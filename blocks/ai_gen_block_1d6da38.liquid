@@ -1,0 +1,672 @@
+{% doc %}
+  @prompt
+    create two columns, both with headers, body text and primary buttons, add a 3rd column to the left but make it more on it's own as a header style column. It needs to hold information like this:
+    
+    Topics that can be covered when you book in a personalised consultation:
+    
+    ✓   Lawn Care Tips 
+    
+    ✓   Weed/Disease Identification & Treatment
+    
+    ✓   Irrigation System and Watering
+    
+    ✓   Water & PH Soil Testing
+    
+    ✓   Suitable Grass Species
+    
+    ✓   Renovation and Replanting Lawns
+    
+    ✓   Lawn Challenges
+    
+    then right justify the other two columns more to the right, can you make this header be above all the columns to the left: Topics that can be covered when you book in a personalised consultation:, add margin options to this header so it doesnt space across the page: Topics that can be covered when you book in a personalised consultation:, increare right margin distance to 1000, make the left hand column shorter than the other two. make it come up under the text., add a section width adjuster
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-three-columns-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: {{ block.settings.section_padding }}px 20px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-three-columns__container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.section_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-three-columns__header-{{ ai_gen_id }} {
+    margin-bottom: {{ block.settings.header_bottom_margin }}px;
+    margin-left: {{ block.settings.header_left_margin }}px;
+    margin-right: {{ block.settings.header_right_margin }}px;
+  }
+
+  .ai-three-columns__header-title-{{ ai_gen_id }} {
+    margin: 0;
+    font-size: {{ block.settings.header_title_size }}px;
+    color: {{ block.settings.header_title_color }};
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .ai-three-columns__content-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: {{ block.settings.column_gap }}px;
+    align-items: start;
+  }
+
+  .ai-three-columns__checklist-column-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.checklist_gap }}px;
+    padding: {{ block.settings.checklist_column_padding }}px;
+    background-color: {{ block.settings.checklist_column_background }};
+    border-radius: {{ block.settings.border_radius }}px;
+    align-self: start;
+  }
+
+  .ai-three-columns__checklist-{{ ai_gen_id }} {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.checklist_gap }}px;
+  }
+
+  .ai-three-columns__checklist-item-{{ ai_gen_id }} {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: {{ block.settings.checklist_text_size }}px;
+    color: {{ block.settings.checklist_text_color }};
+    line-height: 1.5;
+  }
+
+  .ai-three-columns__checkmark-{{ ai_gen_id }} {
+    color: {{ block.settings.checkmark_color }};
+    font-weight: 700;
+    flex-shrink: 0;
+    font-size: {{ block.settings.checklist_text_size }}px;
+  }
+
+  .ai-three-columns__right-columns-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ block.settings.column_gap }}px;
+    grid-column: 2 / 4;
+  }
+
+  .ai-three-columns__column-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.content_gap }}px;
+    padding: {{ block.settings.column_padding }}px;
+    background-color: {{ block.settings.column_background_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+  }
+
+  .ai-three-columns__heading-{{ ai_gen_id }} {
+    margin: 0;
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    font-weight: 600;
+  }
+
+  .ai-three-columns__text-{{ ai_gen_id }} {
+    margin: 0;
+    font-size: {{ block.settings.text_size }}px;
+    color: {{ block.settings.text_color }};
+    line-height: 1.6;
+  }
+
+  .ai-three-columns__button-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    background-color: {{ block.settings.button_color }};
+    color: {{ block.settings.button_text_color }};
+    border: {{ block.settings.button_border_thickness }}px solid {{ block.settings.button_color }};
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_text_size }}px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+  }
+
+  .ai-three-columns__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_color }};
+    color: {{ block.settings.button_hover_text_color }};
+    border-color: {{ block.settings.button_hover_color }};
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-three-columns__content-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+    }
+
+    .ai-three-columns__right-columns-{{ ai_gen_id }} {
+      grid-column: 1;
+      grid-template-columns: 1fr;
+    }
+
+    .ai-three-columns__header-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.header_title_size | times: 0.85 }}px;
+    }
+
+    .ai-three-columns__heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.85 }}px;
+    }
+
+    .ai-three-columns__header-{{ ai_gen_id }} {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-three-columns__text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.text_size | times: 0.9 }}px;
+    }
+
+    .ai-three-columns__checklist-item-{{ ai_gen_id }} {
+      font-size: {{ block.settings.checklist_text_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<three-columns-{{ ai_gen_id }} class="ai-three-columns-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-three-columns__container-{{ ai_gen_id }}">
+    {% if block.settings.header_title != blank %}
+      <div class="ai-three-columns__header-{{ ai_gen_id }}">
+        <h2 class="ai-three-columns__header-title-{{ ai_gen_id }}">{{ block.settings.header_title }}</h2>
+      </div>
+    {% endif %}
+
+    <div class="ai-three-columns__content-{{ ai_gen_id }}">
+      <div class="ai-three-columns__checklist-column-{{ ai_gen_id }}">
+        <ul class="ai-three-columns__checklist-{{ ai_gen_id }}">
+          {% if block.settings.checklist_item_1 != blank %}
+            <li class="ai-three-columns__checklist-item-{{ ai_gen_id }}">
+              <span class="ai-three-columns__checkmark-{{ ai_gen_id }}">✓</span>
+              <span>{{ block.settings.checklist_item_1 }}</span>
+            </li>
+          {% endif %}
+          {% if block.settings.checklist_item_2 != blank %}
+            <li class="ai-three-columns__checklist-item-{{ ai_gen_id }}">
+              <span class="ai-three-columns__checkmark-{{ ai_gen_id }}">✓</span>
+              <span>{{ block.settings.checklist_item_2 }}</span>
+            </li>
+          {% endif %}
+          {% if block.settings.checklist_item_3 != blank %}
+            <li class="ai-three-columns__checklist-item-{{ ai_gen_id }}">
+              <span class="ai-three-columns__checkmark-{{ ai_gen_id }}">✓</span>
+              <span>{{ block.settings.checklist_item_3 }}</span>
+            </li>
+          {% endif %}
+          {% if block.settings.checklist_item_4 != blank %}
+            <li class="ai-three-columns__checklist-item-{{ ai_gen_id }}">
+              <span class="ai-three-columns__checkmark-{{ ai_gen_id }}">✓</span>
+              <span>{{ block.settings.checklist_item_4 }}</span>
+            </li>
+          {% endif %}
+          {% if block.settings.checklist_item_5 != blank %}
+            <li class="ai-three-columns__checklist-item-{{ ai_gen_id }}">
+              <span class="ai-three-columns__checkmark-{{ ai_gen_id }}">✓</span>
+              <span>{{ block.settings.checklist_item_5 }}</span>
+            </li>
+          {% endif %}
+          {% if block.settings.checklist_item_6 != blank %}
+            <li class="ai-three-columns__checklist-item-{{ ai_gen_id }}">
+              <span class="ai-three-columns__checkmark-{{ ai_gen_id }}">✓</span>
+              <span>{{ block.settings.checklist_item_6 }}</span>
+            </li>
+          {% endif %}
+          {% if block.settings.checklist_item_7 != blank %}
+            <li class="ai-three-columns__checklist-item-{{ ai_gen_id }}">
+              <span class="ai-three-columns__checkmark-{{ ai_gen_id }}">✓</span>
+              <span>{{ block.settings.checklist_item_7 }}</span>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <div class="ai-three-columns__right-columns-{{ ai_gen_id }}">
+        <div class="ai-three-columns__column-{{ ai_gen_id }}">
+          {% if block.settings.column_1_heading != blank %}
+            <h3 class="ai-three-columns__heading-{{ ai_gen_id }}">{{ block.settings.column_1_heading }}</h3>
+          {% endif %}
+          {% if block.settings.column_1_text != blank %}
+            <div class="ai-three-columns__text-{{ ai_gen_id }}">{{ block.settings.column_1_text }}</div>
+          {% endif %}
+          {% if block.settings.column_1_button_text != blank %}
+            <a href="{{ block.settings.column_1_button_link }}" class="ai-three-columns__button-{{ ai_gen_id }}">
+              {{ block.settings.column_1_button_text }}
+            </a>
+          {% endif %}
+        </div>
+
+        <div class="ai-three-columns__column-{{ ai_gen_id }}">
+          {% if block.settings.column_2_heading != blank %}
+            <h3 class="ai-three-columns__heading-{{ ai_gen_id }}">{{ block.settings.column_2_heading }}</h3>
+          {% endif %}
+          {% if block.settings.column_2_text != blank %}
+            <div class="ai-three-columns__text-{{ ai_gen_id }}">{{ block.settings.column_2_text }}</div>
+          {% endif %}
+          {% if block.settings.column_2_button_text != blank %}
+            <a href="{{ block.settings.column_2_button_link }}" class="ai-three-columns__button-{{ ai_gen_id }}">
+              {{ block.settings.column_2_button_text }}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</three-columns-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ThreeColumns{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+    }
+    customElements.define('three-columns-{{ ai_gen_id }}', ThreeColumns{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Three columns with header",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Main header"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "header_title",
+      "label": "Title",
+      "default": "Topics that can be covered when you book in a personalised consultation:"
+    },
+    {
+      "type": "range",
+      "id": "header_bottom_margin",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom margin",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "header_left_margin",
+      "min": 0,
+      "max": 1000,
+      "step": 10,
+      "unit": "px",
+      "label": "Left margin",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "header_right_margin",
+      "min": 0,
+      "max": 1000,
+      "step": 10,
+      "unit": "px",
+      "label": "Right margin",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Checklist column"
+    },
+    {
+      "type": "text",
+      "id": "checklist_item_1",
+      "label": "Checklist item 1",
+      "default": "Lawn Care Tips"
+    },
+    {
+      "type": "text",
+      "id": "checklist_item_2",
+      "label": "Checklist item 2",
+      "default": "Weed/Disease Identification & Treatment"
+    },
+    {
+      "type": "text",
+      "id": "checklist_item_3",
+      "label": "Checklist item 3",
+      "default": "Irrigation System and Watering"
+    },
+    {
+      "type": "text",
+      "id": "checklist_item_4",
+      "label": "Checklist item 4",
+      "default": "Water & PH Soil Testing"
+    },
+    {
+      "type": "text",
+      "id": "checklist_item_5",
+      "label": "Checklist item 5",
+      "default": "Suitable Grass Species"
+    },
+    {
+      "type": "text",
+      "id": "checklist_item_6",
+      "label": "Checklist item 6",
+      "default": "Renovation and Replanting Lawns"
+    },
+    {
+      "type": "text",
+      "id": "checklist_item_7",
+      "label": "Checklist item 7",
+      "default": "Lawn Challenges"
+    },
+    {
+      "type": "header",
+      "content": "Column 1"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "column_1_heading",
+      "label": "Heading",
+      "default": "Column one"
+    },
+    {
+      "type": "richtext",
+      "id": "column_1_text",
+      "label": "Text",
+      "default": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>"
+    },
+    {
+      "type": "text",
+      "id": "column_1_button_text",
+      "label": "Button text",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "column_1_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Column 2"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "column_2_heading",
+      "label": "Heading",
+      "default": "Column two"
+    },
+    {
+      "type": "richtext",
+      "id": "column_2_text",
+      "label": "Text",
+      "default": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>"
+    },
+    {
+      "type": "text",
+      "id": "column_2_button_text",
+      "label": "Button text",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "column_2_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Section width",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between columns",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "content_gap",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Content gap",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "checklist_gap",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Checklist gap",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "column_padding",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Column padding",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "checklist_column_padding",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Checklist column padding",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "checklist_column_background",
+      "label": "Checklist column background",
+      "default": "#09552b"
+    },
+    {
+      "type": "color",
+      "id": "column_background_color",
+      "label": "Column background",
+      "default": "#f3f3f3"
+    },
+    {
+      "type": "color",
+      "id": "header_title_color",
+      "label": "Header title",
+      "default": "#09552b"
+    },
+    {
+      "type": "color",
+      "id": "checklist_text_color",
+      "label": "Checklist text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "checkmark_color",
+      "label": "Checkmark",
+      "default": "#71c27a"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#09552b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#09552b"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "header_title_size",
+      "min": 18,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Header title size",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "checklist_text_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Checklist text size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Background",
+      "default": "#09552b"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Hover background",
+      "default": "#71c27a"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text",
+      "default": "#09552b"
+    },
+    {
+      "type": "range",
+      "id": "button_border_thickness",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Border thickness",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Three columns with header"
+    }
+  ]
+}
+{% endschema %}

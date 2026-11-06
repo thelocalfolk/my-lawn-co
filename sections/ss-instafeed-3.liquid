@@ -1,0 +1,1879 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2023 Section Store. All rights reserved.
+Unauthorized copying, modification, distribution, or use
+of this code or any portion of it, is strictly prohibited.
+Violators will be prosecuted to the fullest extent of the law.
+For inquiries or permissions, contact daniel@section.store
+---------------------------------------------------------
+{% endcomment %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+
+{%- liquid 
+  assign padding_horizontal = section.settings.padding_horizontal
+  assign padding_horizontal_mobile = section.settings.padding_horizontal_mobile
+  assign padding_top = section.settings.padding_top
+  assign padding_bottom = section.settings.padding_bottom
+  assign border_color = section.settings.border_color
+  assign border_thickness = section.settings.border_thickness
+  assign margin_top = section.settings.margin_top
+  assign margin_bottom = section.settings.margin_bottom
+  assign background_color = section.settings.background_color
+  assign background_gradient = section.settings.background_gradient
+  assign full_width = section.settings.full_width
+  assign content_width = section.settings.content_width
+  assign lazy = section.settings.lazy
+
+  assign heading = section.settings.heading
+  assign heading_size = section.settings.heading_size
+  assign heading_size_mobile = section.settings.heading_size_mobile
+  assign heading_color = section.settings.heading_color
+  assign heading_custom = section.settings.heading_custom
+  assign heading_font = section.settings.heading_font
+  assign heading_height = section.settings.heading_height
+  assign heading_align = section.settings.heading_align
+  assign heading_align_mobile = section.settings.heading_align_mobile
+  assign heading_row = section.settings.heading_row
+
+  assign items_width_mobile = section.settings.items_width_mobile
+  assign items_width = section.settings.items_width
+  assign items_row = section.settings.items_row
+  assign items_row_mobile = section.settings.items_row_mobile
+  assign items_gap = section.settings.items_gap
+  assign items_gap_mobile = section.settings.items_gap_mobile
+  assign items_margin_mobile = section.settings.items_margin_mobile
+  assign items_margin = section.settings.items_margin
+
+  assign card_padding_vertical = section.settings.card_padding_vertical
+  assign card_padding_vertical_mobile = section.settings.card_padding_vertical_mobile
+  assign card_padding_horizontal = section.settings.card_padding_horizontal
+  assign card_padding_horizontal_mobile = section.settings.card_padding_horizontal_mobile
+  assign card_radius = section.settings.card_radius
+  assign card_border_thickness = section.settings.card_border_thickness
+  assign card_border_color = section.settings.card_border_color
+  assign card_bg_color = section.settings.card_bg_color
+
+  assign logo = section.settings.logo
+  assign logo_size_mobile = section.settings.logo_size_mobile
+  assign logo_size = section.settings.logo_size
+  assign hide_logo = section.settings.hide_logo
+
+  assign author = section.settings.author
+  assign author_size = section.settings.author_size
+  assign author_size_mobile = section.settings.author_size_mobile
+  assign author_color = section.settings.author_color
+  assign author_custom = section.settings.author_custom
+  assign author_font = section.settings.author_font
+  assign author_height = section.settings.author_height
+  assign author_mt = section.settings.author_mt
+
+  assign place_size = section.settings.place_size
+  assign place_size_mobile = section.settings.place_size_mobile
+  assign place_color = section.settings.place_color
+  assign place_custom = section.settings.place_custom
+  assign place_font = section.settings.place_font
+  assign place_height = section.settings.place_height
+  assign place_mt = section.settings.place_mt
+
+  assign image_radius = section.settings.image_radius
+  assign image_border_thickness = section.settings.image_border_thickness
+  assign image_border_color = section.settings.image_border_color
+  assign image_ratio = section.settings.image_ratio
+  assign image_ratio_mobile = section.settings.image_ratio_mobile
+  assign image_mt = section.settings.image_mt
+
+  assign actions_gap_mobile = section.settings.actions_gap_mobile
+  assign actions_gap = section.settings.actions_gap
+  assign actions_mt = section.settings.actions_mt
+  assign actions_icon_size = section.settings.actions_icon_size
+  assign actions_icon_size_mobile = section.settings.actions_icon_size_mobile
+
+  assign time_size = section.settings.time_size
+  assign time_size_mobile = section.settings.time_size_mobile
+  assign time_color = section.settings.time_color
+  assign time_custom = section.settings.time_custom
+  assign time_font = section.settings.time_font
+  assign time_height = section.settings.time_height
+  assign time_mt = section.settings.time_mt
+
+  assign dots_color = section.settings.dots_color
+  assign heart_color = section.settings.heart_color
+  assign comment_color = section.settings.comment_color
+  assign share_color = section.settings.share_color
+  assign save_color = section.settings.save_color
+
+  assign arrow_size = section.settings.arrow_size
+  assign arrow_size_mobile = section.settings.arrow_size_mobile
+  assign arrow_icon_size = section.settings.arrow_icon_size
+  assign arrow_icon_size_mobile = section.settings.arrow_icon_size_mobile
+  assign arrow_color = section.settings.arrow_color
+  assign arrow_hover_color = section.settings.arrow_hover_color
+  assign arrow_bg_color = section.settings.arrow_bg_color
+  assign arrow_bg_hover_color = section.settings.arrow_bg_hover_color
+  assign arrow_border_thickness = section.settings.arrow_border_thickness
+  assign arrow_border_color = section.settings.arrow_border_color
+  assign arrow_border_hover_color = section.settings.arrow_border_hover_color
+  assign arrow_show_desktop = section.settings.arrow_show_desktop
+  assign arrow_show_mobile = section.settings.arrow_show_mobile
+
+  assign scrollbar_height = section.settings.scrollbar_height
+  assign scrollbar_mt = section.settings.scrollbar_mt
+  assign scrollbar_show_desktop = section.settings.scrollbar_show_desktop
+  assign scrollbar_show_mobile = section.settings.scrollbar_show_mobile
+  assign scrollbar_drag_bg_color = section.settings.scrollbar_drag_bg_color
+  assign scrollbar_bg_color = section.settings.scrollbar_bg_color
+  
+-%}
+
+{%- style -%}
+
+  {{  heading_font | font_face: font_display: 'swap' }}
+  {{  author_font | font_face: font_display: 'swap' }}
+  {{  place_font | font_face: font_display: 'swap' }}
+  {{  time_font | font_face: font_display: 'swap' }}
+  
+  .section-{{ section.id }} {
+    border-top: solid {{ border_color }} {{ border_thickness }}px;
+    border-bottom: solid {{ border_color }} {{ border_thickness }}px;
+    margin-top: {{ margin_top | times: 0.75 | round: 0 }}px;
+    margin-bottom: {{ margin_bottom | times: 0.75 | round: 0 }}px;
+  }
+  
+  .section-{{ section.id }}-settings {
+    margin: 0 auto;
+    padding-top: {{ padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ padding_bottom | times: 0.75 | round: 0 }}px;
+    padding-left: {{ padding_horizontal_mobile }}rem;
+    padding-right: {{ padding_horizontal_mobile }}rem;
+  }
+
+  .insta-heading-{{ section.id }} {
+    width: 100%;
+    text-align: {{ heading_align_mobile }};
+  }
+
+  .insta-heading-{{ section.id }} * {
+    margin: 0;
+    font-size: {{ heading_size_mobile }}px;
+    color: {{ heading_color }};
+    line-height: {{ heading_height }}%;
+    text-transform: unset;
+  }
+
+  .insta-heading-{{ section.id }} a {
+    text-decoration: none;
+    font-size: {{ heading_size_mobile | times: 0.75 | round: 0 }}px;
+  }
+
+  .insta-items-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    gap: {{ items_margin_mobile }}px;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .insta-slider-wrapper-{{ section.id }} {
+    width: 100%;
+    max-width: {{ items_width_mobile }}%;
+    margin: 0px auto;
+    min-width: 0;
+    position: relative;
+  }
+  
+  .insta-slider-{{ section.id }} .swiper-wrapper {
+    align-items: stretch;
+  }
+
+  .insta-slide-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: {{ card_padding_vertical_mobile }}px {{ card_padding_horizontal_mobile }}px;
+    border-radius: {{ card_radius }}px;
+    border: {{ card_border_thickness }}px solid {{ card_border_color }};
+    background-color: {{ card_bg_color }};
+    box-sizing: border-box !important; 
+    height: auto !important;
+    text-decoration: none;
+    overflow: hidden;
+    height: auto !important;
+  }
+
+  .insta-top-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .insta-dots-{{ section.id }} {
+    margin-left: auto;
+  }
+
+  .insta-dots-{{ section.id }} svg path {
+    stroke: {{ dots_color }};
+  }
+
+  .insta-logo-{{ section.id }} {
+    flex: 0 0 {{ logo_size_mobile }}px;
+    height: {{ logo_size_mobile }}px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #DDDDDD;
+  }
+
+  .insta-logo-{{ section.id }} img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .insta-author-{{ section.id }} {
+    margin: 0;
+    font-size: {{ author_size_mobile }}px;
+    color: {{ author_color }};
+    line-height: {{ author_height }}%;
+    text-transform: unset;
+    font-weight: 700;
+  }
+
+  .insta-place-{{ section.id }} {
+    margin: 0;
+    margin-top: {{ place_mt | times: 0.75 | round: 0 }}px;
+    font-size: {{ place_size_mobile }}px;
+    color: {{ place_color }};
+    line-height: {{ place_height }}%;
+    text-transform: unset;
+  }
+
+  .insta-image-{{ section.id }} {
+    margin-top: {{ image_mt | times: 0.75 | round: 0 }}px;
+    border-radius: {{ image_radius }}px;
+    border: {{ image_border_thickness }}px solid {{ image_border_color }};
+  }
+
+  .insta-image-{{ section.id }} img,
+  .insta-image-{{ section.id }} svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .insta-image-{{ section.id }} svg {
+    background-color: #DDDDDD;
+  }
+
+  .insta-actions-{{ section.id }} {
+    display: flex;
+    aling-items: center;
+    gap: {{ actions_gap_mobile }}px;
+    margin-top: {{ actions_mt | times: 0.75 | round: 0 }}px;
+  }
+
+  .insta-actions-{{ section.id }} svg {
+    display: block;
+    width: {{ actions_icon_size_mobile }}px;
+    height: {{ actions_icon_size_mobile }}px;
+  }
+
+  .insta-actions-{{ section.id }} svg:last-child {
+    margin-left: auto;
+  }
+
+  .insta-actions-{{ section.id }} + .insta-author-{{ section.id }} {
+    margin-top: {{ author_mt | times: 0.75 | round: 0 }}px;
+  }
+
+  .insta-time-{{ section.id }} {
+    margin: 0;
+    margin-top: {{ time_mt | times: 0.75 | round: 0 }}px;
+    font-size: {{ time_size_mobile }}px;
+    color: {{ time_color }};
+    line-height: {{ time_height }}%;
+    text-transform: unset;
+  }
+
+  .insta-btn-prev-{{ section.id }},
+  .insta-btn-next-{{ section.id }} {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: {{ arrow_size_mobile }}px;
+    height: {{ arrow_size_mobile }}px;
+    border: {{ arrow_border_thickness }}px solid {{ arrow_border_color }};
+    border-radius: 50%;
+    background: {{ arrow_bg_color }};
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    -webkit-appearance: none;
+  }
+
+  .insta-btn-prev-{{ section.id }} {
+    left: 0px !important;
+  }
+
+  .insta-btn-next-{{ section.id }} {
+    right: 0px !important;
+  }
+
+  .insta-btn-prev-{{ section.id }} svg,
+  .insta-btn-next-{{ section.id }} svg {
+    height: {{ arrow_icon_size_mobile }}px;
+    width: {{ arrow_icon_size_mobile }}px;
+  }
+
+  .insta-btn-next-{{ section.id }} svg {
+    transform: rotate(270deg);
+    margin-left: 2px;
+  }
+
+  .insta-btn-prev-{{ section.id }} svg {
+    transform: rotate(90deg);
+    margin-left: -2px;
+  }
+
+  .insta-btn-prev-{{ section.id }} svg path,
+  .insta-btn-next-{{ section.id }} svg path {
+    fill: {{ arrow_color }};
+    transition: all 0.3s ease 0s;
+  }
+
+  .insta-btn-prev-{{ section.id }}:hover ,
+  .insta-btn-next-{{ section.id }}:hover {
+    transition: all 0.3s ease 0s;
+    border: {{ arrow_border_thickness }}px solid {{ arrow_border_hover_color }};
+    background: {{ arrow_bg_hover_color }};
+  }
+
+  .insta-btn-prev-{{ section.id }}:hover svg path,
+  .insta-btn-next-{{ section.id }}:hover svg path {
+    fill: {{ arrow_hover_color }};
+    transition: all 0.3s ease 0s;
+  }
+
+  .insta-btn-prev-{{ section.id }}.swiper-button-disabled,
+  .insta-btn-next-{{ section.id }}.swiper-button-disabled {
+    opacity: 0;
+    transition: all 0.3s ease 0s;
+  }
+
+  .insta-scrollbar-{{ section.id }} {
+    margin-top: {{ scrollbar_mt | times: 0.75 | round: 0 }}px;
+    position: static !important;
+    height: {{ scrollbar_height }}px !important;
+    background-color: {{ scrollbar_bg_color }}!important;
+  }
+
+  .insta-scrollbar-{{ section.id }} .swiper-scrollbar-drag {
+    display: block !important;
+    background-color: {{ scrollbar_drag_bg_color }}!important;
+  }
+  
+  @media(min-width: 1024px) {
+
+    .section-{{ section.id }} {
+      margin-top: {{ margin_top }}px;
+      margin-bottom: {{ margin_bottom }}px;
+    }
+    
+    .section-{{ section.id }}-settings {
+      padding: 0 5rem;
+      padding-top: {{ padding_top }}px;
+      padding-bottom: {{ padding_bottom }}px;
+      padding-left: {{ padding_horizontal }}rem;
+      padding-right: {{ padding_horizontal }}rem;
+    }
+
+    .insta-heading-{{ section.id }} {
+      flex: 0 0 {{ 100 | minus: items_width }}%;
+      text-align: {{ heading_align }};
+    }
+
+    .insta-heading-{{ section.id }} * {
+      font-size: {{ heading_size }}px;
+    }
+
+    .insta-heading-{{ section.id }} a {
+      font-size: {{ heading_size | times: 0.75 | round: 0 }}px;
+    }
+
+    .insta-items-{{ section.id }} {
+      flex-direction: row;
+      gap: {{ items_margin }}px;
+    }
+
+    .insta-slider-wrapper-{{ section.id }} {
+      max-width: 100%;
+      flex: 0 0 {{ items_width }}%;
+    }
+
+    .insta-slide-{{ section.id }} {
+      padding: {{ card_padding_vertical }}px {{ card_padding_horizontal }}px;
+    }
+
+    .insta-logo-{{ section.id }} {
+      flex: 0 0 {{ logo_size }}px;
+      height: {{ logo_size }}px;
+    }
+
+    .insta-author-{{ section.id }} {
+      font-size: {{ author_size }}px;
+    }
+
+    .insta-place-{{ section.id }} {
+      margin-top: {{ place_mt }}px;
+      font-size: {{ place_size }}px;
+    }
+
+    .insta-image-{{ section.id }} {
+      margin-top: {{ image_mt }}px;
+    }
+
+    .insta-actions-{{ section.id }} {
+      gap: {{ actions_gap }}px;
+      margin-top: {{ actions_mt }}px;
+    }
+
+    .insta-actions-{{ section.id }} svg {
+      width: {{ actions_icon_size }}px;
+      height: {{ actions_icon_size }}px;
+    }
+
+    .insta-actions-{{ section.id }} + .insta-author-{{ section.id }} {
+      margin-top: {{ author_mt }}px;
+    }
+
+    .insta-time-{{ section.id }} {
+      margin-top: {{ time_mt }}px;
+      font-size: {{ time_size }}px;
+    }
+
+    .insta-btn-prev-{{ section.id }},
+    .insta-btn-next-{{ section.id }} {
+      width: {{ arrow_size }}px;
+      height: {{ arrow_size }}px;
+    }
+
+    .insta-btn-prev-{{ section.id }} {
+      left: -{{ arrow_size | times: 0.5 }}px !important;
+    }
+  
+    .insta-btn-next-{{ section.id }} {
+      right: -{{ arrow_size | times: 0.5 }}px !important;
+    }
+
+    .insta-btn-prev-{{ section.id }} svg,
+    .insta-btn-next-{{ section.id }} svg {
+      height: {{ arrow_icon_size }}px;
+      width: {{ arrow_icon_size }}px;
+    }
+
+    .insta-scrollbar-{{ section.id }} {
+      margin-top: {{ scrollbar_mt }}px;
+    }
+    
+  }
+  
+{%- endstyle -%}
+
+{% unless full_width %}
+  <style>
+    .section-{{ section.id }}-settings {
+      max-width: {{ content_width }}rem;
+    }
+  </style>
+{% endunless %}
+
+{% if heading_custom %}
+  <style>
+    .insta-heading-{{ section.id }} * {
+      font-family: {{ heading_font.family }}, {{ heading_font.fallback_families }};
+      font-weight: {{ heading_font.weight }};
+      font-style: {{ heading_font.style }};
+    }
+  </style>
+{% endif %}
+
+{% if author_custom %}
+  <style>
+    .insta-author-{{ section.id }} {
+      font-family: {{ author_font.family }}, {{ author_font.fallback_families }};
+      font-weight: {{ author_font.weight }};
+      font-style: {{ author_font.style }};
+    }
+  </style>
+{% endif %}
+
+{% if place_custom %}
+  <style>
+    .insta-place-{{ section.id }} {
+      font-family: {{ place_font.family }}, {{ place_font.fallback_families }};
+      font-weight: {{ place_font.weight }};
+      font-style: {{ place_font.style }};
+    }
+  </style>
+{% endif %}
+
+{% if time_custom %}
+  <style>
+    .insta-time-{{ section.id }} {
+      font-family: {{ time_font.family }}, {{ time_font.fallback_families }};
+      font-weight: {{ time_font.weight }};
+      font-style: {{ time_font.style }};
+    }
+  </style>
+{% endif %}
+
+{% unless heading_row %}
+  <style>
+    .insta-heading-{{ section.id }} {
+      margin-bottom: {{ items_margin_mobile }}px;
+    }
+
+    @media(min-width: 1024px) {
+      .insta-heading-{{ section.id }} {
+        margin-bottom: {{ items_margin }}px;
+      }
+    }
+  </style>
+{% endunless %}
+
+{% if image_ratio_mobile == "portrait" %}
+  <style>
+    .insta-image-{{ section.id }} {
+     aspect-ratio: 9.6/11; 
+    }
+  </style>
+{% elsif image_ratio_mobile == "landscape" %}
+  <style>
+    .insta-image-{{ section.id }} {
+     aspect-ratio: 12/7; 
+    }
+  </style>
+{% elsif image_ratio_mobile == "square" %}
+  <style>
+    .insta-image-{{ section.id }} {
+     aspect-ratio: 12/12; 
+    }
+  </style>
+{% endif %}
+
+{% if image_ratio == "portrait" %}
+  <style>
+    @media(min-width: 1024px) {
+     .insta-image-{{ section.id }} {
+       aspect-ratio: 9.6/11; 
+      } 
+    }
+  </style>
+{% elsif image_ratio == "landscape" %}
+  <style>
+    @media(min-width: 1024px) {
+      .insta-image-{{ section.id }} {
+       aspect-ratio: 12/7; 
+      }
+    }
+  </style>
+{% elsif image_ratio == "square" %}
+  <style>
+    @media(min-width: 1024px) {
+      .insta-image-{{ section.id }} {
+       aspect-ratio: 12/12; 
+      }
+    }
+  </style>
+{% endif %}
+
+{% if arrow_show_mobile %}
+  <style>
+    .insta-btn-prev-{{ section.id }},
+    .insta-btn-next-{{ section.id }} {
+      display: flex;
+    }
+  </style>
+{% else %}
+  <style>
+    .insta-btn-prev-{{ section.id }},
+    .insta-btn-next-{{ section.id }} {
+      display: none;
+    }
+  </style>
+{% endif %}
+
+{% if arrow_show_desktop %}
+  <style>
+    @media(min-width: 1024px) {
+      .insta-btn-prev-{{ section.id }},
+      .insta-btn-next-{{ section.id }} {
+        display: flex;
+      }
+    }
+  </style>
+{% else %}
+  <style>
+    @media(min-width: 1024px) {
+      .insta-btn-prev-{{ section.id }},
+      .insta-btn-next-{{ section.id }} {
+        display: none;
+      }
+    }
+  </style>
+{% endif %}
+
+{% if scrollbar_show_mobile %}
+  <style>
+    .insta-scrollbar-{{ section.id }} {
+      display: flex !important;
+    }
+  </style>
+{% else %}
+  <style>
+    .insta-scrollbar-{{ section.id }} {
+      display: none !important;
+    }
+  </style>
+{% endif %}
+
+{% if scrollbar_show_desktop %}
+  <style>
+    @media(min-width: 1024px) {
+      .insta-scrollbar-{{ section.id }} {
+        display: flex !important;
+      }
+    }
+  </style>
+{% else %}
+  <style>
+    @media(min-width: 1024px) {
+      .insta-scrollbar-{{ section.id }} {
+        display: none !important;
+      }
+    }
+  </style>
+{% endif %}
+
+{% comment %} PREVIEW {% endcomment %}
+<style>
+  .insta-slider-{{ section.id }}.preview .swiper-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    gap: {{ slider_gap }}px;
+  }
+
+  .insta-slider-{{ section.id }}.preview .insta-slide-{{ section.id }} {
+    width: 30%;
+  }
+
+  .insta-slider-{{ section.id }}.preview .insta-slide-{{ section.id }}:not(:first-child) {
+    margin-left: {{ slider_gap }}px;
+  }
+</style>
+
+<div class="section-{{ section.id }} insta-{{ section.id }}" style="background-color:{{ background_color }}; background-image: {{ background_gradient }};">
+    <div class="section-{{ section.id }}-settings">
+
+      {% if heading != blank and heading_row == false %}
+        <div class="insta-heading-{{ section.id }}">{{ heading }}</div>
+      {% endif %}
+
+      <div class="insta-items-{{ section.id }}">
+
+        {% if heading != blank and heading_row %}
+          <div class="insta-heading-{{ section.id }}">{{ heading }}</div>
+        {% endif %}
+
+        <div class="insta-slider-wrapper-{{ section.id }}">
+          <div class="insta-slider-{{ section.id }} swiper preview">
+            <div class="swiper-wrapper">
+              {% for block in section.blocks %}
+                <{% if block.settings.url != blank %}a href="{{ block.settings.url }}"{% else %}div{% endif %} class="insta-slide-{{ section.id }} swiper-slide">
+                  
+                  <div class="insta-top-{{ section.id }}">
+                    {% unless hide_logo %}
+                      <div class="insta-logo-{{ section.id }}">
+                        {% if logo != blank %}
+                          <img src="{{ logo | image_url }}" alt="{{ logo.alt }}" {% if lazy %}lazy="loading"{% endif %}>
+                        {% endif %}
+                      </div>
+                    {% endunless %}
+                    <div class="insta-info-{{ section.id }}">
+                      {% if author != blank %}
+                        <p class="insta-author-{{ section.id }}">{{ author }}</p>
+                      {% endif %}
+                      {% if block.settings.place != blank %}
+                        <p class="insta-place-{{ section.id }}">{{ block.settings.place }}</p>
+                      {% endif %}
+                    </div>
+                    <div class="insta-dots-{{ section.id }}">
+                      <svg width="4" height="15" viewBox="0 0 4 15" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1.75 2.5C2.16421 2.5 2.5 2.16421 2.5 1.75C2.5 1.33579 2.16421 1 1.75 1C1.33579 1 1 1.33579 1 1.75C1 2.16421 1.33579 2.5 1.75 2.5Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M1.75 8C2.16421 8 2.5 7.66421 2.5 7.25C2.5 6.83579 2.16421 6.5 1.75 6.5C1.33579 6.5 1 6.83579 1 7.25C1 7.66421 1.33579 8 1.75 8Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M1.75 13.5C2.16421 13.5 2.5 13.1642 2.5 12.75C2.5 12.3358 2.16421 12 1.75 12C1.33579 12 1 12.3358 1 12.75C1 13.1642 1.33579 13.5 1.75 13.5Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </div>
+                  </div>
+                  
+                  <div class="insta-image-{{ section.id }}">
+                    {% if block.settings.image != blank %}
+                      <img src="{{ block.settings.image | image_url }}" alt="{{ block.settings.alt }}" {% if lazy %}lazy="loading"{% endif %}>
+                    {% else %}
+                      {{ 'image' | placeholder_svg_tag }}
+                    {% endif %}
+                  </div>
+
+                  <div class="insta-actions-{{ section.id }}">
+                      <svg fill="none" height="19" viewBox="0 0 21 19" width="21" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.3451 2.68122C19.4655 0.87105 16.932 -0.609994 13.9851 0.252303C12.5768 0.660241 11.3482 1.53507 10.4999 2.73387C9.65152 1.53507 8.42287 0.660241 7.01465 0.252303C4.0611 -0.596829 1.53416 0.87105 0.654657 2.68122C-0.579275 5.21545 -0.0673239 8.06563 2.17738 11.1528C3.93639 13.5685 6.4502 16.0172 10.0995 18.8608C10.3368 19.0464 10.6695 19.0464 10.9068 18.8608C14.5495 16.0238 17.0699 13.5949 18.8289 11.1528C21.067 8.06563 21.579 5.21545 20.3451 2.68122Z" fill="{{ heart_color }}"></path>
+                      </svg>
+                      <svg fill="none" height="20" viewBox="0 0 23 20" width="23" xmlns="http://www.w3.org/2000/svg">
+                        <path clip-rule="evenodd" d="M0.00126567 9.28571C0.00126567 4.15625 5.15715 0 11.5203 0C17.8834 0 23 4.15759 23 9.28571C23 14.4138 17.8834 18.5714 11.5203 18.5714C10.0487 18.5714 8.59972 18.3393 7.33969 17.9353C5.98967 18.8504 3.84763 20 1.08007 20C0.647163 20 0.261866 19.7411 0.0874423 19.3504C-0.081311 18.9598 -0.00255939 18.5022 0.295571 18.1897C0.318072 18.1732 1.71265 16.683 2.38226 14.9196C0.897233 13.3594 0.00126567 11.4121 0.00126567 9.28571ZM7.99761 15.8875C9.13433 16.2444 10.321 16.4286 11.5248 16.4286C16.6864 16.4286 20.8836 13.2254 20.8836 9.28571C20.8836 5.34598 16.6873 2.14286 11.5234 2.14286C6.35957 2.14286 2.16324 5.34598 2.16324 9.28571C2.16324 11.1696 3.14201 12.5938 3.95338 13.4547L4.8813 14.431L4.40339 15.681C4.15543 16.3283 3.84065 16.9368 3.50877 17.4779C4.57169 17.1377 5.45506 16.635 6.09632 16.1833L6.97384 15.5694L7.99761 15.8875Z" fill-rule="evenodd" fill="{{ comment_color }}"></path>
+                      </svg>
+                      <svg fill="none" height="23" viewBox="0 0 26 23" width="26" xmlns="http://www.w3.org/2000/svg">
+                        <path clip-rule="evenodd" d="M24.0488 0.0136606C24.4483 -0.0517754 24.8478 0.12136 25.0746 0.458208C25.2999 0.796075 25.3113 1.2363 25.104 1.5886L12.6405 22.6467L10.7615 22.1079L7.67859 11.8276L0 5.81718L0.54553 3.91468L24.0488 0.0136606ZM9.35085 11.6629L12.0008 20.4994L23.029 1.86551L2.08685 5.3417L8.41787 10.2974L18.2089 4.18801L19.066 5.60076L9.35085 11.6629Z" fill-rule="evenodd" fill="{{ share_color }}"></path>
+                      </svg>
+                      <svg fill="none" height="21" viewBox="0 0 15 21" width="15" xmlns="http://www.w3.org/2000/svg">
+                        <path clip-rule="evenodd" d="M1.5 0H13.5C14.3284 0 15 0.671573 15 1.5V21L7.5 17.25L0 21V1.5C0 0.671573 0.671573 0 1.5 0ZM13.5 18.5625V1.5H1.5V18.5625L6.825 15.87L7.5 15.5325L8.175 15.87L13.5 18.5625Z" fill-rule="evenodd" fill="{{ save_color }}"></path>
+                      </svg>
+                  </div>
+
+                  {% if author != blank %}
+                    <p class="insta-author-{{ section.id }}">{{ author }}</p>
+                  {% endif %}
+                
+                  {% if block.settings.time != blank %}
+                    <p class="insta-time-{{ section.id }}">{{ block.settings.time }}</p>
+                  {% endif %}
+                  
+                </{% if block.settings.url != blank %}a{% else %}div{% endif %}>
+              {% endfor %}
+            </div>
+            <div class="insta-scrollbar-{{ section.id }} swiper-scrollbar"></div>
+          </div>
+          <div class="insta-btn-prev-{{ section.id }}">
+            <svg width="16" height="9" viewBox="0 0 16 9" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="svelte-1dofwfm use-transition right"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 1.38462L14.5455 0L8 6.23077L1.45455 0L0 1.38462L8 9L16 1.38462Z" fill="currentColor"></path></svg>
+          </div>
+          <div class="insta-btn-next-{{ section.id }}">
+            <svg width="16" height="9" viewBox="0 0 16 9" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="svelte-1dofwfm use-transition right"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 1.38462L14.5455 0L8 6.23077L1.45455 0L0 1.38462L8 9L16 1.38462Z" fill="currentColor"></path></svg>
+          </div>
+        </div>
+        
+      </div>
+    
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@8.4.7/swiper-bundle.min.js"></script>
+
+<script>
+  function initSlider() {
+    document.querySelector('.insta-slider-{{ section.id }}').classList.remove('preview');
+    const slider = new Swiper('.insta-slider-{{ section.id }}', {
+        speed: 300,
+        navigation: {
+          nextEl: '.insta-btn-next-{{ section.id }}',
+          prevEl: '.insta-btn-prev-{{ section.id }}'
+        },
+        scrollbar: {
+          el: '.insta-scrollbar-{{ section.id }}',
+          draggable: true
+        },
+        breakpoints: {
+          320: {
+            spaceBetween: {{ items_gap_mobile }},
+            slidesPerView: {{ items_row_mobile }}
+          },
+          768: {
+            spaceBetween: {{ items_gap_mobile }},
+            slidesPerView: {{ items_row | times: 0.5 | round: 0 }}
+          },
+          1024: {
+            spaceBetween: {{ items_gap }},
+            slidesPerView: {{ items_row }}
+          }
+        }
+      })
+  }
+
+  document.addEventListener('DOMContentLoaded', initSlider);
+  
+  if (Shopify.designMode) {
+     document.addEventListener('shopify:section:unload', initSlider);
+     document.addEventListener('shopify:section:load', initSlider);
+  }
+</script>
+
+{% schema %}
+  {
+    "name": "SS - Instafeed #3",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "heading",
+        "label": "Heading",
+        "default": "<h2>Follow us on insta. @handle</h2>"
+      },
+      {
+        "type": "checkbox",
+        "id": "heading_custom",
+        "label": "Use Custom Font",
+        "default": false
+      },
+      {
+        "type": "font_picker",
+        "id": "heading_font",
+        "label": "Heading Font Family",
+        "default": "josefin_sans_n4"
+      },
+      {
+        "type": "range",
+        "id": "heading_size",
+        "min": 0,
+        "max": 72,
+        "step": 2,
+        "unit": "px",
+        "label": "Heading Size",
+        "default": 40
+      },
+      {
+        "type": "range",
+        "id": "heading_size_mobile",
+        "min": 0,
+        "max": 72,
+        "step": 2,
+        "unit": "px",
+        "label": "Heading Size - Mobile",
+        "default": 30
+      },
+      {
+        "type": "range",
+        "id": "heading_height",
+        "min": 50,
+        "max": 200,
+        "step": 10,
+        "unit": "%",
+        "label": "Heading Line Height",
+        "default": 150
+      },
+      {
+        "type": "select",
+        "id": "heading_align",
+        "label": "Heading Text Align",
+        "default": "center",
+        "options": [
+          {
+            "label": "Left",
+            "value": "left"
+          },
+          {
+            "label": "Center",
+            "value": "center"
+          },
+          {
+            "label": "Right",
+            "value": "right"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "heading_align_mobile",
+        "label": "Heading Text Align - Mobile",
+        "default": "center",
+        "options": [
+          {
+            "label": "Left",
+            "value": "left"
+          },
+          {
+            "label": "Center",
+            "value": "center"
+          },
+          {
+            "label": "Right",
+            "value": "right"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "heading_row",
+        "label": "Heading in Row",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Instafeed Items Settings"
+      },
+      {
+        "type": "range",
+        "id": "items_width",
+        "min": 20,
+        "max": 100,
+        "step": 2,
+        "unit": "%",
+        "label": "Items Width",
+        "default": 76
+      },
+      {
+        "type": "range",
+        "id": "items_width_mobile",
+        "min": 50,
+        "max": 100,
+        "step": 2,
+        "unit": "%",
+        "label": "Items Width - Mobile",
+        "default": 100
+      },
+      {
+        "type": "range",
+        "id": "items_row",
+        "min": 1,
+        "max": 5,
+        "step": 1,
+        "label": "Items Per Row",
+        "default": 3
+      },
+      {
+        "type": "range",
+        "id": "items_row_mobile",
+        "min": 1,
+        "max": 3,
+        "step": 0.1,
+        "label": "Items Per Row - Mobile",
+        "default": 1.3
+      },
+      {
+        "type": "range",
+        "id": "items_gap",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Gap",
+        "default": 48
+      },
+      {
+        "type": "range",
+        "id": "items_gap_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Gap - Mobile",
+        "default": 20
+      },
+      {
+        "type": "range",
+        "id": "items_margin",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Margin from Heading",
+        "default": 20
+      },
+      {
+        "type": "range",
+        "id": "items_margin_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Margin from Heading - Mobile",
+        "default": 20
+      },
+      {
+        "type": "header",
+        "content": "Card Settings"
+      },
+      {
+        "type": "range",
+        "id": "card_padding_vertical",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Padding Vertical",
+        "default": 12
+      },
+      {
+        "type": "range",
+        "id": "card_padding_vertical_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Padding Vertical - Mobile",
+        "default": 12
+      },
+      {
+         "type": "range",
+         "id": "card_padding_horizontal",
+         "min": 0,
+         "max": 100,
+         "step": 2,
+         "unit": "px",
+         "label": "Card Padding Horizontal",
+         "default": 12
+      },
+      {
+         "type": "range",
+         "id": "card_padding_horizontal_mobile",
+         "min": 0,
+         "max": 100,
+         "step": 2,
+         "unit": "px",
+         "label": "Card Padding Horizontal - Mobile",
+         "default": 12
+      },
+      {
+         "type": "range",
+         "id": "card_radius",
+         "min": 0,
+         "max": 100,
+         "step": 2,
+         "unit": "px",
+         "label": "Card Border Radius",
+         "default": 0
+      },
+      {
+         "type": "range",
+         "id": "card_border_thickness",
+         "min": 0,
+         "max": 10,
+         "step": 1,
+         "unit": "px",
+         "label": "Card Border Thickness",
+         "default": 1
+      },
+      {
+        "type": "header",
+        "content": "Card Logo Settings"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Card Logo"
+      },
+      {
+         "type": "range",
+         "id": "logo_size",
+         "min": 20,
+         "max": 100,
+         "step": 2,
+         "unit": "px",
+         "label": "Card Logo Size",
+         "default": 42
+      },
+      {
+         "type": "range",
+         "id": "logo_size_mobile",
+         "min": 20,
+         "max": 100,
+         "step": 2,
+         "unit": "px",
+         "label": "Card Logo Size - Mobile",
+         "default": 32
+      },
+      {
+        "type": "checkbox",
+        "id": "hide_logo",
+        "label": "Hide Logo",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Card Author Settings"
+      },
+      {
+        "type": "text",
+        "id": "author",
+        "label": "Author",
+        "default": "@handle"
+      },
+      {
+        "type": "checkbox",
+        "id": "author_custom",
+        "label": "Use Custom Font",
+        "default": false
+      },
+      {
+        "type": "font_picker",
+        "id": "author_font",
+        "label": "Card Author Font Family",
+        "default": "josefin_sans_n4"
+      },
+      {
+        "type": "range",
+        "id": "author_size",
+        "min": 0,
+        "max": 72,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Author Size",
+        "default": 20
+      },
+      {
+        "type": "range",
+        "id": "author_size_mobile",
+        "min": 0,
+        "max": 72,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Author Size - Mobile",
+        "default": 20
+      },
+      {
+        "type": "range",
+        "id": "author_height",
+        "min": 50,
+        "max": 200,
+        "step": 10,
+        "unit": "%",
+        "label": "Card Author Line Height",
+        "default": 100
+      },
+      {
+        "type": "range",
+        "id": "author_mt",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Author Margin Top",
+        "default": 10
+      },
+      {
+        "type": "header",
+        "content": "Card Location Settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "place_custom",
+        "label": "Use Custom Font",
+        "default": false
+      },
+      {
+        "type": "font_picker",
+        "id": "place_font",
+        "label": "Card Location Font Family",
+        "default": "josefin_sans_n4"
+      },
+      {
+        "type": "range",
+        "id": "place_size",
+        "min": 0,
+        "max": 72,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Location Size",
+        "default": 12
+      },
+      {
+        "type": "range",
+        "id": "place_size_mobile",
+        "min": 0,
+        "max": 72,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Location Size - Mobile",
+        "default": 12
+      },
+      {
+        "type": "range",
+        "id": "place_height",
+        "min": 50,
+        "max": 200,
+        "step": 10,
+        "unit": "%",
+        "label": "Card Location Line Height",
+        "default": 100
+      },
+      {
+        "type": "range",
+        "id": "place_mt",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Location Margin Top",
+        "default": 10
+      },
+      {
+        "type": "header",
+        "content": "Card Image Settings"
+      },
+      {
+        "type": "range",
+        "id": "image_radius",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Image Radius",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "image_border_thickness",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "unit": "px",
+        "label": "Image Border Thickness",
+        "default": 0
+      },
+      {
+        "type": "select",
+        "id": "image_ratio",
+        "label": "Image Aspect Ratio",
+        "default": "portrait",
+        "options": [
+          {
+            "label": "Portrait",
+            "value": "portrait"
+          },
+          {
+            "label": "Square",
+            "value": "square"
+          },
+          {
+            "label": "Landscape",
+            "value": "landscape"
+          },
+          {
+            "label": "Original",
+            "value": "original"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "image_ratio_mobile",
+        "label": "Image Aspect Ratio - Mobile",
+        "default": "portrait",
+        "options": [
+          {
+            "label": "Portrait",
+            "value": "portrait"
+          },
+          {
+            "label": "Square",
+            "value": "square"
+          },
+          {
+            "label": "Landscape",
+            "value": "landscape"
+          },
+          {
+            "label": "Original",
+            "value": "original"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "image_mt",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Image Margin Top",
+        "default": 10
+      },
+      {
+        "type": "header",
+        "content": "Card Actions Settings"
+      },
+       {
+         "type": "range",
+         "id": "actions_icon_size",
+         "min": 10,
+         "max": 100,
+         "step": 2,
+         "unit": "px",
+         "label": "Card Actions Icons Size",
+         "default": 26
+      },
+      {
+         "type": "range",
+         "id": "actions_icon_size_mobile",
+         "min": 10,
+         "max": 100,
+         "step": 2,
+         "unit": "px",
+         "label": "Card Actions Icons Size - Mobile",
+         "default": 20
+      },
+      {
+        "type": "range",
+        "id": "actions_gap",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Actions Gap",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "actions_gap_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Actions Gap - Mobile",
+        "default": 12
+      },
+      {
+        "type": "range",
+        "id": "actions_mt",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Actions Margin Top",
+        "default": 10
+      },
+      {
+        "type": "header",
+        "content": "Card Time Settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "time_custom",
+        "label": "Use Custom Font",
+        "default": false
+      },
+      {
+        "type": "font_picker",
+        "id": "time_font",
+        "label": "Card Time Font Family",
+        "default": "josefin_sans_n4"
+      },
+      {
+        "type": "range",
+        "id": "time_size",
+        "min": 0,
+        "max": 72,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Time Size",
+        "default": 14
+      },
+      {
+        "type": "range",
+        "id": "time_size_mobile",
+        "min": 0,
+        "max": 72,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Time Size - Mobile",
+        "default": 14
+      },
+      {
+        "type": "range",
+        "id": "time_height",
+        "min": 50,
+        "max": 200,
+        "step": 10,
+        "unit": "%",
+        "label": "Card Time Line Height",
+        "default": 100
+      },
+      {
+        "type": "range",
+        "id": "time_mt",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "label": "Card Time Margin Top",
+        "default": 10
+      },
+            {
+        "type": "header",
+        "content": "Slider Settings"
+      },
+      {
+        "type": "range",
+        "id": "slider_width",
+        "min": 20,
+        "max": 100,
+        "step": 2,
+        "unit": "%",
+        "label": "Slider Width",
+        "default": 66
+      },
+      {
+        "type": "range",
+        "id": "slider_width_mobile",
+        "min": 50,
+        "max": 100,
+        "step": 2,
+        "unit": "%",
+        "label": "Slider Width - Mobile",
+        "default": 100
+      },
+      {
+        "type": "range",
+        "id": "slider_view",
+        "min": 1,
+        "max": 5,
+        "step": 1,
+        "label": "Slider Per View",
+        "default": 3
+      },
+      {
+        "type": "range",
+        "id": "slider_view_mobile",
+        "min": 1,
+        "max": 3,
+        "step": 0.1,
+        "label": "Slider Per View - Mobile",
+        "default": 1.3
+      },
+      {
+        "type": "range",
+        "id": "slider_gap",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "Slider Gap",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "slider_gap_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "Slider Gap - Mobile",
+        "default": 16
+      },
+      {
+        "type": "header",
+        "content": "Arrow Settings"
+      },
+      {
+        "type": "range",
+        "id": "arrow_size",
+        "min": 10,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Arrow Size",
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "arrow_size_mobile",
+        "min": 10,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Arrow Size - Mobile",
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "arrow_icon_size",
+        "min": 10,
+        "max": 50,
+        "step": 2,
+        "unit": "px",
+        "label": "Arrow Icon Size",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "arrow_icon_size_mobile",
+        "min": 10,
+        "max": 50,
+        "step": 2,
+        "unit": "px",
+        "label": "Arrow Icon Size - Mobile",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "arrow_border_thickness",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "unit": "px",
+        "label": "Arrow Border Thickness",
+        "default": 0
+      },
+      {
+        "type": "checkbox",
+        "id": "arrow_show_desktop",
+        "label": "Show on Desktop",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "arrow_show_mobile",
+        "label": "Show on Mobile",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Scrollbar Settings"
+      },
+      {
+        "type": "range",
+        "id": "scrollbar_height",
+        "min": 1,
+        "max": 10,
+        "step": 1,
+        "unit": "px",
+        "label": "Scrollbar Height",
+        "default": 2
+      },
+      {
+        "type": "range",
+        "id": "scrollbar_mt",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Scrollbar Margin Top",
+        "default": 20
+      },
+      {
+        "type": "checkbox",
+        "id": "scrollbar_show_desktop",
+        "label": "Show on Desktop",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "scrollbar_show_mobile",
+        "label": "Show on Mobile",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Card Colors"
+      },
+      {
+        "type": "color",
+        "label": "Card Background Color",
+        "id": "card_bg_color",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "label": "Card Border Color",
+        "id": "card_border_color",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "label": "Card Author Color",
+        "id": "author_color",
+        "default": "#1F1209"
+      },
+      {
+        "type": "color",
+        "label": "Card Location Color",
+        "id": "place_color",
+        "default": "#1F1209"
+      },
+      {
+        "type": "color",
+        "label": "Card Dots Color",
+        "id": "dots_color",
+        "default": "#1F1209"
+      },
+      {
+        "type": "color",
+        "label": "Card Image Border Color",
+        "id": "image_border_color",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "label": "Card Heart Icon Color",
+        "id": "heart_color",
+        "default": "#1F1209"
+      },
+      {
+        "type": "color",
+        "label": "Card Comment Icon Color",
+        "id": "comment_color",
+        "default": "#1F1209"
+      },
+      {
+        "type": "color",
+        "label": "Card Share Icon Color",
+        "id": "share_color",
+        "default": "#1F1209"
+      },
+      {
+        "type": "color",
+        "label": "Card Save Icon Color",
+        "id": "save_color",
+        "default": "#1F1209"
+      },
+      {
+        "type": "color",
+        "label": "Card Time Color",
+        "id": "time_color",
+        "default": "#1F1209"
+      },
+      {
+        "type": "header",
+        "content": "Arrow Colors"
+      },
+      {
+        "type": "color",
+        "label": "Arrow color",
+        "id": "arrow_color",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "label": "Arrow Hover color",
+        "id": "arrow_hover_color",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "label": "Arrow Background color",
+        "id": "arrow_bg_color",
+        "default": "#111111"
+      },
+      {
+        "type": "color",
+        "label": "Arrow Background Hover color",
+        "id": "arrow_bg_hover_color",
+        "default": "#454545"
+      },
+      {
+        "type": "color",
+        "label": "Arrow Border color",
+        "id": "arrow_border_color",
+        "default": "#111111"
+      },
+      {
+        "type": "color",
+        "label": "Arrow Border Hover color",
+        "id": "arrow_border_hover_color",
+        "default": "#454545"
+      },
+      {
+        "type": "header",
+        "content": "Scrollbar Colors"
+      },
+      {
+        "type": "color",
+        "label": "Scrollbar Background color",
+        "id": "scrollbar_bg_color",
+        "default": "#D2D5D8"
+      },
+      {
+        "type": "color",
+        "label": "Scrollbar Drag Color",
+        "id": "scrollbar_drag_bg_color",
+        "default": "#111111"
+      },
+      {
+        "type": "header",
+        "content": "Section Colors"
+      },
+      {
+        "type": "color",
+        "label": "Heading Color",
+        "id": "heading_color",
+        "default": "#1F1209"
+      },
+      {
+        "type": "color",
+        "label": "Section background",
+        "id": "background_color",
+        "default": "#FCF7F1"
+      },
+      {
+        "type": "color_background",
+        "id": "background_gradient",
+        "label": "Section background gradient"
+      },
+      {
+        "type": "color",
+        "label": "Border",
+        "id": "border_color",
+        "default": "#000000"
+      },
+      {
+        "type": "header",
+        "content": "Section margin (outside)"
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin top",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin bottom",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Section padding (inside)"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "Padding top",
+        "default": 36
+      },
+      {
+         "type": "range",
+         "id": "padding_bottom",
+         "min": 0,
+         "max": 100,
+         "step": 4,
+         "unit": "px",
+         "label": "Padding bottom",
+         "default": 36
+      },
+      {
+        "type": "range",
+        "id": "padding_horizontal",
+        "min": 0,
+        "max": 30,
+        "step": 1,
+        "unit": "rem",
+        "label": "Padding sides",
+        "default": 5
+      },
+      {
+        "type": "range",
+        "id": "padding_horizontal_mobile",
+        "min": 0,
+        "max": 15,
+        "step": 0.5,
+        "unit": "rem",
+        "label": "Padding sides mobile",
+        "default": 1.5
+      },
+      {
+        "type": "header",
+        "content": "Section Settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "full_width",
+        "label": "Full Width",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "content_width",
+        "min": 0,
+        "max": 400,
+        "step": 10,
+        "unit": "rem",
+        "label": "Section content width",
+        "default": 150
+      },
+      {
+        "type": "range",
+        "id": "border_thickness",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "unit": "px",
+        "label": "Border thickness",
+        "default": 0
+      },
+      {
+        "type": "checkbox",
+        "id": "lazy",
+        "label": "Lazy load",
+        "info": "Lazy load images for speed optimisation",
+        "default": true
+      }
+    ],
+    "blocks": [
+      {
+        "type": "instafeed",
+        "name": "Instafeed",
+        "settings": [
+          {
+            "type": "text",
+            "id": "place",
+            "label": "Location",
+            "default": "Copenhagen, Denmark"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "id": "time",
+            "label": "Time",
+            "default": "Dec 29th, 2023"
+          },
+          {
+            "type": "url",
+            "id": "url",
+            "label": "Url"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "SS - Instafeed #3",
+        "blocks": [
+          {
+            "type": "instafeed"
+          },
+          {
+            "type": "instafeed"
+          },
+          {
+            "type": "instafeed"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

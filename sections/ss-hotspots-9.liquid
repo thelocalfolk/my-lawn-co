@@ -1,0 +1,1429 @@
+ {% comment %}
+---------------------------------------------------------
+Copyright © 2025 Section Store. All rights reserved.
+Unauthorized copying, modification, distribution, or use
+of this code or any portion of it, is strictly prohibited.
+Violators will be prosecuted to the fullest extent of the law.
+For inquiries or permissions, contact daniel@section.store
+---------------------------------------------------------
+{% endcomment %}
+
+{%- liquid 
+  assign padding_horizontal = section.settings.padding_horizontal
+  assign padding_horizontal_mobile = section.settings.padding_horizontal_mobile
+  assign padding_top = section.settings.padding_top
+  assign padding_bottom = section.settings.padding_bottom
+  assign border_color = section.settings.border_color
+  assign border_thickness = section.settings.border_thickness
+  assign margin_top = section.settings.margin_top
+  assign margin_bottom = section.settings.margin_bottom
+  assign margin_horizontal_mobile = section.settings.margin_horizontal_mobile
+  assign margin_horizontal = section.settings.margin_horizontal
+  assign background_color = section.settings.background_color
+  assign background_gradient = section.settings.background_gradient
+  assign full_width = section.settings.full_width
+  assign content_width = section.settings.content_width
+  assign lazy = section.settings.lazy
+  assign section_radius = section.settings.section_radius  
+
+  assign block_size = section.blocks.size | divided_by: 2
+
+  assign heading = section.settings.heading
+  assign heading_size = section.settings.heading_size
+  assign heading_size_mobile = section.settings.heading_size_mobile
+  assign heading_custom = section.settings.heading_custom
+  assign heading_font = section.settings.heading_font
+  assign heading_height = section.settings.heading_height
+  assign heading_color = section.settings.heading_color
+  assign heading_align = section.settings.heading_align
+  assign heading_align_mobile = section.settings.heading_align_mobile
+
+  assign layout_gap = section.settings.layout_gap
+  assign layout_gap_mobile = section.settings.layout_gap_mobile
+  assign layout_mt = section.settings.layout_mt
+  assign layout_mt_mobile = section.settings.layout_mt_mobile
+
+  assign item_align = section.settings.item_align
+  assign item_align_mobile = section.settings.item_align_mobile
+
+  assign item_horizontal_align = ""
+  if item_align == "center"
+    assign item_horizontal_align = "center"
+  elsif item_align == "right"
+    assign item_horizontal_align = "end"
+  else
+    assign item_horizontal_align = "start"
+  endif
+
+  assign item_horizontal_align_mobile = ""
+  if item_align_mobile == "center"
+    assign item_horizontal_align_mobile = "center"
+  elsif item_align_mobile == "right"
+    assign item_horizontal_align_mobile = "end"
+  else
+    assign item_horizontal_align_mobile = "start"
+  endif
+
+  assign number_size = section.settings.number_size
+  assign number_size_mobile = section.settings.number_size_mobile
+  assign number_custom = section.settings.number_custom
+  assign number_font = section.settings.number_font
+  assign number_height = section.settings.number_height
+  assign number_color = section.settings.number_color
+  assign number_bg_color = section.settings.number_bg_color
+  assign number_radius = section.settings.number_radius
+
+  assign title_size = section.settings.title_size
+  assign title_size_mobile = section.settings.title_size_mobile
+  assign title_custom = section.settings.title_custom
+  assign title_font = section.settings.title_font
+  assign title_height = section.settings.title_height
+  assign title_color = section.settings.title_color
+  assign title_bg_color = section.settings.title_bg_color
+  assign title_padding_horizontal = section.settings.title_padding_horizontal
+  assign title_padding_horizontal_mobile = section.settings.title_padding_horizontal_mobile
+  assign title_padding_vertical = section.settings.title_padding_vertical
+  assign title_padding_vertical_mobile = section.settings.title_padding_vertical_mobile
+  assign title_radius = section.settings.title_radius
+
+  assign text_size = section.settings.text_size
+  assign text_size_mobile = section.settings.text_size_mobile
+  assign text_custom = section.settings.text_custom
+  assign text_font = section.settings.text_font
+  assign text_height = section.settings.text_height
+  assign text_color = section.settings.text_color
+  assign text_mt = section.settings.text_mt
+  assign text_mt_mobile = section.settings.text_mt_mobile
+
+  assign image = section.settings.image
+  assign image_ratio = section.settings.image_ratio
+  assign image_ratio_mobile = section.settings.image_ratio_mobile
+  assign image_border_thickness = section.settings.image_border_thickness
+  assign image_border_color = section.settings.image_border_color
+  assign image_radius = section.settings.image_radius
+
+  assign hotspot_number_size = section.settings.hotspot_number_size
+  assign hotspot_number_size_mobile = section.settings.hotspot_number_size_mobile
+  assign hotspot_number_custom = section.settings.hotspot_number_custom
+  assign hotspot_number_font = section.settings.hotspot_number_font
+  assign hotspot_number_height = section.settings.hotspot_number_height
+  assign hotspot_number_color = section.settings.hotspot_number_color
+  assign hotspot_number_border_thickness = section.settings.hotspot_number_border_thickness
+  assign hotspot_number_border_color = section.settings.hotspot_number_border_color
+  assign hotspot_number_bg_color = section.settings.hotspot_number_bg_color
+  assign hotspot_number_radius = section.settings.hotspot_number_radius
+
+  assign loading_attribute = 'eager'
+  if lazy
+    assign loading_attribute = 'lazy'
+  endif
+
+  assign img_alt = image.alt | default: heading | escape
+
+  if image_ratio == "portrait"
+    assign aspect_ratio = 9.6 | divided_by: 13
+    assign calculated_width = 600
+    assign calculated_height = 600 | divided_by: aspect_ratio | round
+  elsif image_ratio == "landscape"
+    assign aspect_ratio = 12 | divided_by: 8
+    assign calculated_width = 600
+    assign calculated_height = 600 | divided_by: aspect_ratio | round
+  elsif image_ratio == "square"
+    assign calculated_width = 600
+    assign calculated_height = 600
+  else
+    # For original ratio, use the actual image dimensions or fall back to a default
+    assign calculated_width = image.width | default: 600
+    assign calculated_height = image.height | default: 400
+  endif
+
+  capture sizes
+    echo "(min-width: " | append: content_width | append: "px) " | append: content_width | minus: 100 | divided_by: 2 | append: "px, "
+    echo "(min-width: 750px) calc((100vw - 130px) / 2), "
+    echo "calc((100vw - 50px) / 2)"
+  endcapture
+  
+-%}
+
+{%- style -%}
+  {{  heading_font | font_face: font_display: 'swap' }}
+  {{  number_font | font_face: font_display: 'swap' }}
+  {{  title_font | font_face: font_display: 'swap' }}
+  {{  text_font | font_face: font_display: 'swap' }}
+  {{  hotspot_number_font | font_face: font_display: 'swap' }}
+
+  .section-{{ section.id }} {
+    border-top: solid {{ border_color }} {{ border_thickness }}px;
+    border-bottom: solid {{ border_color }} {{ border_thickness }}px;
+    margin-top: {{ margin_top | times: 0.75 | round: 0 }}px;
+    margin-bottom: {{ margin_bottom | times: 0.75 | round: 0 }}px;
+    margin-left: {{ margin_horizontal_mobile }}rem;
+    margin-right: {{ margin_horizontal_mobile }}rem;
+    border-radius: {{ section_radius | times: 0.6 | round: 0 }}px;
+    overflow: hidden;
+  }
+
+  .section-{{ section.id }}-settings {
+    margin: 0 auto;
+    padding-top: {{ padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ padding_bottom | times: 0.75 | round: 0 }}px;
+    padding-left: {{ padding_horizontal_mobile }}rem;
+    padding-right: {{ padding_horizontal_mobile }}rem;
+  }
+
+  .hotspot-heading-{{ section.id }} {
+    text-align: {{ heading_align_mobile }};
+  }
+
+  .hotspot-heading-{{ section.id }} * {
+    margin: 0;
+    font-size: {{ heading_size_mobile }}px;
+    color: {{ heading_color }};
+    line-height: {{ heading_height }}%;
+    text-transform: unset;
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  .hotspot-body-{{ section.id }} {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: {{ layout_gap_mobile }}px;
+    margin-top: {{ layout_mt_mobile }}px;
+  }
+
+  .hotspot-hotspots-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    gap: 20px;
+  }
+
+  .hotspot-item-top-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: {{ item_horizontal_align_mobile }};
+    gap: 5px;
+  }
+
+  .hotspot-number-{{ section.id }} {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: {{ number_size_mobile | times: 2 }}px;
+    height: {{ number_size_mobile | times: 2 }}px;
+    border-radius: {{ number_radius | times: 0.5 }}%;
+    background-color: {{ number_bg_color }};
+    font-size: {{ number_size_mobile }}px;
+    color: {{ number_color }};
+    line-height: {{ number_height }}%;
+    text-transform: unset;
+    text-wrap: wrap;
+    word-break: break-word;
+    font-weight: 700;
+  }
+
+  .hotspot-title-{{ section.id }} {
+    margin: 0;
+    text-align: {{ item_align_mobile }};
+    padding: {{ title_padding_vertical_mobile }}px {{ title_padding_horizontal_mobile }}px;
+    border-radius: {{ title_radius }}px;
+    background-color: {{ title_bg_color }};
+    font-size: {{ title_size_mobile }}px;
+    color: {{ title_color }};
+    line-height: {{ title_height }}%;
+    text-transform: unset;
+    text-wrap: wrap;
+    word-break: break-word;
+    font-weight: 700;
+  }
+
+  .hotspot-text-{{ section.id }} {
+    margin-top: {{ text_mt_mobile }}px;
+    text-align: {{ item_align_mobile }};
+  }
+
+  .hotspot-text-{{ section.id }} * {
+    margin: 0;
+    font-size: {{ text_size_mobile }}px;
+    color: {{ text_color }};
+    line-height: {{ text_height }}%;
+    text-transform: unset;
+    text-wrap: wrap;
+    word-break: break-word;
+  }
+
+  .hotspot-image-wrapper-{{ section.id }} {
+    position: relative;
+  }
+
+  .hotspot-image-{{ section.id }} {
+    border: {{ image_border_thickness }}px solid {{ image_border_color }};
+    border-radius: {{ image_radius }}px;
+    overflow: hidden;    
+  }
+
+  .hotspot-image-{{ section.id }} img,
+  .hotspot-image-{{ section.id }} svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hotspot-image-{{ section.id }} svg {
+    background-color: #AFAFAF;
+  }
+
+  .hotspot-item-number-{{ section.id }} {
+    padding: 2px;
+    border: {{ hotspot_number_border_thickness }}px solid {{ hotspot_number_border_color }};
+    border-radius: {{ hotspot_number_radius | times: 0.5 }}%;
+  }
+
+  .hotspot-item-number-{{ section.id }} * {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: {{ hotspot_number_size_mobile | times: 2 }}px;
+    height: {{ hotspot_number_size_mobile | times: 2 }}px;
+    border-radius: {{ hotspot_number_radius | times: 0.5 }}%;
+    background-color: {{ hotspot_number_bg_color }};
+    font-size: {{ hotspot_number_size_mobile }}px;
+    color: {{ hotspot_number_color }};
+    line-height: {{ hotspot_number_height }}%;
+    text-transform: unset;
+    text-wrap: wrap;
+    word-break: break-word;
+    font-weight: 700;
+  }
+
+  @media(min-width: 1024px) {
+
+    .section-{{ section.id }} {
+      margin-top: {{ margin_top }}px;
+      margin-bottom: {{ margin_bottom }}px;
+      margin-left: {{ margin_horizontal }}rem;
+      margin-right: {{ margin_horizontal }}rem;
+      border-radius: {{ section_radius }}px;
+    }
+    
+    .section-{{ section.id }}-settings {
+      padding: 0 5rem;
+      padding-top: {{ padding_top }}px;
+      padding-bottom: {{ padding_bottom }}px;
+      padding-left: {{ padding_horizontal }}rem;
+      padding-right: {{ padding_horizontal }}rem;
+    }
+
+    .hotspot-heading-{{ section.id }} {
+      text-align: {{ heading_align }};
+    }
+
+    .hotspot-heading-{{ section.id }} * {
+      font-size: {{ heading_size }}px;
+    }
+    
+    .hotspot-body-{{ section.id }} {
+      grid-template-columns: repeat(3, 1fr);
+      gap: {{ layout_gap }}px;
+      margin-top: {{ layout_mt }}px;
+    }
+
+    .hotspot-number-{{ section.id }} {
+      width: {{ number_size | times: 2 }}px;
+      height: {{ number_size | times: 2 }}px;
+      font-size: {{ number_size }}px;
+    }
+
+    .hotspot-title-{{ section.id }} {
+      padding: {{ title_padding_vertical }}px {{ title_padding_horizontal }}px;
+      font-size: {{ title_size }}px;
+      text-align: {{ item_align }};
+    }
+
+    .hotspot-text-{{ section.id }} {
+      margin-top: {{ text_mt }}px;
+      text-align: {{ item_align }};
+    }
+
+    .hotspot-text-{{ section.id }} * {
+      font-size: {{ text_size }}px;
+    }
+
+    .hotspot-item-top-{{ section.id }} {
+      justify-content: {{ item_horizontal_align }};
+    }
+
+    .hotspot-item-number-{{ section.id }} * {
+      width: {{ hotspot_number_size | times: 2 }}px;
+      height: {{ hotspot_number_size | times: 2 }}px;     
+      font-size: {{ hotspot_number_size }}px;
+    }
+  }
+
+  {%- endstyle -%}
+
+  {% unless full_width %}
+  <style>
+    .section-{{ section.id }}-settings {
+      max-width: {{ content_width }}px;
+    }
+  </style>
+  {% endunless %}
+
+  {% if margin_horizontal_mobile > 0 %}
+  <style>
+    .section-{{ section.id }} {
+      border-left: solid {{ border_color }} {{ border_thickness }}px;
+      border-right: solid {{ border_color }} {{ border_thickness }}px;
+    }
+    
+    @media(min-width: 1024px) {
+      .section-{{ section.id }} {
+        border-left: 0px;
+        border-right: 0px;
+      }
+    }
+  </style>
+  {% endif %}
+
+  {% if margin_horizontal > 0 %}
+  <style>
+    @media(min-width: 1024px) {
+      .section-{{ section.id }} {
+        border-left: solid {{ border_color }} {{ border_thickness }}px;
+        border-right: solid {{ border_color }} {{ border_thickness }}px;
+      }
+    }
+  </style>
+  {% endif %}
+  
+  {% if heading_custom %}
+    <style>
+      .hotspot-heading-{{ section.id }} * {
+        font-family: {{ heading_font.family }}, {{ heading_font.fallback_families }};
+        font-weight: {{ heading_font.weight }};
+        font-style: {{ heading_font.style }};
+      }
+    </style>
+  {% endif %}
+
+  {% if number_custom %}
+    <style>
+      .hotspot-number-{{ section.id }} {
+        font-family: {{ number_font.family }}, {{ number_font.fallback_families }};
+        font-weight: {{ number_font.weight }};
+        font-style: {{ number_font.style }};
+      }
+    </style>
+  {% endif %}
+
+  {% if title_custom %}
+    <style>
+      .hotspot-title-{{ section.id }} {
+        font-family: {{ title_font.family }}, {{ title_font.fallback_families }};
+        font-weight: {{ title_font.weight }};
+        font-style: {{ title_font.style }};
+      }
+    </style>
+  {% endif %}
+
+  {% if text_custom %}
+    <style>
+      .hotspot-text-{{ section.id }} * {
+        font-family: {{ text_font.family }}, {{ text_font.fallback_families }};
+        font-weight: {{ text_font.weight }};
+        font-style: {{ text_font.style }};
+      }
+    </style>
+  {% endif %}
+
+  {% if hotspot_number_custom %}
+    <style>
+      .hotspot-item-number-{{ section.id }} * {
+        font-family: {{ hotspot_number_font.family }}, {{ hotspot_number_font.fallback_families }};
+        font-weight: {{ hotspot_number_font.weight }};
+        font-style: {{ hotspot_number_font.style }};
+      }
+    </style>
+  {% endif %}
+
+  {% if image_ratio_mobile == "portrait" %}
+    <style>
+      .hotspot-image-{{ section.id }} {
+        aspect-ratio: 9.6/13;
+      }
+    </style>
+  {% elsif image_ratio_mobile == "landscape" %}
+    <style>
+    .hotspot-image-{{ section.id }} {
+      aspect-ratio: 12/8;
+    }
+    </style>
+  {% elsif image_ratio_mobile == "square" %}
+    <style>
+      .hotspot-image-{{ section.id }} {
+        aspect-ratio: 12/12;
+      }
+    </style>
+  {% else %}
+    <style>
+      .hotspot-image-{{ section.id }} {
+        aspect-ratio: auto;
+      }
+    </style>
+  {% endif %}
+  
+  {% if image_ratio == "portrait" %}
+    <style>
+      @media(min-width: 1024px) {
+        .hotspot-image-{{ section.id }} {
+          aspect-ratio: 9.6/13;
+        }
+      }
+      
+    </style>
+  {% elsif image_ratio == "landscape" %}
+    <style>
+      @media(min-width: 1024px) {
+        .hotspot-image-{{ section.id }} {
+          aspect-ratio: 12/8;
+        }
+      }  
+    </style>
+  {% elsif image_ratio == "square" %}
+    <style>
+      @media(min-width: 1024px) {
+        .hotspot-image-{{ section.id }} {
+          aspect-ratio: 12/12;
+        }
+      }    
+    </style>
+  {% else %}
+    <style>
+       @media(min-width: 1024px) {
+        .hotspot-image-{{ section.id }} {
+          aspect-ratio: auto;
+        }
+      }
+    </style>
+  {% endif %}
+
+  {% for block in section.blocks %}
+    <style>
+      .hotspot-item-number-{{ block.id }} {
+        position: absolute;
+        z-index: 2;
+        top: {{ block.settings.vertical_position_mobile }}%;
+        left: {{ block.settings.horizontal_position_mobile }}%;
+        transform: translate(-{{ block.settings.horizontal_position_mobile }}%, -{{ block.settings.vertical_position_mobile }}%)
+      }
+
+      @media(min-width: 1024px) {
+        .hotspot-item-number-{{ block.id }} {
+          top: {{ block.settings.vertical_position }}%;
+          left: {{ block.settings.horizontal_position }}%;
+          transform: translate(-{{ block.settings.horizontal_position }}%, -{{ block.settings.vertical_position }}%)
+        }
+      }
+    </style>
+  {% endfor %}
+
+<div class="section-{{ section.id }} hotspot-{{ section.id }}" style="background-color:{{ background_color }}; background-image: {{ background_gradient }};">
+  <div class="section-{{ section.id }}-settings">
+    {% if heading != blank %}
+      <div class="hotspot-heading-{{ section.id }}">{{ heading }}</div>
+    {% endif %}
+    <div class="hotspot-body-{{ section.id }}">
+      {% assign index = 0 %}
+      <div class="hotspot-hotspots-{{ section.id }}">
+        {% for block in section.blocks limit: block_size %}
+          {% assign index = index | plus: 1 %}
+          <div class="hotspot-item-{{ section.id }}">
+            <div class="hotspot-item-top-{{ section.id }}">
+              <p class="hotspot-number-{{ section.id }}">{{ index }}</p>
+              {% if block.settings.title != blank %}
+                <p class="hotspot-title-{{ section.id }}">{{ block.settings.title }}</p>
+              {% endif %}
+            </div>           
+            {% if block.settings.text != blank %}     
+              <div class="hotspot-text-{{ section.id }}">{{ block.settings.text }}</div>
+            {% endif %}
+          </div>         
+        {% endfor %}
+      </div>
+      <div class="hotspot-image-wrapper-{{ section.id }}">
+        <div class="hotspot-image-{{ section.id }}">
+          {% if image != blank %}
+                {{ image | image_url: width: 750 | image_tag:
+                  loading: loading_attribute,
+                  sizes: sizes,
+                  widths: '165, 360, 535, 750, 1070, 1500',
+                  height: calculated_height,
+                  width: calculated_width,
+                  alt: img_alt
+                }}   
+          {% else %}
+            {{ 'image' | placeholder_svg_tag }}
+          {% endif %}      
+        </div>
+        {% for block in section.blocks %}
+          <div class="hotspot-item-number-{{ section.id }} hotspot-item-number-{{ block.id }}"><p>{{ forloop.index }}</p></div>
+        {% endfor %}
+      </div>
+      <div class="hotspot-hotspots-{{ section.id }}">
+        {% for block in section.blocks offset: block_size %}
+          {% assign index = index | plus: 1 %}
+          <div class="hotspot-item-{{ section.id }}">
+            <div class="hotspot-item-top-{{ section.id }}">
+              <p class="hotspot-number-{{ section.id }}">{{ index }}</p>
+              {% if block.settings.title != blank %}
+                <p class="hotspot-title-{{ section.id }}">{{ block.settings.title }}</p>
+              {% endif %}
+            </div>     
+            {% if block.settings.text != blank %}     
+              <div class="hotspot-text-{{ section.id }}">{{ block.settings.text }}</div>
+            {% endif %}
+          </div>         
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "SS - Hotspots #9",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Text",
+      "default": "<h2>Hotspot #9</h2>"
+    },
+    {
+      "type": "checkbox",
+      "id": "heading_custom",
+      "label": "Use custom font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Font family",
+      "default": "josefin_sans_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 0,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Font size",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 0,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Font size - mobile",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "heading_height",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "%",
+      "label": "Line height",
+      "default": 130
+    },
+    {
+      "type": "text_alignment",
+      "id": "heading_align",
+      "label": "Alignment",
+      "default": "center"
+    },
+    {
+      "type": "text_alignment",
+      "id": "heading_align_mobile",
+      "label": "Alignment - mobile",
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "layout_gap",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "layout_gap_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap - mobile",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "layout_mt",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "layout_mt_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin top - mobile",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Hotspot content"
+    },
+    {
+      "type": "text_alignment",
+      "id": "item_align",
+      "label": "Alignment"
+    },
+    {
+      "type": "text_alignment",
+      "id": "item_align_mobile",
+      "label": "Alignment - mobile"
+    },
+    {
+      "type": "header",
+      "content": "Number"
+    },
+    {
+      "type": "checkbox",
+      "id": "number_custom",
+      "label": "Use custom font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "number_font",
+      "label": "Font family",
+      "default": "josefin_sans_n4"
+    },
+    {
+      "type": "range",
+      "id": "number_size",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "number_size_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size - mobile",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "number_height",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "%",
+      "label": "Line height",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "number_radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "%",
+      "label": "Roundness",
+      "default": 100
+    }, 
+    {
+      "type": "header",
+      "content": "Title"
+    },
+    {
+      "type": "checkbox",
+      "id": "title_custom",
+      "label": "Use custom font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "title_font",
+      "label": "Font family",
+      "default": "josefin_sans_n4"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size - mobile",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "title_height",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "%",
+      "label": "Line height",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "title_padding_horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding horizontal",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "title_padding_horizontal_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding horizontal - mobile",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "title_padding_vertical",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding vertical",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "title_padding_vertical_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding vertical - mobile",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "title_radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Roundness",
+      "default": 100
+    }, 
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "checkbox",
+      "id": "text_custom",
+      "label": "Use custom font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "text_font",
+      "label": "Font family",
+      "default": "josefin_sans_n4"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size - mobile",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "text_height",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "%",
+      "label": "Line height",
+      "default": 150
+    }, 
+    {
+      "type": "range",
+      "id": "text_mt",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin top",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "text_mt_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin top - mobile",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },  
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    }, 
+    {
+      "type": "range",
+      "id": "image_border_thickness",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Border thickness",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Roundness",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Aspect ratio",
+      "default": "original",
+      "options": [
+        {
+          "label": "Portrait",
+          "value": "portrait"
+        },
+        {
+          "label": "Square",
+          "value": "square"
+        },
+        {
+          "label": "Landscape",
+          "value": "landscape"
+        },
+        {
+          "label": "Original",
+          "value": "original"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "image_ratio_mobile",
+      "label": "Aspect ratio - mobile",
+      "default": "original",
+      "options": [
+        {
+          "label": "Portrait",
+          "value": "portrait"
+        },
+        {
+          "label": "Square",
+          "value": "square"
+        },
+        {
+          "label": "Landscape",
+          "value": "landscape"
+        },
+        {
+          "label": "Original",
+          "value": "original"
+        }
+      ]
+    }, 
+    {
+      "type": "header",
+      "content": "Hotspot number"
+    },
+    {
+      "type": "checkbox",
+      "id": "hotspot_number_custom",
+      "label": "Use custom font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "hotspot_number_font",
+      "label": "Font family",
+      "default": "josefin_sans_n4"
+    },
+    {
+      "type": "range",
+      "id": "hotspot_number_size",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "hotspot_number_size_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size - mobile",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "hotspot_number_height",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "%",
+      "label": "Line height",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "hotspot_number_radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "%",
+      "label": "Roundness",
+      "default": 100
+    }, 
+    {
+      "type": "range",
+      "id": "hotspot_number_border_thickness",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Border thickness",
+      "default": 1
+    },  
+    {
+      "type": "header",
+      "content": "Hotspot content colors"
+    },
+    {
+      "type": "color",
+      "label": "Number",
+      "id": "number_color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "label": "Number background",
+      "id": "number_bg_color",
+      "default": "#F3F3F3"
+    },
+    {
+      "type": "color",
+      "label": "Title",
+      "id": "title_color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "label": "Title background",
+      "id": "title_bg_color",
+      "default": "#F3F3F3"
+    },
+    {
+      "type": "color",
+      "label": "Text",
+      "id": "text_color",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Hotspot number colors"
+    },
+    {
+      "type": "color",
+      "label": "Number",
+      "id": "hotspot_number_color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "label": "Background",
+      "id": "hotspot_number_bg_color",
+      "default": "#F3F3F3"
+    },
+    {
+      "type": "color",
+      "label": "Border",
+      "id": "hotspot_number_border_color",
+      "default": "#F3F3F3"
+    },
+    {
+      "type": "header",
+      "content": "Section colors"
+    },
+    {
+      "type": "color",
+      "label": "Heading",
+      "id": "heading_color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "label": "Image border",
+      "id": "image_border_color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "label": "Section background",
+      "id": "background_color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Section background gradient",
+      "info": "Remove gradient to replace with solid colors"
+    },
+    {
+      "type": "color",
+      "label": "Border",
+      "id": "border_color",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Section margin (outside)"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_horizontal",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "rem",
+      "label": "Margin sides",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_horizontal_mobile",
+      "min": 0,
+      "max": 15,
+      "step": 0.5,
+      "unit": "rem",
+      "label": "Margin sides mobile",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section padding (inside)"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 36
+    },
+    {
+       "type": "range",
+       "id": "padding_bottom",
+       "min": 0,
+       "max": 100,
+       "step": 4,
+       "unit": "px",
+       "label": "Padding bottom",
+       "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "rem",
+      "label": "Padding sides",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal_mobile",
+      "min": 0,
+      "max": 15,
+      "step": 0.5,
+      "unit": "rem",
+      "label": "Padding sides mobile",
+      "default": 1.5
+    },
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 800,
+      "max": 2000,
+      "step": 100,
+      "unit": "px",
+      "label": "Section content width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "border_thickness",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Border thickness",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Section roundness",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "lazy",
+      "label": "Lazy load",
+      "info": "Lazy load images for speed optimisation",
+      "default": true
+    }
+  ],
+  "blocks": [     
+    {
+      "type": "hotspot",
+      "name": "Hotspot",
+      "settings": [    
+        {
+          "type": "header",
+          "content": "Content"
+        }, 
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Tell a story, explain a product detail, or describe a new promotion.</p>"
+        },
+        {
+          "type": "header",
+          "content": "Position"
+        }, 
+        {
+          "type": "range",
+          "id": "vertical_position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Vertical position",
+          "default": 10
+        },
+        {
+          "type": "range",
+          "id": "vertical_position_mobile",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Vertical position - mobile",
+          "default": 40
+        },
+        {
+          "type": "range",
+          "id": "horizontal_position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Horizontal position",
+          "default": 35
+        },
+        {
+          "type": "range",
+          "id": "horizontal_position_mobile",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Horizontal position - mobile",
+          "default": 50
+        },
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "SS - Hotspots #9",
+      "blocks": [ 
+          {
+            "type": "hotspot",
+            "settings": {            
+              "vertical_position": 32,
+              "vertical_position_mobile": 60,    
+              "horizontal_position": 10,
+              "horizontal_position_mobile": 32    
+            }
+          },  
+          {
+            "type": "hotspot",
+            "settings": {              
+              "vertical_position": 40,
+              "vertical_position_mobile": 36,
+              "horizontal_position": 50,
+              "horizontal_position_mobile": 50                
+            }
+          },   
+          {
+            "type": "hotspot",
+            "settings": {           
+              "vertical_position": 25,
+              "vertical_position_mobile": 29,
+              "horizontal_position": 30,
+              "horizontal_position_mobile": 30               
+            }
+          },  
+          {
+            "type": "hotspot",
+            "settings": {        
+              "vertical_position": 21,
+              "vertical_position_mobile": 21,
+              "horizontal_position": 90,
+              "horizontal_position_mobile": 90                  
+            }
+          }
+        ]
+    }
+  ]
+}
+{% endschema %}
