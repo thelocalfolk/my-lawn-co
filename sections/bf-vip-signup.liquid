@@ -15,11 +15,23 @@
   #bfvip-{{ sid }} .bfvip__wrap { display: flex; flex-wrap: wrap; align-items: stretch; gap: clamp(24px, 3vw, 48px); padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; }
   #bfvip-{{ sid }} .bfvip__copy { flex: 1.15 1 440px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
   #bfvip-{{ sid }} .bfvip__media { flex: 0.85 1 340px; min-width: 0; position: relative; }
-  #bfvip-{{ sid }} .bfvip__media img { width: 100%; height: 100%; min-height: 320px; object-fit: cover; object-position: 60% 30%; display: block; }
-  @media (max-width: 749px) { #bfvip-{{ sid }} .bfvip__media img { height: 340px; min-height: 0; } }
+  #bfvip-{{ sid }} .bfvip__media > img { width: 100%; height: 100%; min-height: 320px; object-fit: cover; object-position: 60% 30%; display: block; }
+  @media (max-width: 749px) { #bfvip-{{ sid }} .bfvip__media > img { height: 340px; min-height: 0; } }
   #bfvip-{{ sid }} .bfvip__badge { position: absolute; top: 14px; right: 14px; width: 112px; height: 112px; border-radius: 999px; background: var(--leaf); border: 2px solid var(--forest); color: var(--forest); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; line-height: 1; text-transform: uppercase; }
   #bfvip-{{ sid }} .bfvip__badge strong { font-size: 34px; font-weight: 700; letter-spacing: -.02em; }
   #bfvip-{{ sid }} .bfvip__badge span { font-size: 12px; font-weight: 700; letter-spacing: .04em; margin-top: 4px; max-width: 90px; }
+  #bfvip-{{ sid }} .bfvip__props { position: absolute; inset: 0; pointer-events: none; }
+  #bfvip-{{ sid }} .bfvip__guide { position: absolute; left: -20px; bottom: -22px; width: 52%; max-width: 300px; height: auto; min-height: 0; object-fit: contain; transform: rotate(-5deg); filter: drop-shadow(0 10px 18px rgba(13,48,31,.35)); }
+  #bfvip-{{ sid }} .bfvip__voucher { position: absolute; right: -16px; bottom: 7%; width: 46%; max-width: 230px; aspect-ratio: 1.75; transform: rotate(7deg); background: var(--forest); color: #fff; border-radius: 10px; box-shadow: 0 10px 22px rgba(13,48,31,.35); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; line-height: 1; text-transform: uppercase; overflow: hidden; }
+  #bfvip-{{ sid }} .bfvip__voucher::before { content: ""; position: absolute; inset: 7px; border: 1.5px dashed var(--leaf); border-radius: 6px; }
+  #bfvip-{{ sid }} .bfvip__voucher::after { content: ""; position: absolute; top: 50%; left: -11px; right: -11px; height: 22px; margin-top: -11px; background: radial-gradient(circle at 11px 50%, {{ section.settings.bg_color }} 10px, transparent 11px) left / 22px 22px no-repeat, radial-gradient(circle at 11px 50%, {{ section.settings.bg_color }} 10px, transparent 11px) right / 22px 22px no-repeat; }
+  #bfvip-{{ sid }} .bfvip__voucher small { font-size: clamp(9px, .8vw, 11px); font-weight: 700; letter-spacing: .14em; color: var(--leaf); }
+  #bfvip-{{ sid }} .bfvip__voucher strong { font-size: clamp(38px, 4vw, 56px); font-weight: 800; letter-spacing: -.03em; color: var(--leaf); margin: 4px 0 2px; }
+  #bfvip-{{ sid }} .bfvip__voucher span { font-size: clamp(11px, 1vw, 14px); font-weight: 700; letter-spacing: .1em; }
+  @media (max-width: 749px) {
+    #bfvip-{{ sid }} .bfvip__guide { left: 6px; bottom: -14px; width: 46%; }
+    #bfvip-{{ sid }} .bfvip__voucher { right: 6px; bottom: 5%; width: 40%; }
+  }
   #bfvip-{{ sid }} .bfvip__eyebrow { margin: 0; color: var(--forest); font-size: 14px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
   #bfvip-{{ sid }} h1 { margin: 0; color: {{ section.settings.heading_color }}; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.08; letter-spacing: -.01em; font-weight: 700; text-transform: uppercase; }
   #bfvip-{{ sid }} h1 em { font-style: normal; color: {{ section.settings.highlight_color }}; }
@@ -115,6 +127,18 @@
         {{ section.settings.image | image_url: width: 1400 | image_tag: loading: 'eager', sizes: '(min-width: 990px) 600px, 100vw', widths: '600, 900, 1200, 1400', alt: section.settings.image.alt }}
       {%- elsif all_products['rescue-dog-wee-repair'].featured_image != blank -%}
         {{ all_products['rescue-dog-wee-repair'].featured_image | image_url: width: 1400 | image_tag: loading: 'eager', sizes: '(min-width: 990px) 600px, 100vw', alt: 'RESCUE Dog Wee Repair' }}
+      {%- endif -%}
+      {%- if section.settings.show_props -%}
+        <div class="bfvip__props" aria-hidden="true">
+          {%- if section.settings.voucher_amount != blank -%}
+            <div class="bfvip__voucher"><small>{{ section.settings.voucher_top | escape }}</small><strong>{{ section.settings.voucher_amount | escape }}</strong><span>{{ section.settings.voucher_label | escape }}</span></div>
+          {%- endif -%}
+          {%- if section.settings.guide_image != blank -%}
+            {{ section.settings.guide_image | image_url: width: 700 | image_tag: class: 'bfvip__guide', loading: 'eager', alt: '' }}
+          {%- else -%}
+            <img class="bfvip__guide" src="{{ 'bf-vip-guide.png' | asset_url }}" width="640" height="506" alt="" loading="eager">
+          {%- endif -%}
+        </div>
       {%- endif -%}
       {%- if section.settings.badge_big != blank -%}
         <div class="bfvip__badge" aria-hidden="true"><strong>{{ section.settings.badge_big | escape }}</strong><span>{{ section.settings.badge_small | escape }}</span></div>
@@ -241,6 +265,11 @@
     { "type": "image_picker", "id": "image", "label": "Image" },
     { "type": "text", "id": "badge_big", "label": "Badge large text", "default": "$60" },
     { "type": "text", "id": "badge_small", "label": "Badge small text", "default": "FREE BONUSES" },
+    { "type": "checkbox", "id": "show_props", "label": "Show voucher and guide around the image", "default": true },
+    { "type": "image_picker", "id": "guide_image", "label": "Guide image (transparent PNG)", "info": "Leave blank to use the Ultimate Lawn Program guide." },
+    { "type": "text", "id": "voucher_top", "label": "Voucher top line", "default": "My Lawn Co." },
+    { "type": "text", "id": "voucher_amount", "label": "Voucher amount", "default": "$20" },
+    { "type": "text", "id": "voucher_label", "label": "Voucher label", "default": "Gift voucher" },
     { "type": "header", "content": "Style" },
     { "type": "color", "id": "bg_color", "label": "Background", "default": "#F7F5E9" },
     { "type": "color", "id": "accent_color", "label": "Accent (box, button, badge)", "default": "#70C27A" },
