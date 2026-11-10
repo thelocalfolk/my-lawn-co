@@ -33,8 +33,11 @@
     #bfvip-{{ sid }} .bfvip__voucher { right: 6px; bottom: 5%; width: 40%; }
   }
   #bfvip-{{ sid }} .bfvip__eyebrow { margin: 0; color: var(--forest); font-size: 14px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-  #bfvip-{{ sid }} h1 { margin: 0; color: {{ section.settings.heading_color }}; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.08; letter-spacing: -.01em; font-weight: 700; text-transform: uppercase; }
-  #bfvip-{{ sid }} h1 em { font-style: normal; color: {{ section.settings.highlight_color }}; }
+  #bfvip-{{ sid }} h1 { margin: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; font-weight: 700; text-transform: uppercase; line-height: 1; }
+  #bfvip-{{ sid }} .bfvip__h-kicker { color: var(--forest); font-size: clamp(20px, 2vw, 28px); letter-spacing: .01em; }
+  #bfvip-{{ sid }} .bfvip__h-big { color: {{ section.settings.heading_color }}; font-size: clamp(44px, 5.2vw, 76px); font-weight: 800; line-height: 1; letter-spacing: 0; -webkit-text-stroke: 1.5px var(--forest); paint-order: stroke fill; }
+  #bfvip-{{ sid }} .bfvip__h-sub { color: {{ section.settings.highlight_color }}; font-size: clamp(20px, 2vw, 28px); letter-spacing: .01em; margin-top: 4px; }
+  #bfvip-{{ sid }} .bfvip__h-sub mark { background: var(--leaf); color: var(--forest); padding: 0 .2em; border-radius: 4px; }
   #bfvip-{{ sid }} .bfvip__sub { margin: 0; font-size: 16px; line-height: 1.45; color: var(--ink); max-width: 560px; }
   #bfvip-{{ sid }} .bfvip__sub p { margin: 0; }
   #bfvip-{{ sid }} .bfvip__box { max-width: 560px; padding: 4px 0; }
@@ -72,7 +75,11 @@
       {%- if section.settings.eyebrow != blank -%}
         <p class="bfvip__eyebrow">{{ section.settings.eyebrow | escape }}</p>
       {%- endif -%}
-      <h1>{{ section.settings.heading }}</h1>
+      <h1>
+        {%- if section.settings.heading_kicker != blank -%}<span class="bfvip__h-kicker">{{ section.settings.heading_kicker }}</span>{%- endif -%}
+        <span class="bfvip__h-big">{{ section.settings.heading_big }}</span>
+        {%- if section.settings.heading_sub != blank -%}<span class="bfvip__h-sub">{{ section.settings.heading_sub }}</span>{%- endif -%}
+      </h1>
       {%- if section.settings.subheading != blank -%}
         <div class="bfvip__sub">{{ section.settings.subheading }}</div>
       {%- endif -%}
@@ -252,7 +259,9 @@
     { "type": "text", "id": "source_label", "label": "Sign-up source label", "default": "BFCM 2026 VIP page" },
     { "type": "header", "content": "Content" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "VIP early access · Black Friday 2026" },
-    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "VIPs shop 30% off first. <em>Plus $60 in free bonuses.</em>" },
+    { "type": "inline_richtext", "id": "heading_kicker", "label": "Heading small line above (optional)" },
+    { "type": "inline_richtext", "id": "heading_big", "label": "Heading (big)", "default": "VIPs shop 30% off first." },
+    { "type": "inline_richtext", "id": "heading_sub", "label": "Heading second line (smaller)", "default": "Plus $60 in free bonuses" },
     { "type": "richtext", "id": "subheading", "label": "Subheading", "default": "<p>Join the list for early access on Friday 20 November, a day before everyone else.</p>" },
     { "type": "text", "id": "perks_title", "label": "Perks box title", "default": "VIP day only: Friday 20 November" },
     { "type": "text", "id": "button_label", "label": "Button label", "default": "Get VIP access" },
@@ -273,8 +282,8 @@
     { "type": "header", "content": "Style" },
     { "type": "color", "id": "bg_color", "label": "Background", "default": "#F7F5E9" },
     { "type": "color", "id": "accent_color", "label": "Accent (box, button, badge)", "default": "#70C27A" },
-    { "type": "color", "id": "heading_color", "label": "Heading", "default": "#70C27A" },
-    { "type": "color", "id": "highlight_color", "label": "Heading highlight", "default": "#0B552B" },
+    { "type": "color", "id": "heading_color", "label": "Big heading line", "default": "#70C27A" },
+    { "type": "color", "id": "highlight_color", "label": "Heading second line", "default": "#0B552B" },
     { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 32 },
     { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 40 }
   ],
