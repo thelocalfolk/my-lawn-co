@@ -12,11 +12,12 @@
 
 <style>
   #bfvip-{{ sid }} { --forest: #0D301F; --ink: #1D1E20; --leaf: {{ accent }}; --sky: #B5CFEE; background: {{ section.settings.bg_color }}; color: var(--ink); }
-  #bfvip-{{ sid }} .bfvip__wrap { display: flex; flex-wrap: wrap; align-items: center; gap: clamp(24px, 3vw, 48px); padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; }
+  #bfvip-{{ sid }} .bfvip__wrap { display: flex; flex-wrap: wrap; align-items: stretch; gap: clamp(24px, 3vw, 48px); padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; }
   #bfvip-{{ sid }} .bfvip__copy { flex: 1.15 1 440px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
   #bfvip-{{ sid }} .bfvip__media { flex: 0.85 1 340px; min-width: 0; position: relative; }
-  #bfvip-{{ sid }} .bfvip__media img { width: 100%; height: clamp(240px, 30vw, 440px); object-fit: cover; display: block; }
-  #bfvip-{{ sid }} .bfvip__badge { position: absolute; top: -14px; right: -8px; width: 112px; height: 112px; border-radius: 999px; background: var(--leaf); border: 2px solid var(--forest); color: var(--forest); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; line-height: 1; text-transform: uppercase; }
+  #bfvip-{{ sid }} .bfvip__media img { width: 100%; height: 100%; min-height: 320px; object-fit: cover; object-position: 60% 30%; display: block; }
+  @media (max-width: 749px) { #bfvip-{{ sid }} .bfvip__media img { height: 340px; min-height: 0; } }
+  #bfvip-{{ sid }} .bfvip__badge { position: absolute; top: 14px; right: 14px; width: 112px; height: 112px; border-radius: 999px; background: var(--leaf); border: 2px solid var(--forest); color: var(--forest); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; line-height: 1; text-transform: uppercase; }
   #bfvip-{{ sid }} .bfvip__badge strong { font-size: 34px; font-weight: 700; letter-spacing: -.02em; }
   #bfvip-{{ sid }} .bfvip__badge span { font-size: 12px; font-weight: 700; letter-spacing: .04em; margin-top: 4px; max-width: 90px; }
   #bfvip-{{ sid }} .bfvip__eyebrow { margin: 0; color: var(--forest); font-size: 14px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
