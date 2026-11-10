@@ -21,7 +21,7 @@
   #bfvip-{{ sid }} .bfvip__badge strong { font-size: 34px; font-weight: 700; letter-spacing: -.02em; }
   #bfvip-{{ sid }} .bfvip__badge span { font-size: 12px; font-weight: 700; letter-spacing: .04em; margin-top: 4px; max-width: 90px; }
   #bfvip-{{ sid }} .bfvip__eyebrow { margin: 0; color: var(--forest); font-size: 14px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-  #bfvip-{{ sid }} h1 { margin: 0; color: var(--forest); font-size: clamp(28px, 3.2vw, 44px); line-height: 1.08; letter-spacing: -.01em; font-weight: 700; text-transform: uppercase; }
+  #bfvip-{{ sid }} h1 { margin: 0; color: {{ section.settings.heading_color }}; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.08; letter-spacing: -.01em; font-weight: 700; text-transform: uppercase; }
   #bfvip-{{ sid }} h1 em { font-style: normal; color: {{ section.settings.highlight_color }}; }
   #bfvip-{{ sid }} .bfvip__sub { margin: 0; font-size: 16px; line-height: 1.45; color: var(--ink); max-width: 560px; }
   #bfvip-{{ sid }} .bfvip__sub p { margin: 0; }
@@ -244,6 +244,7 @@
     { "type": "header", "content": "Style" },
     { "type": "color", "id": "bg_color", "label": "Background", "default": "#F7F5E9" },
     { "type": "color", "id": "accent_color", "label": "Accent (box, button, badge)", "default": "#70C27A" },
+    { "type": "color", "id": "heading_color", "label": "Heading", "default": "#70C27A" },
     { "type": "color", "id": "highlight_color", "label": "Heading highlight", "default": "#0B552B" },
     { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 32 },
     { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 40 }
