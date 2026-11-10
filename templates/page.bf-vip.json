@@ -1,0 +1,36 @@
+{
+  "sections": {
+    "vip": {
+      "type": "bf-vip-signup",
+      "blocks": {
+        "perk1": {
+          "type": "perk",
+          "settings": {
+            "text": "30% off everything, before anyone else"
+          }
+        },
+        "perk2": {
+          "type": "perk",
+          "settings": {
+            "text": "Free $20 gift voucher"
+          }
+        },
+        "perk3": {
+          "type": "perk",
+          "settings": {
+            "text": "Free Yearly Lawn Program, worth $40"
+          }
+        }
+      },
+      "block_order": [
+        "perk1",
+        "perk2",
+        "perk3"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "vip"
+  ]
+}
