@@ -11,38 +11,44 @@
 -%}
 
 <style>
-  #bfvip-{{ sid }} { background: {{ section.settings.bg_color }}; color: #FFFEFA; }
-  #bfvip-{{ sid }} .bfvip__wrap { display: flex; flex-wrap: wrap; align-items: center; gap: clamp(28px, 4vw, 64px); padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; }
-  #bfvip-{{ sid }} .bfvip__copy { flex: 1 1 440px; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
-  #bfvip-{{ sid }} .bfvip__media { flex: 1 1 400px; min-width: 0; position: relative; }
-  #bfvip-{{ sid }} .bfvip__media img { width: 100%; height: clamp(320px, 40vw, 580px); object-fit: cover; border-radius: 24px; display: block; }
-  #bfvip-{{ sid }} .bfvip__badge { position: absolute; top: -12px; right: -6px; width: 132px; height: 132px; border-radius: 999px; background: {{ accent }}; color: #0D301F; display: flex; flex-direction: column; align-items: center; justify-content: center; transform: rotate(8deg); box-shadow: 0 12px 30px rgba(0,0,0,.3); text-align: center; line-height: 1; }
-  #bfvip-{{ sid }} .bfvip__badge strong { font-size: 44px; font-weight: 900; letter-spacing: -.03em; }
-  #bfvip-{{ sid }} .bfvip__badge span { font-size: 12px; font-weight: 800; letter-spacing: .06em; margin-top: 4px; }
-  #bfvip-{{ sid }} .bfvip__eyebrow { align-self: flex-start; border: 1.5px solid {{ accent }}; color: {{ accent }}; font-size: 13px; font-weight: 800; letter-spacing: .12em; padding: 7px 14px; border-radius: 999px; text-transform: uppercase; }
-  #bfvip-{{ sid }} h1 { margin: 0; color: #FFFEFA; font-size: clamp(38px, 5.4vw, 72px); line-height: 1; letter-spacing: -.03em; font-weight: 900; }
-  #bfvip-{{ sid }} h1 em { font-style: normal; color: {{ accent }}; }
-  #bfvip-{{ sid }} .bfvip__sub { margin: 0; font-size: clamp(16px, 1.4vw, 19px); line-height: 1.5; color: #C9DCCD; max-width: 560px; }
-  #bfvip-{{ sid }} .bfvip__perks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 17px; font-weight: 600; }
-  #bfvip-{{ sid }} .bfvip__perks li { display: flex; gap: 12px; align-items: center; }
+  #bfvip-{{ sid }} { --forest: #0D301F; --ink: #1D1E20; --leaf: {{ accent }}; --sky: #B5CFEE; background: {{ section.settings.bg_color }}; color: var(--ink); }
+  #bfvip-{{ sid }} .bfvip__wrap { display: flex; flex-wrap: wrap; align-items: center; gap: clamp(24px, 3vw, 48px); padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; }
+  #bfvip-{{ sid }} .bfvip__copy { flex: 1.15 1 440px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+  #bfvip-{{ sid }} .bfvip__media { flex: 0.85 1 340px; min-width: 0; position: relative; }
+  #bfvip-{{ sid }} .bfvip__media img { width: 100%; height: clamp(240px, 30vw, 440px); object-fit: cover; display: block; }
+  #bfvip-{{ sid }} .bfvip__badge { position: absolute; top: -14px; right: -8px; width: 112px; height: 112px; border-radius: 999px; background: var(--leaf); border: 2px solid var(--forest); color: var(--forest); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; line-height: 1; text-transform: uppercase; }
+  #bfvip-{{ sid }} .bfvip__badge strong { font-size: 34px; font-weight: 700; letter-spacing: -.02em; }
+  #bfvip-{{ sid }} .bfvip__badge span { font-size: 12px; font-weight: 700; letter-spacing: .04em; margin-top: 4px; max-width: 90px; }
+  #bfvip-{{ sid }} .bfvip__eyebrow { margin: 0; color: var(--forest); font-size: 14px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  #bfvip-{{ sid }} h1 { margin: 0; color: var(--forest); font-size: clamp(28px, 3.2vw, 44px); line-height: 1.08; letter-spacing: -.01em; font-weight: 700; text-transform: uppercase; }
+  #bfvip-{{ sid }} h1 em { font-style: normal; color: {{ section.settings.highlight_color }}; }
+  #bfvip-{{ sid }} .bfvip__sub { margin: 0; font-size: 16px; line-height: 1.45; color: var(--ink); max-width: 560px; }
+  #bfvip-{{ sid }} .bfvip__sub p { margin: 0; }
+  #bfvip-{{ sid }} .bfvip__box { background: var(--leaf); border: 2px solid var(--forest); padding: 14px 18px; max-width: 560px; }
+  #bfvip-{{ sid }} .bfvip__box-title { margin: 0 0 8px; color: var(--forest); font-size: 17px; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; }
+  #bfvip-{{ sid }} .bfvip__perks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; font-size: 15px; font-weight: 600; color: var(--forest); }
+  #bfvip-{{ sid }} .bfvip__perks li { display: flex; gap: 10px; align-items: center; }
   #bfvip-{{ sid }} .bfvip__perks svg { flex: none; }
-  #bfvip-{{ sid }} form { display: flex; flex-direction: column; gap: 12px; max-width: 560px; }
+  #bfvip-{{ sid }} form { display: flex; flex-direction: column; gap: 10px; max-width: 560px; }
   #bfvip-{{ sid }} .bfvip__row { display: flex; flex-wrap: wrap; gap: 10px; }
-  #bfvip-{{ sid }} input[type="email"], #bfvip-{{ sid }} input[type="tel"] { flex: 1 1 220px; min-width: 0; height: 54px; border-radius: 999px; border: 1px solid rgba(255,255,255,.35); background: rgba(255,255,255,.07); color: #FFFEFA; padding: 0 22px; font: inherit; font-size: 16px; }
-  #bfvip-{{ sid }} input::placeholder { color: rgba(255,254,250,.65); }
-  #bfvip-{{ sid }} input:focus-visible, #bfvip-{{ sid }} button:focus-visible { outline: 3px solid {{ accent }}; outline-offset: 2px; }
-  #bfvip-{{ sid }} .bfvip__consent { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; line-height: 1.45; color: #C9DCCD; }
-  #bfvip-{{ sid }} .bfvip__consent input { width: 18px; height: 18px; margin: 1px 0 0; accent-color: {{ accent }}; flex: none; }
-  #bfvip-{{ sid }} button[type="submit"] { height: 56px; border-radius: 999px; border: 0; background: {{ accent }}; color: #0D301F; padding: 0 30px; font: inherit; font-size: 17px; font-weight: 800; cursor: pointer; }
+  #bfvip-{{ sid }} input[type="email"], #bfvip-{{ sid }} input[type="tel"] { flex: 1 1 220px; min-width: 0; height: 50px; border-radius: 999px; border: 2px solid var(--forest); background: #FFFFFF; color: var(--ink); padding: 0 22px; font: inherit; font-size: 16px; }
+  #bfvip-{{ sid }} input::placeholder { color: #55605A; }
+  #bfvip-{{ sid }} input:focus-visible, #bfvip-{{ sid }} button:focus-visible { outline: 3px solid var(--forest); outline-offset: 2px; }
+  #bfvip-{{ sid }} .bfvip__consent { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; line-height: 1.45; color: #55605A; }
+  #bfvip-{{ sid }} .bfvip__consent input { width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--forest); flex: none; }
+  #bfvip-{{ sid }} button[type="submit"] { height: 50px; border-radius: 999px; border: 2px solid var(--forest); background: var(--leaf); color: var(--forest); padding: 0 40px; font: inherit; font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; cursor: pointer; }
+  #bfvip-{{ sid }} button[type="submit"]:hover { background: #98DB9F; }
   #bfvip-{{ sid }} button[disabled] { opacity: .6; cursor: wait; }
-  #bfvip-{{ sid }} .bfvip__msg { font-size: 15px; min-height: 1.4em; margin: 0; }
-  #bfvip-{{ sid }} .bfvip__msg--error { color: #FFB4A8; }
-  #bfvip-{{ sid }} .bfvip__done { display: none; background: rgba(255,255,255,.08); border: 1.5px solid {{ accent }}; border-radius: 20px; padding: 22px 24px; max-width: 560px; }
-  #bfvip-{{ sid }} .bfvip__done h2 { margin: 0 0 6px; color: {{ accent }}; font-size: 24px; font-weight: 900; }
-  #bfvip-{{ sid }} .bfvip__done p { margin: 0; color: #E3EEE5; font-size: 16px; line-height: 1.5; }
+  #bfvip-{{ sid }} .bfvip__msg { font-size: 14px; margin: 0; }
+  #bfvip-{{ sid }} .bfvip__msg:empty { display: none; }
+  #bfvip-{{ sid }} .bfvip__msg--error { color: #A3261B; }
+  #bfvip-{{ sid }} .bfvip__done { display: none; background: var(--sky); border: 2px solid var(--forest); padding: 22px 24px; max-width: 560px; }
+  #bfvip-{{ sid }} .bfvip__done h2 { margin: 0 0 6px; color: var(--forest); font-size: 22px; font-weight: 700; text-transform: uppercase; }
+  #bfvip-{{ sid }} .bfvip__done p { margin: 0; color: var(--ink); font-size: 16px; line-height: 1.5; }
   #bfvip-{{ sid }}.is-done form { display: none; }
   #bfvip-{{ sid }}.is-done .bfvip__done { display: block; }
-  #bfvip-{{ sid }} .bfvip__fine { font-size: 12px; color: rgba(201,220,205,.85); margin: 0; }
+  #bfvip-{{ sid }} .bfvip__fine { font-size: 12px; color: #55605A; margin: 0; }
+  #bfvip-{{ sid }} .bfvip__fine p { margin: 0; }
   #bfvip-{{ sid }} .bfvip__fine a { color: inherit; }
   #bfvip-{{ sid }} .bfvip__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 </style>
@@ -51,7 +57,7 @@
   <div class="page-width bfvip__wrap">
     <div class="bfvip__copy">
       {%- if section.settings.eyebrow != blank -%}
-        <span class="bfvip__eyebrow">{{ section.settings.eyebrow | escape }}</span>
+        <p class="bfvip__eyebrow">{{ section.settings.eyebrow | escape }}</p>
       {%- endif -%}
       <h1>{{ section.settings.heading }}</h1>
       {%- if section.settings.subheading != blank -%}
@@ -59,26 +65,29 @@
       {%- endif -%}
 
       {%- if section.blocks.size > 0 -%}
+        <div class="bfvip__box">
+        {%- if section.settings.perks_title != blank -%}<p class="bfvip__box-title">{{ section.settings.perks_title | escape }}</p>{%- endif -%}
         <ul class="bfvip__perks">
           {%- for block in section.blocks -%}
             <li {{ block.shopify_attributes }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{ accent }}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0D301F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>
               <span>{{ block.settings.text | escape }}</span>
             </li>
           {%- endfor -%}
         </ul>
+        </div>
       {%- endif -%}
 
       <form novalidate>
         <div class="bfvip__row">
           <label for="bfvip-email-{{ sid }}" class="visually-hidden">Email address</label>
           <input id="bfvip-email-{{ sid }}" type="email" name="email" autocomplete="email" placeholder="Your email address" required>
+        {%- if section.settings.show_phone -%}
+            <label for="bfvip-phone-{{ sid }}" class="visually-hidden">Mobile number (optional)</label>
+            <input id="bfvip-phone-{{ sid }}" type="tel" name="phone" autocomplete="tel" placeholder="Mobile (optional)">
+        {%- endif -%}
         </div>
         {%- if section.settings.show_phone -%}
-          <div class="bfvip__row">
-            <label for="bfvip-phone-{{ sid }}" class="visually-hidden">Mobile number (optional)</label>
-            <input id="bfvip-phone-{{ sid }}" type="tel" name="phone" autocomplete="tel" placeholder="Mobile number (optional, for a text when it opens)">
-          </div>
           <label class="bfvip__consent">
             <input type="checkbox" name="sms_consent">
             <span>{{ section.settings.sms_consent_text | escape }}</span>
@@ -86,7 +95,7 @@
         {%- endif -%}
         <div class="bfvip__hp" aria-hidden="true"><label>Leave this empty <input type="text" name="company_website" tabindex="-1" autocomplete="off"></label></div>
         <div class="bfvip__row">
-          <button type="submit">{{ section.settings.button_label | escape }}</button>
+          <button type="submit" style="flex: 1 1 auto;">{{ section.settings.button_label | escape }}</button>
         </div>
         <p class="bfvip__msg" role="status" aria-live="polite"></p>
         {%- if section.settings.fine_print != blank -%}
@@ -217,9 +226,10 @@
     { "type": "text", "id": "klaviyo_sms_list_id", "label": "Klaviyo list ID for SMS (optional)", "info": "Leave blank to use the same list" },
     { "type": "text", "id": "source_label", "label": "Sign-up source label", "default": "BFCM 2026 VIP page" },
     { "type": "header", "content": "Content" },
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "VIP early access · Fri 20 Nov" },
-    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Shop Black Friday a day early. <em>Plus $60 in free bonuses.</em>" },
-    { "type": "richtext", "id": "subheading", "label": "Subheading", "default": "<p>Join the VIP list and you'll get early access to 30% off sitewide on Friday 20 November, before it opens to everyone.</p>" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "VIP early access · Black Friday 2026" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "VIPs shop 30% off first. <em>Plus $60 in free bonuses.</em>" },
+    { "type": "richtext", "id": "subheading", "label": "Subheading", "default": "<p>Join the list for early access on Friday 20 November, a day before everyone else.</p>" },
+    { "type": "text", "id": "perks_title", "label": "Perks box title", "default": "VIP day only: Friday 20 November" },
     { "type": "text", "id": "button_label", "label": "Button label", "default": "Get VIP access" },
     { "type": "checkbox", "id": "show_phone", "label": "Show mobile number field", "default": true },
     { "type": "text", "id": "sms_consent_text", "label": "SMS consent text", "default": "Text me when VIP access opens and about My Lawn Co offers. Msg frequency varies. Reply STOP to opt out." },
@@ -231,10 +241,11 @@
     { "type": "text", "id": "badge_big", "label": "Badge large text", "default": "$60" },
     { "type": "text", "id": "badge_small", "label": "Badge small text", "default": "FREE BONUSES" },
     { "type": "header", "content": "Style" },
-    { "type": "color", "id": "bg_color", "label": "Background", "default": "#0D301F" },
-    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#FFE57B" },
-    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64 },
-    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64 }
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#F7F5E9" },
+    { "type": "color", "id": "accent_color", "label": "Accent (box, button, badge)", "default": "#70C27A" },
+    { "type": "color", "id": "highlight_color", "label": "Heading highlight", "default": "#0B552B" },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 32 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 40 }
   ],
   "blocks": [
     {

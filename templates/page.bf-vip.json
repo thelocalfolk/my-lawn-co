@@ -27,7 +27,9 @@
         "perk2",
         "perk3"
       ],
-      "settings": {}
+      "settings": {
+        "image": "shopify://shop_images/DSC06498_copy.jpg"
+      }
     }
   },
   "order": [
