@@ -187,14 +187,13 @@
     function subscribe(profileAttrs, channels, list) {
       return fetch('https://a.klaviyo.com/client/subscriptions/?company_id=' + encodeURIComponent(company), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/vnd.api+json', revision: '2024-10-15' },
+        headers: { 'Content-Type': 'application/vnd.api+json', revision: '2025-10-15' },
         body: JSON.stringify({
           data: {
             type: 'subscription',
             attributes: {
               custom_source: source,
-              profile: { data: { type: 'profile', attributes: profileAttrs } },
-              subscriptions: channels
+              profile: { data: { type: 'profile', attributes: Object.assign({}, profileAttrs, { subscriptions: channels }) } }
             },
             relationships: { list: { data: { type: 'list', id: list } } }
           }
