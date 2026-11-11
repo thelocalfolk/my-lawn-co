@@ -140,7 +140,7 @@
                             <p class="caption-with-letter-spacing light">{{ item.product.vendor }}</p>
                           {%- endif -%}
 
-                          {%- if bf_gift -%}<span class="bf-gift-badge">Free gift</span>{%- endif -%}
+                          {%- if bf_gift -%}<span class="bf-gift-badge"><span aria-hidden="true">🎁</span> Free gift</span>{%- endif -%}
                           <a href="{{ item.url }}" class="cart-item__name h4 break">
                             {{- item.product.title | escape -}}
                           </a>
