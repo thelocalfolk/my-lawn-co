@@ -79,7 +79,8 @@
 
               <tbody>
                 {%- for item in cart.items -%}
-                  <tr class="cart-item" id="CartItem-{{ item.index | plus: 1 }}">
+                  {%- assign bf_gift = false -%}{%- if item.properties._bf_gift != blank -%}{%- assign bf_gift = true -%}{%- endif -%}
+                  <tr class="cart-item{% if bf_gift %} cart-item--bf-gift{% endif %}" id="CartItem-{{ item.index | plus: 1 }}">
                     <td class="cart-item__media">
                       {% if item.image %}
                         {% comment %} Leave empty space due to a:empty CSS display: none rule {% endcomment %}
@@ -102,9 +103,12 @@
                         <p class="caption-with-letter-spacing">{{ item.product.vendor }}</p>
                       {%- endif -%}
 
+                      {%- if bf_gift -%}<span class="bf-gift-badge"><span aria-hidden="true">🎁</span> Free gift</span>{%- endif -%}
                       <a href="{{ item.url }}" class="cart-item__name h4 break">{{ item.product.title | escape }}</a>
 
-                      {%- if item.original_price != item.final_price -%}
+                      {%- if bf_gift -%}
+                        {% render 'bf-free-gift-price', item: item %}
+                      {%- elsif item.original_price != item.final_price -%}
                         <div class="cart-item__discounted-prices">
                           <span class="visually-hidden">
                             {{ 'products.product.price.regular_price' | t }}
@@ -174,7 +178,9 @@
                     <td class="cart-item__totals right medium-hide large-up-hide">
                       {%- render 'loading-spinner' -%}
                       <div class="cart-item__price-wrapper">
-                        {%- if item.original_line_price != item.final_line_price -%}
+                        {%- if bf_gift -%}
+                          {% render 'bf-free-gift-price', item: item, line: true %}
+                        {%- elsif item.original_line_price != item.final_line_price -%}
                           <dl class="cart-item__discounted-prices">
                             <dt class="visually-hidden">
                               {{ 'products.product.price.regular_price' | t }}
@@ -225,6 +231,9 @@
                       endif
                     -%}
                     <td class="cart-item__quantity{% if has_qty_rules or has_vol_pricing %} cart-item__quantity--info{% endif %}">
+                      {%- if bf_gift -%}
+                        <span class="bf-gift-qty">Added automatically</span>
+                      {%- else -%}
                       <quantity-popover>
                         <div class="cart-item__quantity-wrapper quantity-popover-wrapper">
                           <label class="visually-hidden" for="Quantity-{{ item.index | plus: 1 }}">
@@ -385,12 +394,15 @@
                           </span>
                         </div>
                       </quantity-popover>
+                      {%- endif -%}
                     </td>
 
                     <td class="cart-item__totals right small-hide">
                       {%- render 'loading-spinner' -%}
                       <div class="cart-item__price-wrapper">
-                        {%- if item.original_line_price != item.final_line_price -%}
+                        {%- if bf_gift -%}
+                          {% render 'bf-free-gift-price', item: item, line: true %}
+                        {%- elsif item.original_line_price != item.final_line_price -%}
                           <dl class="cart-item__discounted-prices">
                             <dt class="visually-hidden">
                               {{ 'products.product.price.regular_price' | t }}
