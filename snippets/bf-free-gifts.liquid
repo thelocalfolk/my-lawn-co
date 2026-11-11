@@ -42,6 +42,9 @@
   <script src="{{ 'bf-free-gifts.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
 <style>
+  /* Gift lines must never make the drawer scroll sideways (the drawer's custom scrollbar shows as a thick green bar). */
+  cart-drawer-items { overflow-x: hidden; }
+  .cart-item--bf-gift .cart-item__details, .cart-item--bf-gift .cart-item__quantity { min-width: 0; }
   .cart-item--bf-gift .cart-item__name { pointer-events: none; text-decoration: none; }
   .bf-gift-badge {
     display: inline-block;
