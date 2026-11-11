@@ -1,0 +1,64 @@
+{% comment %}
+  BFCM 2026 free gifts: config + styles + script.
+  Settings live in Theme settings > "BFCM free gifts".
+  Gift lines carry the hidden property _bf_gift and are added/removed by
+  assets/bf-free-gifts.js. Rendered from layout/theme.liquid.
+{% endcomment %}
+{%- if settings.bf_gifts_enable -%}
+  {%- liquid
+    assign bfg_gifts = ''
+    for i in (1..2)
+      assign key_product = 'bf_gift_' | append: i | append: '_product'
+      assign key_dates = 'bf_gift_' | append: i | append: '_dates'
+      assign key_code = 'bf_gift_' | append: i | append: '_code'
+      assign bfg_product = settings[key_product]
+      if bfg_product != blank and bfg_product.selected_or_first_available_variant != blank
+        capture bfg_json
+          echo '{"variant":'
+          echo bfg_product.selected_or_first_available_variant.id
+          echo ',"title":'
+          echo bfg_product.title | json
+          echo ',"dates":'
+          echo settings[key_dates] | json
+          echo ',"code":'
+          echo settings[key_code] | json
+          echo '}'
+        endcapture
+        if bfg_gifts != ''
+          assign bfg_gifts = bfg_gifts | append: ','
+        endif
+        assign bfg_gifts = bfg_gifts | append: bfg_json
+      endif
+    endfor
+  -%}
+  <script>
+    window.bfFreeGifts = {
+      gifts: [{{ bfg_gifts }}],
+      minSubtotal: {{ settings.bf_gifts_min_subtotal | default: 0 | times: 100 }},
+      utcOffset: {{ settings.bf_gifts_utc_offset | default: '+11:00' | json }},
+      preview: {{ request.design_mode | json }}
+    };
+  </script>
+  <script src="{{ 'bf-free-gifts.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+<style>
+  .cart-item--bf-gift .cart-item__name { pointer-events: none; text-decoration: none; }
+  .bf-gift-badge {
+    display: inline-block;
+    margin-bottom: 0.4rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 99px;
+    background: #FFE57B;
+    color: #0D301F;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+  .bf-gift-price { display: flex; gap: 0.6rem; align-items: baseline; justify-content: inherit; flex-wrap: wrap; }
+  .cart-item__totals .bf-gift-price { justify-content: flex-end; }
+  .bf-gift-price__was { opacity: 0.6; }
+  .bf-gift-price__free { color: #09552B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+  .bf-gift-qty { display: inline-block; font-size: 1.3rem; opacity: 0.75; white-space: nowrap; }
+</style>

@@ -1,0 +1,34 @@
+{% comment %}
+  BFCM 2026 free gift price: shows the gift's value struck through and "Free".
+  The value is the variant's compare-at price (set the gift product to $0 with
+  a compare-at of $20 / $40). Falls back to the normal price if the line isn't $0.
+
+  Usage:
+  {% render 'bf-free-gift-price', item: item, line: true %}
+{% endcomment %}
+{%- liquid
+  if line
+    assign bfg_final = item.final_line_price
+    assign bfg_value = item.variant.compare_at_price | times: item.quantity
+    if item.original_line_price > bfg_value
+      assign bfg_value = item.original_line_price
+    endif
+  else
+    assign bfg_final = item.final_price
+    assign bfg_value = item.variant.compare_at_price
+    if item.original_price > bfg_value
+      assign bfg_value = item.original_price
+    endif
+  endif
+-%}
+<div class="bf-gift-price">
+  {%- if bfg_final == 0 -%}
+    {%- if bfg_value > 0 -%}
+      <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
+      <s class="bf-gift-price__was">{{ bfg_value | money }}</s>
+    {%- endif -%}
+    <strong class="bf-gift-price__free">Free</strong>
+  {%- else -%}
+    <span class="price price--end">{{ bfg_final | money }}</span>
+  {%- endif -%}
+</div>

@@ -1465,5 +1465,79 @@
         "default": "scheme-1"
       }
     ]
+  },
+  {
+    "name": "BFCM free gifts",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Adds free gift products to the cart automatically during their date ranges, as long as the cart has at least one paid item. Price each gift product at $0 with a compare-at price (e.g. $20) so the cart shows the $20 struck through and FREE. In the theme editor the gifts always show, so you can preview them."
+      },
+      {
+        "type": "checkbox",
+        "id": "bf_gifts_enable",
+        "label": "Enable free gifts",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "bf_gifts_min_subtotal",
+        "label": "Minimum spend on paid items ($)",
+        "default": 0,
+        "info": "0 means any paid item unlocks the gifts."
+      },
+      {
+        "type": "text",
+        "id": "bf_gifts_utc_offset",
+        "label": "Store time offset",
+        "default": "+11:00",
+        "info": "AEDT is +11:00."
+      },
+      {
+        "type": "header",
+        "content": "Gift 1"
+      },
+      {
+        "type": "product",
+        "id": "bf_gift_1_product",
+        "label": "Product",
+        "info": "e.g. $20 Gift Voucher"
+      },
+      {
+        "type": "textarea",
+        "id": "bf_gift_1_dates",
+        "label": "Active dates",
+        "default": "2026-11-20 00:00 to 2026-11-20 23:59",
+        "info": "One date range per line, e.g. 2026-11-20 00:00 to 2026-11-20 23:59 (store time). An end date with no time covers the whole day."
+      },
+      {
+        "type": "text",
+        "id": "bf_gift_1_code",
+        "label": "Only with this discount code (optional)",
+        "info": "e.g. VIP30. The code must be on the cart, for example via a /discount/VIP30 link in the email. Leave blank for everyone."
+      },
+      {
+        "type": "header",
+        "content": "Gift 2"
+      },
+      {
+        "type": "product",
+        "id": "bf_gift_2_product",
+        "label": "Product",
+        "info": "e.g. Yearly Lawn Program (free)"
+      },
+      {
+        "type": "textarea",
+        "id": "bf_gift_2_dates",
+        "label": "Active dates",
+        "default": "2026-11-20 00:00 to 2026-11-20 23:59\n2026-11-28 00:00 to 2026-11-30 23:59",
+        "info": "One date range per line, e.g. 2026-11-20 00:00 to 2026-11-20 23:59 (store time). An end date with no time covers the whole day."
+      },
+      {
+        "type": "text",
+        "id": "bf_gift_2_code",
+        "label": "Only with this discount code (optional)"
+      }
+    ]
   }
 ]
