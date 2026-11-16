@@ -14,7 +14,7 @@
   </style>
   <script>
     (function () {
-      function money(t) { var n = parseFloat(String(t).replace(/[^0-9.]/g, '')); return isNaN(n) ? null : n; }
+      function money(t) { var m = String(t).replace(/,/g, '').match(/[0-9]+(\.[0-9]+)?/); return m ? parseFloat(m[0]) : null; }
       function setup() {
         var wrap = document.querySelector('.product__info-container .appstle_subscription_wrapper');
         if (!wrap || wrap.parentNode.querySelector('.bf-subnudge')) return !!wrap;
@@ -33,7 +33,8 @@
           var badge = (subOpt.querySelector('.appstle-save-badge') || {}).textContent || '';
           var save = one && sub && one > sub ? '$' + (one - sub).toFixed(2) : badge.replace(/save/i, '').trim();
           btn.querySelector('[data-t]').innerHTML = 'Using it again? <strong>Subscribe and save ' + (save || '10%') + '</strong> on every delivery. Skip or cancel anytime.';
-          btn.hidden = !oneActive;
+          // during the Black Friday sale the one-time price can be lower than the subscription, so don't push it then
+          btn.hidden = !oneActive || (one && sub && sub >= one);
         }
         btn.addEventListener('click', function () {
           var r = subOpt.querySelector('input[type=radio]');
