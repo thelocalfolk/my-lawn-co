@@ -1,0 +1,116 @@
+{%- comment -%}
+  BFCM 2026 sale strip for product pages (sits under Add to cart).
+  The message and countdown change with the date (Sydney time, AEDT +11:00).
+  Rendered from a "Custom liquid" block in the product templates:
+    {% render 'bf-sale-strip' %}
+  Preview any phase by adding ?bf_phase=pre|vip|launch|refund|bf|gift to the URL.
+  Edit the copy in the PHASES list in the script below.
+{%- endcomment -%}
+<div class="bf-strip" data-bf-strip hidden>
+  <p class="bf-strip__eyebrow" data-bf-eyebrow></p>
+  <p class="bf-strip__title" data-bf-title></p>
+  <p class="bf-strip__text" data-bf-text></p>
+  <div class="bf-strip__timer" data-bf-timer>
+    <span class="bf-strip__label" data-bf-label></span>
+    <span class="bf-strip__units" aria-live="off">
+      <span><b data-bf-d>0</b><i>days</i></span>
+      <span><b data-bf-h>00</b><i>hrs</i></span>
+      <span><b data-bf-m>00</b><i>mins</i></span>
+      <span><b data-bf-s>00</b><i>secs</i></span>
+    </span>
+  </div>
+  <a class="bf-strip__link" data-bf-link hidden></a>
+</div>
+
+<style>
+  .bf-strip { margin: 16px 0 4px; padding: 16px 18px; border: 2px solid #0D301F; border-radius: 14px; background: #0D301F; color: #fff; font-family: inherit; }
+  .bf-strip[hidden] { display: none; }
+  .bf-strip p { margin: 0; }
+  .bf-strip__eyebrow { color: #70C27A; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  .bf-strip__title { margin-top: 4px !important; font-size: 20px; line-height: 1.15; font-weight: 800; text-transform: uppercase; letter-spacing: -.005em; }
+  .bf-strip__text { margin-top: 6px !important; font-size: 14px; line-height: 1.45; color: #E4EFE6; }
+  .bf-strip__text:empty { display: none; }
+  .bf-strip__timer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed rgba(112, 194, 122, .6); }
+  .bf-strip__label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #70C27A; }
+  .bf-strip__units { display: flex; gap: 6px; }
+  .bf-strip__units span { min-width: 48px; padding: 6px 4px 5px; border-radius: 8px; background: #70C27A; color: #0D301F; text-align: center; line-height: 1; }
+  .bf-strip__units b { display: block; font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .bf-strip__units i { display: block; margin-top: 3px; font-size: 10px; font-style: normal; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+  .bf-strip__link { display: inline-block; margin-top: 12px; color: #70C27A; font-size: 14px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+  .bf-strip__link[hidden] { display: none; }
+  @media (max-width: 400px) { .bf-strip__units span { min-width: 42px; } .bf-strip__title { font-size: 18px; } }
+</style>
+
+<script>
+  (function () {
+    var el = document.currentScript.previousElementSibling.previousElementSibling;
+    if (!el || !el.hasAttribute('data-bf-strip')) return;
+    var TZ = {{ settings.bf_gifts_utc_offset | default: '+11:00' | json }};
+    function at(d) { return new Date(d + 'T00:00:00' + TZ).getTime(); }
+
+    // start = first moment it shows, end = when the countdown hits zero (both Sydney time)
+    var PHASES = [
+      { id: 'pre', start: at('2026-11-19'), end: at('2026-11-20'),
+        eyebrow: 'Black Friday starts tomorrow', title: 'VIPs get 30% off first',
+        text: 'VIP early access opens Friday 20 November, a day before everyone else, with $60 in free bonuses.',
+        label: 'VIP access opens in', link: { text: 'Join the VIP list', url: '/pages/vip-early-access' } },
+      { id: 'vip', start: at('2026-11-20'), end: at('2026-11-21'),
+        eyebrow: 'VIP early access · today only', title: '30% off everything',
+        text: 'Plus a free $20 gift voucher and a free Yearly Lawn Program. Public sale starts tomorrow.',
+        label: 'VIP access ends in' },
+      { id: 'launch', start: at('2026-11-21'), end: at('2026-12-01'),
+        eyebrow: 'Black Friday sale', title: '30% off sitewide',
+        text: 'Our biggest sale of the year. Ends midnight Monday 30 November.',
+        label: 'Sale ends in' },
+      { id: 'refund', start: at('2026-11-22'), end: at('2026-11-23'),
+        eyebrow: 'Today only · 30% off sitewide', title: 'We’re refunding 10 orders',
+        text: 'Order today and you could get your whole order refunded. 10 customers who order today win.',
+        label: 'Ends tonight in' },
+      { id: 'bf', start: at('2026-11-27'), end: at('2026-11-28'),
+        eyebrow: 'It’s Black Friday', title: '30% off sitewide',
+        text: 'Free gift weekend starts tomorrow. Keep an eye out.',
+        label: 'Black Friday ends in' },
+      { id: 'gift', start: at('2026-11-28'), end: at('2026-12-01'),
+        eyebrow: 'Free gift weekend · 30% off sitewide', title: 'Free Yearly Lawn Program',
+        text: 'Get the Yearly Lawn Program (worth $40) free with your order, plus 30% off everything. Final days.',
+        label: 'Sale ends in' }
+    ];
+
+    var forced = (location.search.match(/[?&]bf_phase=(\w+)/) || [])[1];
+    function current(now) {
+      if (forced) {
+        for (var i = 0; i < PHASES.length; i++) if (PHASES[i].id === forced) return PHASES[i];
+      }
+      var hit = null;
+      // later entries win, so one-day events override the running sale message
+      PHASES.forEach(function (p) { if (now >= p.start && now < p.end) hit = p; });
+      return hit;
+    }
+
+    var q = function (s) { return el.querySelector(s); };
+    var shown = null;
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function tick() {
+      var now = Date.now();
+      var p = current(now);
+      if (!p) { el.hidden = true; shown = null; return; }
+      if (p !== shown) {
+        shown = p;
+        q('[data-bf-eyebrow]').textContent = p.eyebrow;
+        q('[data-bf-title]').textContent = p.title;
+        q('[data-bf-text]').textContent = p.text || '';
+        q('[data-bf-label]').textContent = p.label;
+        var a = q('[data-bf-link]');
+        if (p.link) { a.textContent = p.link.text; a.href = p.link.url; a.hidden = false; } else { a.hidden = true; }
+        el.hidden = false;
+      }
+      var left = Math.max(0, Math.floor(((forced ? Math.max(p.end, now + 36e5 * 30) : p.end) - now) / 1000));
+      q('[data-bf-d]').textContent = Math.floor(left / 86400);
+      q('[data-bf-h]').textContent = pad(Math.floor(left % 86400 / 3600));
+      q('[data-bf-m]').textContent = pad(Math.floor(left % 3600 / 60));
+      q('[data-bf-s]').textContent = pad(left % 60);
+    }
+    tick();
+    setInterval(tick, 1000);
+  })();
+</script>
