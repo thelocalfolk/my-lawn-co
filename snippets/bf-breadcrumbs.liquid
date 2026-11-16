@@ -1,0 +1,45 @@
+{%- comment -%}
+  Product page breadcrumbs: Home / Collection / Product (+ BreadcrumbList schema).
+  Uses the collection the shopper came from when the URL has one, otherwise the product's first collection.
+  Rendered at the top of the product info column in sections/main-product.liquid.
+{%- endcomment -%}
+{%- liquid
+  assign bc = collection
+  if bc == blank
+    for c in product.collections
+      unless c.handle == 'all' or c.handle == 'frontpage'
+        assign bc = c
+        break
+      endunless
+    endfor
+  endif
+-%}
+<nav class="bf-crumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="{{ routes.root_url }}">Home</a></li>
+    {%- if bc -%}<li><a href="{{ bc.url }}">{{ bc.title | escape }}</a></li>{%- endif -%}
+    <li><span aria-current="page">{{ product.title | escape }}</span></li>
+  </ol>
+</nav>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": {{ shop.url | append: routes.root_url | json }} }
+      {%- if bc -%},
+      { "@type": "ListItem", "position": 2, "name": {{ bc.title | json }}, "item": {{ shop.url | append: bc.url | json }} }
+      {%- endif -%},
+      { "@type": "ListItem", "position": {% if bc %}3{% else %}2{% endif %}, "name": {{ product.title | json }}, "item": {{ shop.url | append: product.url | json }} }
+    ]
+  }
+</script>
+<style>
+  .bf-crumbs { margin: 0 0 12px; font-size: 13px; line-height: 1.4; }
+  .bf-crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 0; padding: 0; list-style: none; }
+  .bf-crumbs li { display: inline-flex; align-items: center; gap: 4px; color: #4F6B58; min-width: 0; }
+  .bf-crumbs li + li::before { content: "/"; color: #9CB5A2; }
+  .bf-crumbs a { color: #09552B; text-decoration: none; }
+  .bf-crumbs a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .bf-crumbs [aria-current] { color: #4F6B58; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 60vw; }
+</style>
