@@ -1,0 +1,124 @@
+{%- comment -%}
+  Cart drawer extras (Black Friday theme).
+    {% render 'bf-cart-extras', part: 'ship' %}    "You're $X away from free shipping" bar under the cart heading.
+                                                   Uses the standing site rule (free shipping over $300); not a sale offer.
+    {% render 'bf-cart-extras', part: 'script' %}  (layout/theme.liquid) the + Add click handler.
+    {% render 'bf-cart-extras', part: 'upsell' %}  "Goes great with": up to 3 range products not already in the cart,
+                                                   picked from what is in the cart (same map as the product page box),
+                                                   each with a + Add button. Replaces the Essential Upsell cart funnel on this theme.
+  Both sit inside the drawer, so they refresh whenever the cart changes.
+{%- endcomment -%}
+{%- if part == 'ship' and cart.item_count > 0 -%}
+  {%- liquid
+    assign threshold = 30000
+    assign total = cart.total_price
+    assign left = threshold | minus: total
+    assign pct = total | times: 100 | divided_by: threshold
+    if pct > 100
+      assign pct = 100
+    endif
+  -%}
+  <div class="bf-ship">
+    {%- if left > 0 -%}
+      <p class="bf-ship__text">You're <strong>{{ left | money }}</strong> away from free shipping</p>
+    {%- else -%}
+      <p class="bf-ship__text"><strong>You've unlocked free shipping</strong></p>
+    {%- endif -%}
+    <div class="bf-ship__track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ pct }}" aria-label="Progress to free shipping"><span style="width: {{ pct }}%"></span></div>
+  </div>
+  <style>
+    .bf-ship { margin: 0 0 6px; padding: 12px 14px; border-radius: 12px; background: #F1F8F2; }
+    .bf-ship__text { margin: 0 0 8px; font-size: 14px; line-height: 1.35; color: #0D301F; }
+    .bf-ship__text strong { font-weight: 800; }
+    .bf-ship__track { height: 8px; border-radius: 999px; background: #D5E3D8; overflow: hidden; }
+    .bf-ship__track span { display: block; height: 100%; border-radius: inherit; background: #09552B; transition: width .4s ease; }
+  </style>
+{%- endif -%}
+
+{%- if part == 'upsell' and cart.item_count > 0 -%}
+  {%- liquid
+    assign offer_map = 'rescue-dog-wee-repair=grow-granular-fertiliser,thrive-liquid-fertiliser|grow-granular-fertiliser=thrive-liquid-fertiliser,vital-wetting-agent,enrich|thrive-liquid-fertiliser=grow-granular-fertiliser,revive-traces,enrich|revive-traces=thrive-liquid-fertiliser,enrich,grow-granular-fertiliser|enrich=vital-wetting-agent,grow-granular-fertiliser,thrive-liquid-fertiliser|vital-wetting-agent=grow-granular-fertiliser,enrich,thrive-liquid-fertiliser|grow-rescue-bundle=thrive-liquid-fertiliser,vital-wetting-agent,enrich|grow-thrive-bundle=rescue-dog-wee-repair,vital-wetting-agent,enrich|healthy-soil-bundle=thrive-liquid-fertiliser,rescue-dog-wee-repair,revive-traces|healthy-leaf-bundle=grow-granular-fertiliser,rescue-dog-wee-repair,vital-wetting-agent|complete-lawn-health-bundle=rescue-dog-wee-repair' | split: '|'
+    assign candidates = ''
+    for item in cart.items
+      for row in offer_map
+        assign pair = row | split: '='
+        if pair[0] == item.product.handle
+          assign candidates = candidates | append: ',' | append: pair[1]
+        endif
+      endfor
+    endfor
+    assign candidates = candidates | append: ',rescue-dog-wee-repair,grow-granular-fertiliser,thrive-liquid-fertiliser,vital-wetting-agent,enrich,revive-traces' | remove_first: ',' | split: ',' | uniq
+    assign in_cart = cart.items | map: 'product_id' | join: ',' | prepend: ',' | append: ','
+    assign shown = 0
+  -%}
+  <div class="bf-cup">
+    <p class="bf-cup__title">Goes great with</p>
+    <ul class="bf-cup__list">
+      {%- for h in candidates -%}
+        {%- if shown >= 3 -%}{%- break -%}{%- endif -%}
+        {%- assign p = all_products[h] -%}
+        {%- if p == blank or p.available == false -%}{%- continue -%}{%- endif -%}
+        {%- assign pid = p.id | prepend: ',' | append: ',' -%}
+        {%- if in_cart contains pid -%}{%- continue -%}{%- endif -%}
+        {%- assign v = p.selected_or_first_available_variant -%}
+        {%- assign shown = shown | plus: 1 -%}
+        <li class="bf-cup__item">
+          <a href="{{ p.url }}" class="bf-cup__img">{%- if p.featured_image -%}<img src="{{ p.featured_image | image_url: width: 120 }}" alt="" width="52" height="52" loading="lazy">{%- endif -%}</a>
+          <div class="bf-cup__info">
+            <a href="{{ p.url }}" class="bf-cup__name">{{ p.title | escape }}</a>
+            <span class="bf-cup__price">{{ v.price | money }}{%- if v.compare_at_price > v.price -%} <s>{{ v.compare_at_price | money }}</s>{%- endif -%}</span>
+          </div>
+          <button type="button" class="bf-cup__add" data-bf-cup-add="{{ v.id }}" aria-label="Add {{ p.title | escape }} to cart">+ Add</button>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+  <style>
+    [data-essential-upsell-funnel-id="54e63ee4-2adc-49ad-b054-8cd0f7d7917a"] { display: none !important; }
+    .bf-cup { margin: 18px 0 8px; }
+    .bf-cup__title { margin: 0 0 8px; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0D301F; }
+    .bf-cup__list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+    .bf-cup__item { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border: 1.5px solid #D5E3D8; border-radius: 12px; background: #fff; }
+    .bf-cup__img img { display: block; width: 52px; height: 52px; object-fit: cover; border-radius: 8px; }
+    .bf-cup__info { min-width: 0; flex: 1; display: flex; flex-direction: column; line-height: 1.3; }
+    .bf-cup__name { color: #0D301F; font-size: 14px; font-weight: 700; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bf-cup__price { font-size: 13px; color: #09552B; font-weight: 700; }
+    .bf-cup__price s { color: #6B7F70; font-weight: 500; }
+    .bf-cup__add { flex: none; min-height: 38px; padding: 0 14px; border: 0; border-radius: 10px; background: #09552B; color: #fff; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+    .bf-cup__add:hover { background: #0D301F; }
+    .bf-cup__add[aria-busy="true"] { opacity: .6; cursor: progress; }
+  </style>
+{%- endif -%}
+
+{%- comment -%} Click handler for the + Add buttons. Rendered once from layout/theme.liquid, since scripts inside the refreshed drawer HTML don't run. {%- endcomment -%}
+{%- if part == 'script' -%}
+  <script>
+    (function () {
+      if (window.bfCupBound) return;
+      window.bfCupBound = true;
+      document.addEventListener('click', function (e) {
+        var btn = e.target.closest && e.target.closest('[data-bf-cup-add]');
+        if (!btn) return;
+        e.preventDefault();
+        if (btn.getAttribute('aria-busy') === 'true') return;
+        btn.setAttribute('aria-busy', 'true');
+        var cart = document.querySelector('cart-drawer');
+        var ids = cart && cart.getSectionsToRender ? cart.getSectionsToRender().map(function (s) { return s.id; }) : [];
+        fetch((window.routes && window.routes.cart_add_url) || '/cart/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ items: [{ id: Number(btn.getAttribute('data-bf-cup-add')), quantity: 1 }], sections: ids, sections_url: window.location.pathname })
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (res) {
+            if (res.status) throw new Error(res.description || res.message);
+            if (!cart || !cart.renderContents) { window.location = '/cart'; return; }
+            var ready = res.sections && ids.every(function (id) { return res.sections[id]; });
+            return (ready ? Promise.resolve(res.sections) : fetch(window.location.pathname + '?sections=' + ids.join(',')).then(function (r) { return r.json(); }))
+              .then(function (sections) { cart.renderContents({ id: Number(btn.getAttribute('data-bf-cup-add')), sections: sections }); });
+          })
+          .catch(function () { window.location = '/cart'; });
+      });
+    })();
+  </script>
+{%- endif -%}
