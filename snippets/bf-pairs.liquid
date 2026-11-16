@@ -1,14 +1,20 @@
 {%- comment -%}
-  "Pairs well with" upsells for product pages, replacing the Essential Upsell app's
-  product page offer (which only ever offered the Lawn Program and the free guide).
+  "Complete your lawn care" box for product pages (replaces the Essential Upsell app's
+  product page offer, which only ever offered the Lawn Program and the free guide).
+  Tick boxes + one "Add all to cart" button. The product on the page is always included.
+  If the ticked items exactly make up a bundle (e.g. Rescue + Grow), the bundle is added
+  instead so the customer gets the bundle price. No swap when a subscription is selected
+  or the quantity is more than 1.
   Rendered from a "Custom liquid" block under Add to cart: {% render 'bf-pairs' %}
-  Map: product handle = comma-separated handles to offer, in order (max 3 shown).
-  Products already in the cart, sold out, or missing are skipped.
+
+  OFFERS:  product handle = handles to offer, in order (the first one starts ticked)
+  BUNDLES: bundle handle  = the products inside it (one of each)
 {%- endcomment -%}
 {%- liquid
-  assign map = 'rescue-dog-wee-repair=grow-rescue-bundle,thrive-liquid-fertiliser,grow-granular-fertiliser|grow-granular-fertiliser=thrive-liquid-fertiliser,vital-wetting-agent,enrich|thrive-liquid-fertiliser=grow-granular-fertiliser,revive-traces,enrich|revive-traces=thrive-liquid-fertiliser,enrich|enrich=vital-wetting-agent,grow-granular-fertiliser|vital-wetting-agent=grow-granular-fertiliser,enrich|grow-rescue-bundle=thrive-liquid-fertiliser,vital-wetting-agent|grow-thrive-bundle=rescue-dog-wee-repair,vital-wetting-agent|healthy-soil-bundle=healthy-leaf-bundle,rescue-dog-wee-repair|healthy-leaf-bundle=healthy-soil-bundle,rescue-dog-wee-repair|complete-lawn-health-bundle=rescue-dog-wee-repair|the-ultimate-lawn-program-a-yearly-lawn-care-program=rescue-dog-wee-repair,grow-thrive-bundle|a-beginners-guide-to-the-perfect-lawn=rescue-dog-wee-repair,grow-thrive-bundle' | split: '|'
+  assign offer_map = 'rescue-dog-wee-repair=grow-granular-fertiliser,thrive-liquid-fertiliser|grow-granular-fertiliser=thrive-liquid-fertiliser,vital-wetting-agent,enrich|thrive-liquid-fertiliser=grow-granular-fertiliser,revive-traces,enrich|revive-traces=thrive-liquid-fertiliser,enrich|enrich=vital-wetting-agent,grow-granular-fertiliser|vital-wetting-agent=grow-granular-fertiliser,enrich|grow-rescue-bundle=thrive-liquid-fertiliser,vital-wetting-agent|grow-thrive-bundle=rescue-dog-wee-repair,vital-wetting-agent|healthy-soil-bundle=thrive-liquid-fertiliser,rescue-dog-wee-repair|healthy-leaf-bundle=grow-granular-fertiliser,rescue-dog-wee-repair|complete-lawn-health-bundle=rescue-dog-wee-repair|the-ultimate-lawn-program-a-yearly-lawn-care-program=rescue-dog-wee-repair,grow-thrive-bundle|a-beginners-guide-to-the-perfect-lawn=rescue-dog-wee-repair,grow-thrive-bundle' | split: '|'
+  assign bundle_map = 'grow-rescue-bundle=grow-granular-fertiliser,rescue-dog-wee-repair|grow-thrive-bundle=grow-granular-fertiliser,thrive-liquid-fertiliser|healthy-soil-bundle=grow-granular-fertiliser,enrich,vital-wetting-agent|healthy-leaf-bundle=thrive-liquid-fertiliser,revive-traces,enrich|complete-lawn-health-bundle=grow-granular-fertiliser,vital-wetting-agent,thrive-liquid-fertiliser,revive-traces,enrich' | split: '|'
   assign offers = ''
-  for row in map
+  for row in offer_map
     assign pair = row | split: '='
     if pair[0] == product.handle
       assign offers = pair[1] | split: ','
@@ -16,25 +22,35 @@
   endfor
   assign in_cart = cart.items | map: 'product_id' | join: ',' | prepend: ',' | append: ','
   assign shown = 0
+  assign main_variant = product.selected_or_first_available_variant
 -%}
 <style>
   [data-essential-upsell-funnel-id="ff08a33f-c120-4321-a958-f86d2431b2cb"] { display: none !important; }
-  .bf-pairs { margin: 18px 0 6px; }
+  .bf-pairs { margin: 18px 0 6px; padding: 14px; border: 1.5px solid #0D301F; border-radius: 14px; background: #fff; }
   .bf-pairs__title { margin: 0 0 10px; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B552B; }
   .bf-pairs__list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
-  .bf-pairs__item { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border: 1.5px solid #0D301F; border-radius: 12px; background: #fff; }
-  .bf-pairs__img { flex: none; width: 56px; height: 56px; border-radius: 8px; overflow: hidden; background: #F7F5E9; }
+  .bf-pairs__item { display: flex; align-items: center; gap: 10px; }
+  .bf-pairs__item input { flex: none; width: 20px; height: 20px; margin: 0; accent-color: #0D301F; cursor: pointer; }
+  .bf-pairs__item input:disabled { cursor: default; }
+  .bf-pairs__img { flex: none; width: 48px; height: 48px; border-radius: 8px; overflow: hidden; background: #F7F5E9; }
   .bf-pairs__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .bf-pairs__info { flex: 1; min-width: 0; line-height: 1.3; }
   .bf-pairs__name { display: block; color: #0D301F; font-size: 14px; font-weight: 700; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .bf-pairs__name:hover { text-decoration: underline; }
+  a.bf-pairs__name:hover { text-decoration: underline; }
   .bf-pairs__price { font-size: 13px; color: #1D1E20; }
-  .bf-pairs__price s { color: #7A857F; margin-left: 4px; }
-  .bf-pairs__btn { flex: none; min-width: 72px; height: 38px; padding: 0 14px; border: 2px solid #0D301F; border-radius: 999px; background: #70C27A; color: #0D301F; font: inherit; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; cursor: pointer; }
+  .bf-pairs__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #B9C9BE; }
+  .bf-pairs__total { font-size: 14px; line-height: 1.35; color: #0D301F; }
+  .bf-pairs__total strong { font-size: 17px; font-weight: 800; }
+  .bf-pairs__total s { margin-left: 6px; color: #7A857F; }
+  .bf-pairs__deal { display: block; margin-top: 2px; font-size: 12px; font-weight: 700; color: #0B552B; }
+  .bf-pairs__deal:empty { display: none; }
+  .bf-pairs__btn { flex: 1 1 180px; height: 44px; padding: 0 16px; border: 2px solid #0D301F; border-radius: 999px; background: #70C27A; color: #0D301F; font: inherit; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; cursor: pointer; }
   .bf-pairs__btn:hover { background: #98DB9F; }
   .bf-pairs__btn[disabled] { opacity: .6; cursor: default; }
+  .bf-pairs__err { flex-basis: 100%; margin: 0; font-size: 13px; color: #B3261E; }
+  .bf-pairs__err:empty { display: none; }
 </style>
-{%- if offers != '' -%}
+{%- if offers != '' and main_variant -%}
   {%- capture items -%}
     {%- for h in offers -%}
       {%- assign p = all_products[h] -%}
@@ -42,41 +58,129 @@
       {%- assign pid = p.id | prepend: ',' | append: ',' -%}
       {%- if in_cart contains pid -%}{%- continue -%}{%- endif -%}
       {%- assign v = p.selected_or_first_available_variant -%}
-      {%- assign shown = shown | plus: 1 -%}
       <li class="bf-pairs__item">
+        <input type="checkbox" id="bfp-{{ v.id }}" data-bfp-item data-handle="{{ p.handle }}" data-variant="{{ v.id }}" data-price="{{ v.price }}"{% if shown == 0 %} checked{% endif %}>
         <a class="bf-pairs__img" href="{{ p.url }}" tabindex="-1" aria-hidden="true">
-          {%- if p.featured_image -%}{{ p.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}
+          {%- if p.featured_image -%}{{ p.featured_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}
         </a>
-        <div class="bf-pairs__info">
-          <a class="bf-pairs__name" href="{{ p.url }}">{{ p.title | escape }}</a>
-          <span class="bf-pairs__price">{{ v.price | money }}{% if v.compare_at_price > v.price %}<s>{{ v.compare_at_price | money }}</s>{% endif %}</span>
-        </div>
-        <button type="button" class="bf-pairs__btn" data-bf-pair-add="{{ v.id }}" aria-label="Add {{ p.title | escape }} to cart">Add</button>
+        <label class="bf-pairs__info" for="bfp-{{ v.id }}">
+          <span class="bf-pairs__name">{{ p.title | escape }}</span>
+          <span class="bf-pairs__price">{{ v.price | money }}</span>
+        </label>
       </li>
+      {%- assign shown = shown | plus: 1 -%}
     {%- endfor -%}
   {%- endcapture -%}
   {%- if shown > 0 -%}
-    <div class="bf-pairs">
-      <p class="bf-pairs__title">Pairs well with</p>
-      <ul class="bf-pairs__list">{{ items }}</ul>
+    {%- capture bundles_json -%}
+      [
+      {%- assign first = true -%}
+      {%- for row in bundle_map -%}
+        {%- assign pair = row | split: '=' -%}
+        {%- assign bp = all_products[pair[0]] -%}
+        {%- if bp == blank or bp.available == false -%}{%- continue -%}{%- endif -%}
+        {%- unless first -%},{%- endunless -%}{%- assign first = false -%}
+        {"handle":{{ bp.handle | json }},"title":{{ bp.title | json }},"variant":{{ bp.selected_or_first_available_variant.id }},"price":{{ bp.selected_or_first_available_variant.price }},"parts":{{ pair[1] | split: ',' | json }}}
+      {%- endfor -%}
+      ]
+    {%- endcapture -%}
+    <div class="bf-pairs" data-bf-pairs data-main-handle="{{ product.handle }}" data-main-price="{{ main_variant.price }}">
+      <p class="bf-pairs__title">Complete your lawn care</p>
+      <ul class="bf-pairs__list">
+        <li class="bf-pairs__item">
+          <input type="checkbox" checked disabled aria-label="{{ product.title | escape }} (this item)">
+          <span class="bf-pairs__img">{%- if product.featured_image -%}{{ product.featured_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}</span>
+          <span class="bf-pairs__info">
+            <span class="bf-pairs__name">This item: {{ product.title | escape }}</span>
+            <span class="bf-pairs__price" data-bfp-main-price>{{ main_variant.price | money }}</span>
+          </span>
+        </li>
+        {{ items }}
+      </ul>
+      <div class="bf-pairs__foot">
+        <div class="bf-pairs__total">Total: <strong data-bfp-total></strong><s data-bfp-was hidden></s><span class="bf-pairs__deal" data-bfp-deal></span></div>
+        <button type="button" class="bf-pairs__btn" data-bfp-add>Add all to cart</button>
+        <p class="bf-pairs__err" data-bfp-err role="alert"></p>
+      </div>
+      <script type="application/json" data-bfp-bundles>{{ bundles_json | strip_newlines }}</script>
+      <script type="application/json" data-bfp-prices>{"v":{ {%- for v in product.variants -%}"{{ v.id }}":{{ v.price }}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%} },"p":{ {%- assign firstp = true -%}{%- for v in product.variants -%}{%- for a in v.selling_plan_allocations -%}{%- unless firstp -%},{%- endunless -%}{%- assign firstp = false -%}"{{ v.id }}:{{ a.selling_plan.id }}":{{ a.price }}{%- endfor -%}{%- endfor -%} }}</script>
     </div>
     <script>
       (function () {
-        if (window.__bfPairsBound) return;
-        window.__bfPairsBound = true;
-        document.addEventListener('click', function (e) {
-          var btn = e.target.closest('[data-bf-pair-add]');
-          if (!btn) return;
-          e.preventDefault();
+        var root = document.currentScript.previousElementSibling;
+        if (!root || !root.hasAttribute('data-bf-pairs')) return;
+        var bundles = [], prices = { v: {}, p: {} };
+        try { bundles = JSON.parse(root.querySelector('[data-bfp-bundles]').textContent); } catch (e) {}
+        try { prices = JSON.parse(root.querySelector('[data-bfp-prices]').textContent); } catch (e) {}
+        var mainHandle = root.dataset.mainHandle;
+        var section = root.closest('.product') || document;
+        var form = section.querySelector('form[data-type="add-to-cart-form"]') || document.querySelector('form[action*="/cart/add"]');
+        var btn = root.querySelector('[data-bfp-add]');
+        var fmt = function (cents) {
+          return (window.Shopify && Shopify.formatMoney) ? Shopify.formatMoney(cents) : '$' + (cents / 100).toFixed(2);
+        };
+
+        function mainLine() {
+          var fd = form ? new FormData(form) : null;
+          var id = fd && Number(fd.get('id'));
+          var qty = fd && Number(fd.get('quantity')) || 1;
+          var plan = fd && fd.get('selling_plan');
+          var line = { id: id, quantity: qty };
+          if (plan) line.selling_plan = Number(plan);
+          return line;
+        }
+        function mainPrice(line) {
+          var key = line.id + ':' + (line.selling_plan || '');
+          if (line.selling_plan && prices.p[key] != null) return prices.p[key];
+          if (prices.v[line.id] != null) return prices.v[line.id];
+          return Number(root.dataset.mainPrice);
+        }
+        function plan() {
+          var main = mainLine();
+          var ticked = [].slice.call(root.querySelectorAll('[data-bfp-item]:checked'));
+          var lines = [main].concat(ticked.map(function (c) { return { id: Number(c.dataset.variant), quantity: 1 }; }));
+          var total = mainPrice(main) * main.quantity + ticked.reduce(function (s, c) { return s + Number(c.dataset.price); }, 0);
+          var res = { lines: lines, total: total, bundle: null };
+          if (ticked.length && main.quantity === 1 && !main.selling_plan) {
+            var set = [mainHandle].concat(ticked.map(function (c) { return c.dataset.handle; })).sort().join(',');
+            bundles.forEach(function (b) {
+              if (b.parts.slice().sort().join(',') === set && b.price < total) res.bundle = b;
+            });
+            if (res.bundle) res.lines = [{ id: res.bundle.variant, quantity: 1 }];
+          }
+          return res;
+        }
+        function render() {
+          var p = plan();
+          var n = p.lines.length === 1 && p.bundle ? (p.bundle.parts.length) : p.lines.length;
+          root.querySelector('[data-bfp-total]').textContent = fmt(p.bundle ? p.bundle.price : p.total);
+          var was = root.querySelector('[data-bfp-was]');
+          var deal = root.querySelector('[data-bfp-deal]');
+          if (p.bundle) {
+            was.textContent = fmt(p.total); was.hidden = false;
+            deal.textContent = 'Bundle price: you save ' + fmt(p.total - p.bundle.price) + ' with the ' + p.bundle.title;
+          } else {
+            was.hidden = true; deal.textContent = '';
+          }
+          var ml = mainLine(); root.querySelector('[data-bfp-main-price]').textContent = fmt(mainPrice(ml) * ml.quantity);
+          btn.textContent = n > 1 ? 'Add all ' + n + ' to cart' : 'Add to cart';
+        }
+        root.addEventListener('change', render);
+        if (form) form.addEventListener('change', function () { setTimeout(render, 0); });
+        render();
+
+        btn.addEventListener('click', function () {
+          var p = plan();
+          if (!p.lines[0].id) return;
           var cart = document.querySelector('cart-drawer') || document.querySelector('cart-notification');
-          var body = { items: [{ id: Number(btn.getAttribute('data-bf-pair-add')), quantity: 1 }] };
+          var body = { items: p.lines };
           if (cart && cart.getSectionsToRender) {
             body.sections = cart.getSectionsToRender().map(function (s) { return s.id; });
             body.sections_url = window.location.pathname;
           }
+          var err = root.querySelector('[data-bfp-err]');
+          err.textContent = '';
           btn.disabled = true;
-          var label = btn.textContent;
-          btn.textContent = '…';
           fetch((window.routes && window.routes.cart_add_url) || '/cart/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -84,17 +188,17 @@
           })
             .then(function (r) { return r.json(); })
             .then(function (res) {
-              if (res.status) throw new Error(res.description || 'Could not add');
-              btn.textContent = 'Added';
+              if (res.status) throw new Error(res.description || res.message || 'Could not add to cart');
               if (cart && cart.renderContents) {
-                if (cart.classList.contains('is-empty')) cart.classList.remove('is-empty');
+                cart.classList.remove('is-empty');
                 cart.renderContents(res);
               } else {
                 window.location.href = (window.routes && window.routes.cart_url) || '/cart';
               }
               if (window.publish && window.PUB_SUB_EVENTS) window.publish(PUB_SUB_EVENTS.cartUpdate, { source: 'bf-pairs', cartData: res });
             })
-            .catch(function () { btn.textContent = label; btn.disabled = false; });
+            .catch(function (e) { err.textContent = e.message || 'Something went wrong. Please try again.'; })
+            .finally(function () { btn.disabled = false; });
         });
       })();
     </script>
