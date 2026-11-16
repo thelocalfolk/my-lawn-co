@@ -40,4 +40,19 @@
   .product__info-container shopify-accelerated-checkout { --shopify-accelerated-checkout-button-border-radius: 14px; --shopify-accelerated-checkout-button-block-size: 54px; }
   .product__info-container .shopify-payment-button { margin-top: 10px; }
   .product__info-container .shopify-payment-button__more-options { font-size: 13px; color: #09552B; text-underline-offset: 3px; }
+
+  /* Afterpay: tight under the price, smaller */
+  .product__info-container .shopify-block[id*="afterpay"] { margin-top: -10px !important; margin-bottom: 4px !important; }
+  .product__info-container square-placement { display: block; font-size: 13px; line-height: 1.3; --messaging-font-size: 13px; --logo-badge-width: 68px; }
+
+  /* Quantity picker to match the purchase options */
+  .product__info-container .product-form__quantity .form__label,
+  .product__info-container .product-form__quantity .quantity__label { margin-bottom: 10px; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #0D301F; }
+  .product__info-container .product-form__quantity .quantity { width: 150px; min-height: 52px; border: 2px solid #D5E3D8; border-radius: 14px; background: #fff; overflow: hidden; }
+  .product__info-container .product-form__quantity .quantity:before,
+  .product__info-container .product-form__quantity .quantity:after { display: none !important; }
+  .product__info-container .product-form__quantity .quantity:focus-within { border-color: #09552B; box-shadow: 0 0 0 3px rgba(112, 194, 122, .25); }
+  .product__info-container .product-form__quantity .quantity__input { font-size: 17px; font-weight: 700; color: #0D301F; opacity: 1; }
+  .product__info-container .product-form__quantity .quantity__button { width: 46px; color: #09552B; }
+  .product__info-container .product-form__quantity .quantity__button svg { width: 12px; }
 </style>

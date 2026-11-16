@@ -1,0 +1,167 @@
+{%- comment -%}
+  Black Friday 2026 homepage hero: the homepage video full-bleed behind the sale message,
+  light blue accents, and a live countdown. The message changes by date (Sydney time):
+  pre (to 19 Nov), VIP day (20), launch (21+), refund day (22), free gift weekend (28-29), Cyber Monday (30).
+  Preview a phase with ?bf_phase=pre|vip|launch|refund|gift|cyber. Hidden after the sale ends.
+{%- endcomment -%}
+{%- liquid
+  assign accent = section.settings.accent | default: '#7FA3CB'
+  assign fallback_video = '//mylawncoturfcare.com/cdn/shop/videos/c/vp/99d4a666fb364c688abc32ac7ce116c1/99d4a666fb364c688abc32ac7ce116c1.HD-1080p-4.8Mbps-46883818.mp4?v=0'
+-%}
+<section class="bfh" id="bfh-{{ section.id }}" style="--bfh-accent: {{ accent }}; --bfh-overlay: {{ section.settings.overlay | divided_by: 100.0 }};" data-bfh hidden>
+  <div class="bfh__media" aria-hidden="true">
+    {%- if section.settings.video != blank -%}
+      {{ section.settings.video | video_tag: autoplay: true, loop: true, muted: true, controls: false, playsinline: true, preload: 'auto', class: 'bfh__video' }}
+    {%- else -%}
+      <video class="bfh__video" src="{{ fallback_video }}" autoplay muted loop playsinline preload="auto"></video>
+    {%- endif -%}
+  </div>
+  <div class="bfh__inner page-width">
+    <div class="bfh__copy">
+      <span class="bfh__badge" data-bfh-badge></span>
+      <h1 class="bfh__title"><span data-bfh-t1></span> <span class="bfh__accent" data-bfh-t2></span></h1>
+      <p class="bfh__text" data-bfh-text></p>
+      <div class="bfh__timer" data-bfh-timer>
+        <span class="bfh__label" data-bfh-label></span>
+        <div class="bfh__units" aria-live="off">
+          <div><strong data-bfh-d>0</strong><span>Days</span></div>
+          <div><strong data-bfh-h>00</strong><span>Hrs</span></div>
+          <div><strong data-bfh-m>00</strong><span>Mins</span></div>
+          <div><strong data-bfh-s>00</strong><span>Secs</span></div>
+        </div>
+      </div>
+      <div class="bfh__ctas">
+        <a class="bfh__btn" data-bfh-cta href="/collections/all"></a>
+        <a class="bfh__btn bfh__btn--ghost" href="{{ section.settings.secondary_url | default: '/products/rescue-dog-wee-repair' }}">{{ section.settings.secondary_label | default: 'Shop RESCUE' }}</a>
+      </div>
+      <div class="bfh__proof">
+        <span class="bfh__stars" aria-hidden="true">{%- for i in (1..5) -%}<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.6 7.2.8-5.4 4.9 1.5 7.1L12 17.8 5.7 21.4l1.5-7.1L1.8 9.4 9 8.6z"/></svg>{%- endfor -%}</span>
+        <span>Trusted by 130,000+ Aussie lawn lovers</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #bfh-{{ section.id }} { position: relative; overflow: hidden; color: #FFFEFA; background: #0D301F; font-family: Inter, var(--font-body-family), sans-serif; }
+  #bfh-{{ section.id }}[hidden] { display: none; }
+  #bfh-{{ section.id }} .bfh__media { position: absolute; inset: 0; }
+  #bfh-{{ section.id }} .bfh__video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #bfh-{{ section.id }} .bfh__media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(8, 20, 30, calc(var(--bfh-overlay) + .15)) 0%, rgba(8, 20, 30, var(--bfh-overlay)) 55%, rgba(8, 20, 30, calc(var(--bfh-overlay) - .2)) 100%); }
+  #bfh-{{ section.id }} .bfh__inner { position: relative; z-index: 1; min-height: clamp(560px, 46vw, 760px); display: flex; align-items: center; padding-top: clamp(48px, 6vw, 96px); padding-bottom: clamp(48px, 6vw, 96px); }
+  #bfh-{{ section.id }} .bfh__copy { max-width: 640px; display: flex; flex-direction: column; gap: 22px; }
+  #bfh-{{ section.id }} .bfh__badge { align-self: flex-start; padding: 8px 14px; border-radius: 999px; background: var(--bfh-accent); color: #0D301F; font-size: 13px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+  #bfh-{{ section.id }} .bfh__title { margin: 0; color: #FFFEFA; font-family: inherit; font-size: clamp(44px, 6vw, 84px); line-height: .98; letter-spacing: -.035em; font-weight: 900; }
+  #bfh-{{ section.id }} .bfh__accent { color: var(--bfh-accent); }
+  #bfh-{{ section.id }} .bfh__text { margin: 0; max-width: 560px; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; color: #E6EEF6; }
+  #bfh-{{ section.id }} .bfh__text:empty { display: none; }
+  #bfh-{{ section.id }} .bfh__label { display: block; margin-bottom: 10px; font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--bfh-accent); }
+  #bfh-{{ section.id }} .bfh__units { display: flex; gap: 10px; }
+  #bfh-{{ section.id }} .bfh__units > div { width: 78px; padding: 12px 0; border-radius: 14px; background: rgba(127, 163, 203, .18); border: 1.5px solid var(--bfh-accent); backdrop-filter: blur(6px); display: flex; flex-direction: column; align-items: center; }
+  #bfh-{{ section.id }} .bfh__units strong { font-size: 32px; line-height: 1.05; font-weight: 900; font-variant-numeric: tabular-nums; color: #FFFEFA; }
+  #bfh-{{ section.id }} .bfh__units span { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--bfh-accent); }
+  #bfh-{{ section.id }} .bfh__ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+  #bfh-{{ section.id }} .bfh__btn { display: inline-flex; align-items: center; gap: 10px; padding: 18px 30px; border-radius: 999px; background: var(--bfh-accent); color: #0D301F; font-size: 17px; font-weight: 800; text-decoration: none; transition: filter .15s; }
+  #bfh-{{ section.id }} .bfh__btn:hover { filter: brightness(1.08); }
+  #bfh-{{ section.id }} .bfh__btn--ghost { background: transparent; color: #FFFEFA; border: 2px solid rgba(255, 255, 255, .55); padding: 16px 26px; font-weight: 700; }
+  #bfh-{{ section.id }} .bfh__proof { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: #E6EEF6; }
+  #bfh-{{ section.id }} .bfh__stars { display: flex; gap: 2px; color: var(--bfh-accent); }
+  @media (max-width: 749px) {
+    #bfh-{{ section.id }} .bfh__media::after { background: rgba(8, 20, 30, calc(var(--bfh-overlay) + .1)); }
+    #bfh-{{ section.id }} .bfh__inner { min-height: 640px; align-items: flex-end; }
+    #bfh-{{ section.id }} .bfh__copy { gap: 18px; }
+    #bfh-{{ section.id }} .bfh__units { gap: 8px; }
+    #bfh-{{ section.id }} .bfh__units > div { width: auto; flex: 1; }
+    #bfh-{{ section.id }} .bfh__units strong { font-size: 28px; }
+    #bfh-{{ section.id }} .bfh__btn { flex: 1 1 100%; justify-content: center; }
+    #bfh-{{ section.id }} .bfh__btn--ghost { flex: 1 1 100%; justify-content: center; }
+  }
+</style>
+
+<script>
+  (function () {
+    var el = document.getElementById('bfh-{{ section.id }}');
+    if (!el) return;
+    var TZ = {{ settings.bf_gifts_utc_offset | default: '+11:00' | json }};
+    function at(d) { return new Date(d + 'T00:00:00' + TZ).getTime(); }
+    var END = at('2026-12-01');
+    // later entries win, so one-day events override the running sale message
+    var PHASES = [
+      { id: 'pre', start: at('2026-11-01'), end: at('2026-11-20'),
+        badge: 'Black Friday starts Fri 20 Nov', t1: 'Get in first.', t2: 'VIPs shop 30% off a day early.',
+        text: 'Join the VIP list for early access on Friday 20 November, plus $60 in free bonuses: a $20 gift voucher and the Yearly Lawn Program (worth $40).',
+        label: 'VIP early access opens in', cta: 'Join the VIP list', url: '/pages/vip-early-access' },
+      { id: 'vip', start: at('2026-11-20'), end: at('2026-11-21'),
+        badge: 'VIP early access · Fri 20 Nov only', t1: '30% off sitewide', t2: '+ $60 in free bonuses.',
+        text: 'A free $20 gift voucher and a free Yearly Lawn Program (worth $40), on top of 30% off everything. Opens to everyone tomorrow.',
+        label: 'VIP access ends in', cta: 'Shop VIP deals', url: '/collections/all' },
+      { id: 'launch', start: at('2026-11-21'), end: END,
+        badge: 'Black Friday · 20–30 Nov', t1: '30% off.', t2: 'Everything.',
+        text: 'Every lawn fix, every fertiliser, every bundle. Our biggest sale of the year runs until midnight Monday 30 November.',
+        label: 'Sale ends in', cta: 'Shop 30% off', url: '/collections/all' },
+      { id: 'refund', start: at('2026-11-22'), end: at('2026-11-23'),
+        badge: 'Refund giveaway · Sun 22 Nov only', t1: 'Order today.', t2: 'It could be free.',
+        text: 'We’re refunding 10 lucky customers who order today, on top of 30% off sitewide.',
+        label: 'Giveaway ends tonight in', cta: 'Shop 30% off', url: '/collections/all' },
+      { id: 'gift', start: at('2026-11-28'), end: END,
+        badge: 'Free gift weekend · 28–30 Nov', t1: '30% off', t2: '+ a free Yearly Lawn Program.',
+        text: 'Dave’s year-round plan, worth $40, free with every eligible order. Only until midnight Monday.',
+        label: 'Sale ends in', cta: 'Shop and claim it', url: '/collections/all' },
+      { id: 'cyber', start: at('2026-11-30'), end: END,
+        badge: 'Cyber Monday · Final day', t1: 'Last chance.', t2: 'Everything ends at midnight.',
+        text: '30% off sitewide, plus the free Yearly Lawn Program (worth $40) with every eligible order. After tonight, it’s gone.',
+        label: 'Everything ends in', cta: 'Shop 30% off', url: '/collections/all' }
+    ];
+    var forced = (location.search.match(/[?&]bf_phase=(\w+)/) || [])[1];
+    function current(now) {
+      if (forced) for (var i = 0; i < PHASES.length; i++) if (PHASES[i].id === forced) return PHASES[i];
+      var hit = null;
+      PHASES.forEach(function (p) { if (now >= p.start && now < p.end) hit = p; });
+      return hit;
+    }
+    var q = function (s) { return el.querySelector(s); };
+    var shown = null, loaded = Date.now();
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function tick() {
+      var now = Date.now();
+      var p = current(now);
+      {%- if request.design_mode -%} if (!p) p = PHASES[2]; {%- endif -%}
+      if (!p) { el.hidden = true; shown = null; return; }
+      if (p !== shown) {
+        shown = p;
+        q('[data-bfh-badge]').textContent = p.badge;
+        q('[data-bfh-t1]').textContent = p.t1;
+        q('[data-bfh-t2]').textContent = p.t2;
+        q('[data-bfh-text]').textContent = p.text || '';
+        q('[data-bfh-label]').textContent = p.label;
+        var a = q('[data-bfh-cta]'); a.textContent = p.cta; a.href = p.url;
+        el.hidden = false;
+        var v = el.querySelector('video'); if (v && v.paused) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); }
+      }
+      // in preview, pretend it is 9:30am on the phase's first day
+      var t = forced ? p.start + 9.5 * 36e5 + (now - loaded) : now;
+      var left = Math.max(0, Math.floor((p.end - t) / 1000));
+      q('[data-bfh-d]').textContent = Math.floor(left / 86400);
+      q('[data-bfh-h]').textContent = pad(Math.floor(left % 86400 / 3600));
+      q('[data-bfh-m]').textContent = pad(Math.floor(left % 3600 / 60));
+      q('[data-bfh-s]').textContent = pad(left % 60);
+    }
+    tick();
+    setInterval(tick, 1000);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "BF hero (video)",
+  "tag": "div",
+  "settings": [
+    { "type": "video", "id": "video", "label": "Background video", "info": "Leave empty to use the current homepage video." },
+    { "type": "color", "id": "accent", "label": "Accent colour", "default": "#7FA3CB" },
+    { "type": "range", "id": "overlay", "label": "Video darkening", "min": 20, "max": 80, "step": 5, "unit": "%", "default": 50 },
+    { "type": "text", "id": "secondary_label", "label": "Second button text", "default": "Shop RESCUE" },
+    { "type": "url", "id": "secondary_url", "label": "Second button link" }
+  ],
+  "presets": [{ "name": "BF hero (video)" }]
+}
+{% endschema %}
