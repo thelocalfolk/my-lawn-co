@@ -17,4 +17,13 @@
   .product-form__submit[disabled] { background: #9CB5A2 !important; opacity: 1 !important; }
   .quick-add__submit .loading__spinner .path,
   .product-form__submit .loading__spinner .path { stroke: #fff; }
+  /* "In stock" badge (snippets/bf-stock-badge.liquid) */
+      .bf-stock { display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px 5px 9px; border-radius: 999px; background: #fff; color: #0D301F; font-size: 12px; font-weight: 700; letter-spacing: .03em; line-height: 1.2; box-shadow: 0 1px 4px rgba(13, 48, 31, .12); }
+      .bf-stock--overlay { position: absolute; top: 10px; left: 10px; z-index: 2; pointer-events: none; }
+      .bf-stock__dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: #2DBE4F; flex: none; }
+      .bf-stock__dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: #2DBE4F; animation: bf-stock-pulse 1.6s ease-out infinite; }
+      @keyframes bf-stock-pulse { 0% { transform: scale(1); opacity: .7; } 100% { transform: scale(2.8); opacity: 0; } }
+      @media (prefers-reduced-motion: reduce) { .bf-stock__dot::after { animation: none; } }
+      .product__info-container .bf-stock { margin: 0 0 10px; background: #F1F8F2; box-shadow: none; }
+      @media (max-width: 749px) { .bf-stock--overlay { top: 6px; left: 6px; font-size: 11px; padding: 4px 9px 4px 8px; } }
 </style>

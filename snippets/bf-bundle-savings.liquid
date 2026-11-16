@@ -5,6 +5,7 @@
   Rendered from a "Custom liquid" block under the price: {% render 'bf-bundle-savings' %}
   Map: bundle handle = comma-separated handles of the products inside it (one of each).
 {%- endcomment -%}
+{%- render 'bf-stock-badge', product: product -%}
 {%- liquid
   assign map = 'grow-rescue-bundle=grow-granular-fertiliser,rescue-dog-wee-repair|grow-thrive-bundle=grow-granular-fertiliser,thrive-liquid-fertiliser|healthy-soil-bundle=grow-granular-fertiliser,enrich,vital-wetting-agent|healthy-leaf-bundle=thrive-liquid-fertiliser,revive-traces,enrich|complete-lawn-health-bundle=grow-granular-fertiliser,vital-wetting-agent,thrive-liquid-fertiliser,revive-traces,enrich' | split: '|'
   assign parts = ''

@@ -1,0 +1,10 @@
+{%- comment -%}
+  "In stock" badge with a pulsing green dot.
+  Usage: {% render 'bf-stock-badge', product: card_product, overlay: true %}  (product cards, over the image)
+         {% render 'bf-stock-badge', product: product %}                     (product page, inline under the price)
+  Only shows for physical products that are available. Styles live in snippets/bf-buttons.liquid (loaded once in <head>).
+{%- endcomment -%}
+{%- assign bf_v = product.selected_or_first_available_variant -%}
+{%- if product.available and bf_v.requires_shipping -%}
+  <span class="bf-stock{% if overlay %} bf-stock--overlay{% endif %}"><span class="bf-stock__dot" aria-hidden="true"></span>In stock</span>
+{%- endif -%}

@@ -319,16 +319,6 @@
       </div>
     </div>
   </div>
-  {%- comment -%} BF theme: big logo across the bottom of the footer {%- endcomment -%}
-  {%- if settings.logo != blank -%}
-    <div class="bf-footer-logo">
-      <img src="{{ settings.logo | image_url: width: 2400 }}" alt="{{ shop.name | escape }}" width="{{ settings.logo.width }}" height="{{ settings.logo.height }}" loading="lazy">
-    </div>
-    <style>
-      .bf-footer-logo { padding: clamp(28px, 4vw, 56px) clamp(16px, 2.5vw, 40px) clamp(14px, 1.6vw, 28px); }
-      .bf-footer-logo img { display: block; width: 100%; height: auto; }
-    </style>
-  {%- endif -%}
 </footer>
 
 {% schema %}
