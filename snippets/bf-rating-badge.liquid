@@ -1,0 +1,12 @@
+{%- comment -%}
+  Product page rating: Judge.me stars at the top (above the title), bigger,
+  with "Loved by 130,000+ lawn lovers" in place of the review count.
+  Rendered from a "Custom liquid" block right after the Judge.me preview badge block.
+  Products with no reviews keep Judge.me's default badge.
+{%- endcomment -%}
+<style>
+  .product__info-container .jdgm--done-setup .jdgm-prev-badge:not([data-number-of-reviews="0"]) { display: flex !important; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+  .product__info-container .jdgm--done-setup .jdgm-prev-badge:not([data-number-of-reviews="0"]) .jdgm-star { font-size: 22px; }
+  .product__info-container .jdgm--done-setup .jdgm-prev-badge:not([data-number-of-reviews="0"]) .jdgm-prev-badge__text { display: none; }
+  .product__info-container .jdgm--done-setup .jdgm-prev-badge:not([data-number-of-reviews="0"])::after { content: "Loved by 130,000+ lawn lovers"; font-size: 14px; font-weight: 600; letter-spacing: .02em; color: rgb(var(--color-foreground)); }
+</style>
