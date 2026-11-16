@@ -7,11 +7,12 @@
   or the quantity is more than 1.
   Rendered from a "Custom liquid" block under Add to cart: {% render 'bf-pairs' %}
 
-  OFFERS:  product handle = handles to offer, in order (the first one starts ticked)
+  OFFERS:  product handle = handles to offer, in order (the first one starts ticked).
+           Products not listed get the default list (Rescue, Grow, Thrive, Vital).
   BUNDLES: bundle handle  = the products inside it (one of each)
 {%- endcomment -%}
 {%- liquid
-  assign offer_map = 'rescue-dog-wee-repair=grow-granular-fertiliser,thrive-liquid-fertiliser|grow-granular-fertiliser=thrive-liquid-fertiliser,vital-wetting-agent,enrich|thrive-liquid-fertiliser=grow-granular-fertiliser,revive-traces,enrich|revive-traces=thrive-liquid-fertiliser,enrich|enrich=vital-wetting-agent,grow-granular-fertiliser|vital-wetting-agent=grow-granular-fertiliser,enrich|grow-rescue-bundle=thrive-liquid-fertiliser,vital-wetting-agent|grow-thrive-bundle=rescue-dog-wee-repair,vital-wetting-agent|healthy-soil-bundle=thrive-liquid-fertiliser,rescue-dog-wee-repair|healthy-leaf-bundle=grow-granular-fertiliser,rescue-dog-wee-repair|complete-lawn-health-bundle=rescue-dog-wee-repair|the-ultimate-lawn-program-a-yearly-lawn-care-program=rescue-dog-wee-repair,grow-thrive-bundle|a-beginners-guide-to-the-perfect-lawn=rescue-dog-wee-repair,grow-thrive-bundle' | split: '|'
+  assign offer_map = 'rescue-dog-wee-repair=grow-granular-fertiliser,thrive-liquid-fertiliser|grow-granular-fertiliser=thrive-liquid-fertiliser,vital-wetting-agent,enrich|thrive-liquid-fertiliser=grow-granular-fertiliser,revive-traces,enrich|revive-traces=thrive-liquid-fertiliser,enrich,grow-granular-fertiliser|enrich=vital-wetting-agent,grow-granular-fertiliser,thrive-liquid-fertiliser|vital-wetting-agent=grow-granular-fertiliser,enrich,thrive-liquid-fertiliser|grow-rescue-bundle=thrive-liquid-fertiliser,vital-wetting-agent,enrich|grow-thrive-bundle=rescue-dog-wee-repair,vital-wetting-agent,enrich|healthy-soil-bundle=thrive-liquid-fertiliser,rescue-dog-wee-repair,revive-traces|healthy-leaf-bundle=grow-granular-fertiliser,rescue-dog-wee-repair,vital-wetting-agent|complete-lawn-health-bundle=rescue-dog-wee-repair|the-ultimate-lawn-program-a-yearly-lawn-care-program=rescue-dog-wee-repair,grow-thrive-bundle,vital-wetting-agent|a-beginners-guide-to-the-perfect-lawn=rescue-dog-wee-repair,grow-thrive-bundle,vital-wetting-agent' | split: '|'
   assign bundle_map = 'grow-rescue-bundle=grow-granular-fertiliser,rescue-dog-wee-repair|grow-thrive-bundle=grow-granular-fertiliser,thrive-liquid-fertiliser|healthy-soil-bundle=grow-granular-fertiliser,enrich,vital-wetting-agent|healthy-leaf-bundle=thrive-liquid-fertiliser,revive-traces,enrich|complete-lawn-health-bundle=grow-granular-fertiliser,vital-wetting-agent,thrive-liquid-fertiliser,revive-traces,enrich' | split: '|'
   assign offers = ''
   for row in offer_map
@@ -20,6 +21,9 @@
       assign offers = pair[1] | split: ','
     endif
   endfor
+  if offers == ''
+    assign offers = 'rescue-dog-wee-repair,grow-granular-fertiliser,thrive-liquid-fertiliser,vital-wetting-agent' | split: ','
+  endif
   assign in_cart = cart.items | map: 'product_id' | join: ',' | prepend: ',' | append: ','
   assign shown = 0
   assign main_variant = product.selected_or_first_available_variant
@@ -54,7 +58,7 @@
   {%- capture items -%}
     {%- for h in offers -%}
       {%- assign p = all_products[h] -%}
-      {%- if p == blank or p.available == false or shown >= 3 -%}{%- continue -%}{%- endif -%}
+      {%- if p == blank or p.available == false or p.id == product.id or shown >= 3 -%}{%- continue -%}{%- endif -%}
       {%- assign pid = p.id | prepend: ',' | append: ',' -%}
       {%- if in_cart contains pid -%}{%- continue -%}{%- endif -%}
       {%- assign v = p.selected_or_first_available_variant -%}
