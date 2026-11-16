@@ -89,6 +89,7 @@
 
     var q = function (s) { return el.querySelector(s); };
     var shown = null;
+    var loaded = Date.now();
     function pad(n) { return (n < 10 ? '0' : '') + n; }
     function tick() {
       var now = Date.now();
@@ -104,7 +105,9 @@
         if (p.link) { a.textContent = p.link.text; a.href = p.link.url; a.hidden = false; } else { a.hidden = true; }
         el.hidden = false;
       }
-      var left = Math.max(0, Math.floor(((forced ? Math.max(p.end, now + 36e5 * 30) : p.end) - now) / 1000));
+      // in preview, pretend it is 9:30am on the phase's first day
+      var t = forced ? p.start + 9.5 * 36e5 + (now - loaded) : now;
+      var left = Math.max(0, Math.floor((p.end - t) / 1000));
       q('[data-bf-d]').textContent = Math.floor(left / 86400);
       q('[data-bf-h]').textContent = pad(Math.floor(left % 86400 / 3600));
       q('[data-bf-m]').textContent = pad(Math.floor(left % 3600 / 60));
