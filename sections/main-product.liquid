@@ -500,14 +500,20 @@
                         {{ product.metafields.reviews.rating.value.scale_max -}}
                       </span>
                     </p>
-                    <p class="rating-count caption">
-                      <span aria-hidden="true">({{ product.metafields.reviews.rating_count }})</span>
+                    <p class="rating-count caption bf-rating-loved">
+                      Loved by 130,000+ lawn lovers
                       <span class="visually-hidden">
                         {{- product.metafields.reviews.rating_count }}
                         {{ 'accessibility.total_reviews' | t -}}
                       </span>
                     </p>
                   </div>
+                  <style>
+                    #ProductInfo-{{ section.id }} .rating-wrapper { align-items: center; gap: 10px; }
+                    #ProductInfo-{{ section.id }} .rating-wrapper .rating-star { --font-size: 2.6; --letter-spacing: 0.25; }
+                    #ProductInfo-{{ section.id }} .rating-wrapper .rating-text { display: none; }
+                    #ProductInfo-{{ section.id }} .bf-rating-loved { margin: 0; font-size: 1.4rem; font-weight: 600; letter-spacing: .02em; color: rgb(var(--color-foreground)); }
+                  </style>
                 {%- endif -%}
               {%- when 'complementary' -%}
                 <product-recommendations
