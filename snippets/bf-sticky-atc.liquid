@@ -1,0 +1,69 @@
+{%- comment -%}
+  Sticky Add to cart bar for product pages. Slides up once the main Add to cart button
+  scrolls out of view; its button clicks the real one, so the chosen quantity and
+  one-time / subscription option carry over. Rendered from the top of snippets/bf-pairs.liquid.
+{%- endcomment -%}
+{%- if product and product.available -%}
+  <div class="bf-sticky" data-bf-sticky aria-hidden="true">
+    <div class="bf-sticky__inner">
+      {%- if product.featured_image -%}
+        <img class="bf-sticky__img" src="{{ product.featured_image | image_url: width: 120 }}" alt="" width="48" height="48" loading="lazy">
+      {%- endif -%}
+      <div class="bf-sticky__info">
+        <span class="bf-sticky__title">{{ product.title | escape }}</span>
+        <span class="bf-sticky__price" data-bf-sticky-price>{{ product.selected_or_first_available_variant.price | money }}</span>
+      </div>
+      <button type="button" class="bf-sticky__btn" data-bf-sticky-btn tabindex="-1">Add to cart</button>
+    </div>
+  </div>
+  <style>
+    .bf-sticky { position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: #FFFEFA; border-top: 1px solid #D5E3D8; box-shadow: 0 -6px 20px rgba(13, 48, 31, .1); transform: translateY(110%); transition: transform .25s ease; }
+    .bf-sticky.is-visible { transform: translateY(0); }
+    .bf-sticky__inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+    .bf-sticky__img { width: 48px; height: 48px; object-fit: cover; border-radius: 10px; flex: none; }
+    .bf-sticky__info { min-width: 0; flex: 1; display: flex; flex-direction: column; line-height: 1.25; }
+    .bf-sticky__title { font-size: 14px; font-weight: 700; color: #0D301F; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bf-sticky__price { font-size: 14px; font-weight: 800; color: #09552B; }
+    .bf-sticky__btn { flex: none; min-height: 48px; padding: 0 26px; border: 0; border-radius: 12px; background: #09552B; color: #fff; font: inherit; font-size: 16px; font-weight: 700; letter-spacing: .02em; cursor: pointer; transition: background-color .15s; }
+    .bf-sticky__btn:hover { background: #0D301F; }
+    @media (max-width: 749px) { .bf-sticky__btn { padding: 0 18px; font-size: 15px; } }
+  </style>
+  <script>
+    (function () {
+      var bar = document.currentScript.previousElementSibling.previousElementSibling;
+      if (!bar || !bar.hasAttribute('data-bf-sticky')) return;
+      document.body.appendChild(bar);
+      var main = document.querySelector('.product__info-container .product-form__submit');
+      if (!main) return;
+      var priceEl = bar.querySelector('[data-bf-sticky-price]');
+      var btn = bar.querySelector('[data-bf-sticky-btn]');
+      function visible(e) { return e && e.offsetParent !== null && getComputedStyle(e).visibility !== 'hidden'; }
+      function readPrice() {
+        var sub = document.querySelector('.appstle-active-option .appstle_subscription_amount');
+        if (visible(sub) && sub.textContent.trim()) return sub.textContent.trim();
+        var items = document.querySelectorAll('.product__info-container .price .price-item');
+        for (var i = 0; i < items.length; i++) {
+          if (visible(items[i]) && !items[i].closest('s') && items[i].textContent.trim()) return items[i].textContent.trim();
+        }
+        return null;
+      }
+      var ticking = false;
+      function update() {
+        ticking = false;
+        // show only once the main button has scrolled up out of view (not before reaching it)
+        var show = main.getBoundingClientRect().bottom < 0 && !main.disabled;
+        if (show === bar.classList.contains('is-visible')) return;
+        if (show) { var p = readPrice(); if (p) priceEl.textContent = p; }
+        bar.classList.toggle('is-visible', show);
+        bar.setAttribute('aria-hidden', show ? 'false' : 'true');
+        btn.tabIndex = show ? 0 : -1;
+      }
+      window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+      update();
+      btn.addEventListener('click', function () {
+        if (main.disabled) return;
+        main.click();
+      });
+    })();
+  </script>
+{%- endif -%}

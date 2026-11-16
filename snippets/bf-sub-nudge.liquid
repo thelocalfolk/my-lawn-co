@@ -1,0 +1,53 @@
+{%- comment -%}
+  Subscribe nudge for product pages with an Appstle subscription option. While "One-Time Purchase"
+  is selected, a line under the options shows the saving per delivery; clicking it switches to
+  Subscribe & Save. Hidden once Subscribe & Save is picked. Rendered from the top of snippets/bf-pairs.liquid.
+{%- endcomment -%}
+{%- if product.selling_plan_groups.size > 0 -%}
+  <style>
+    .bf-subnudge { display: flex; align-items: center; gap: 10px; width: 100%; margin: 10px 0 0; padding: 11px 14px; border: 1.5px dashed #70C27A; border-radius: 12px; background: #F1F8F2; color: #0D301F; font: inherit; font-size: 14px; line-height: 1.35; text-align: left; cursor: pointer; }
+    .bf-subnudge:hover { border-style: solid; }
+    .bf-subnudge[hidden] { display: none; }
+    .bf-subnudge__icon { flex: none; width: 28px; height: 28px; border-radius: 50%; background: #70C27A; color: #0D301F; display: inline-flex; align-items: center; justify-content: center; }
+    .bf-subnudge strong { font-weight: 800; }
+    .bf-subnudge__go { margin-left: auto; flex: none; font-weight: 700; color: #09552B; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+  </style>
+  <script>
+    (function () {
+      function money(t) { var n = parseFloat(String(t).replace(/[^0-9.]/g, '')); return isNaN(n) ? null : n; }
+      function setup() {
+        var wrap = document.querySelector('.product__info-container .appstle_subscription_wrapper');
+        if (!wrap || wrap.parentNode.querySelector('.bf-subnudge')) return !!wrap;
+        var subOpt = wrap.querySelector('.appstle_include_dropdown, .payAsYouGoPlansDropdownWrapper');
+        var oneOpt = wrap.querySelector('.appstle_one_time_details_wrapper');
+        if (!subOpt || !oneOpt) return true;
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'bf-subnudge';
+        btn.innerHTML = '<span class="bf-subnudge__icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></span><span data-t></span><span class="bf-subnudge__go">Switch</span>';
+        wrap.insertAdjacentElement('afterend', btn);
+        function refresh() {
+          var oneActive = oneOpt.closest('.appstle_subscription_wrapper_option').classList.contains('appstle-active-option');
+          var one = money((oneOpt.querySelector('.appstle_subscription_amount') || {}).textContent);
+          var sub = money((subOpt.querySelector('.appstle_subscription_amount') || {}).textContent);
+          var badge = (subOpt.querySelector('.appstle-save-badge') || {}).textContent || '';
+          var save = one && sub && one > sub ? '$' + (one - sub).toFixed(2) : badge.replace(/save/i, '').trim();
+          btn.querySelector('[data-t]').innerHTML = 'Using it again? <strong>Subscribe and save ' + (save || '10%') + '</strong> on every delivery. Skip or cancel anytime.';
+          btn.hidden = !oneActive;
+        }
+        btn.addEventListener('click', function () {
+          var r = subOpt.querySelector('input[type=radio]');
+          var l = subOpt.querySelector('.appstle_radio_label');
+          (l || r).click();
+          setTimeout(refresh, 50);
+        });
+        new MutationObserver(refresh).observe(wrap, { subtree: true, attributes: true, attributeFilter: ['class'], childList: true, characterData: true });
+        refresh();
+        return true;
+      }
+      // Appstle builds its widget after page load, so wait for it
+      var tries = 0;
+      (function wait() { if (setup() || ++tries > 40) return; setTimeout(wait, 250); })();
+    })();
+  </script>
+{%- endif -%}
