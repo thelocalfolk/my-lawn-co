@@ -189,13 +189,26 @@
             .then(function (r) { return r.json(); })
             .then(function (res) {
               if (res.status) throw new Error(res.description || res.message || 'Could not add to cart');
-              if (cart && cart.renderContents) {
-                cart.classList.remove('is-empty');
-                cart.renderContents(res);
-              } else {
+              if (!cart || !cart.renderContents) {
                 window.location.href = (window.routes && window.routes.cart_url) || '/cart';
+                return;
               }
-              if (window.publish && window.PUB_SUB_EVENTS) window.publish(PUB_SUB_EVENTS.cartUpdate, { source: 'bf-pairs', cartData: res });
+              // Adding several items at once doesn't always send the drawer HTML back, so fetch it if missing.
+              var ids = body.sections || [];
+              var ready = res.sections && ids.every(function (id) { return res.sections[id]; })
+                ? Promise.resolve(res)
+                : fetch(window.location.pathname + '?sections=' + ids.join(','))
+                    .then(function (r) { return r.json(); })
+                    .then(function (sections) { res.sections = sections; return res; });
+              return ready.then(function (state) {
+                try {
+                  cart.classList.remove('is-empty');
+                  cart.renderContents(state);
+                } catch (e) {
+                  window.location.href = (window.routes && window.routes.cart_url) || '/cart';
+                }
+                if (window.publish && window.PUB_SUB_EVENTS) window.publish(PUB_SUB_EVENTS.cartUpdate, { source: 'bf-pairs', cartData: state });
+              });
             })
             .catch(function (e) { err.textContent = e.message || 'Something went wrong. Please try again.'; })
             .finally(function () { btn.disabled = false; });
