@@ -1,0 +1,43 @@
+{%- comment -%}
+  Product page buy box styling: Appstle "Purchase Options" (one-time / Subscribe & Save),
+  the "Subscription detail" link, a solid green Add to cart, and a matching Shop Pay button.
+  Rendered at the top of snippets/bf-pairs.liquid so it loads on every product template.
+{%- endcomment -%}
+<style>
+  .product__info-container .appstle_sub_widget { margin: 6px 0 4px !important; }
+  .product__info-container .appstle_widget_title { margin: 0 0 10px !important; font-size: 12px !important; font-weight: 700 !important; letter-spacing: .1em !important; text-transform: uppercase !important; color: #0D301F !important; }
+  .product__info-container .appstle_subscription_wrapper { display: flex !important; flex-direction: column !important; gap: 10px !important; }
+  .product__info-container .appstle_subscription_wrapper_option { margin: 0 !important; padding: 16px 18px !important; border: 2px solid #D5E3D8 !important; border-radius: 14px !important; background: #fff !important; transition: border-color .15s, background-color .15s, box-shadow .15s; cursor: pointer; }
+  .product__info-container .appstle_subscription_wrapper_option:hover { border-color: #9CCBA3 !important; }
+  .product__info-container .appstle_subscription_wrapper_option.appstle-active-option { border-color: #09552B !important; background: #F1F8F2 !important; box-shadow: 0 0 0 3px rgba(112, 194, 122, .25); }
+  .product__info-container .appstle_one_time_details_wrapper,
+  .product__info-container .appstle_subscription_radio_wrapper { display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 10px; }
+  .product__info-container .appstle_radio_label { display: flex !important; align-items: center !important; gap: 12px !important; margin: 0 !important; font-size: 16px !important; font-weight: 600 !important; letter-spacing: 0 !important; color: #0D301F !important; }
+  .product__info-container .appstle_circle { width: 22px !important; height: 22px !important; min-width: 22px !important; border: 2px solid #9CB5A2 !important; border-radius: 50% !important; background: #fff !important; display: inline-flex !important; align-items: center; justify-content: center; }
+  .product__info-container .appstle-active-option .appstle_circle { border-color: #09552B !important; }
+  .product__info-container .appstle_dot { width: 10px !important; height: 10px !important; border-radius: 50% !important; background: #09552B !important; }
+  .product__info-container .appstle-text-and-badge-wrapper { display: inline-flex !important; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+  .product__info-container .appstle-save-badge { padding: 4px 10px !important; border-radius: 999px !important; background: #70C27A !important; color: #0D301F !important; font-size: 11px !important; font-weight: 800 !important; letter-spacing: .06em !important; line-height: 1.2 !important; }
+  .product__info-container .appstle_subscription_wrapper_option .appstle_subscription_amount { font-size: 17px !important; font-weight: 800 !important; color: #0D301F !important; }
+  .product__info-container .appstle_subscription_amount_wrapper { display: flex !important; flex-direction: column !important; align-items: flex-end !important; line-height: 1.2; }
+  .product__info-container .appstle_subscription_compare_amount { font-size: 13px !important; font-weight: 500 !important; color: #6B7F70 !important; }
+  .product__info-container .appstle_select_label { font-size: 11px !important; font-weight: 700 !important; letter-spacing: .08em !important; color: #0D301F !important; }
+  .product__info-container .appstle_select { border: 1.5px solid #9CB5A2 !important; border-radius: 10px !important; background-color: #fff !important; color: #0D301F !important; }
+  .product__info-container .appstle-tootltip-parent { margin: 12px 0 16px !important; }
+  .product__info-container .appstle_tooltip_wrapper { display: inline-flex !important; align-items: center; gap: 6px; }
+  .product__info-container .appstle_tooltip_wrapper svg { width: 18px !important; height: 18px !important; }
+  .product__info-container .appstle_tooltip_title { font-size: 13px !important; font-weight: 600 !important; color: #09552B !important; text-decoration: underline; text-underline-offset: 3px; }
+
+  /* Add to cart: solid green */
+  .product__info-container .product-form__submit { min-height: 56px; border-radius: 14px !important; background: #09552B !important; color: #fff !important; font-size: 17px !important; font-weight: 700 !important; letter-spacing: .02em !important; box-shadow: none !important; transition: background-color .15s, transform .1s; }
+  .product__info-container .product-form__submit::before,
+  .product__info-container .product-form__submit::after { box-shadow: none !important; border-radius: 14px !important; }
+  .product__info-container .product-form__submit:hover:not([disabled]) { background: #0D301F !important; }
+  .product__info-container .product-form__submit:active:not([disabled]) { transform: translateY(1px); }
+  .product__info-container .product-form__submit[disabled] { background: #9CB5A2 !important; opacity: 1 !important; }
+  .product__info-container .product-form__submit .loading__spinner .path { stroke: #fff; }
+  .product__info-container .product-form__buttons { max-width: none !important; }
+  .product__info-container shopify-accelerated-checkout { --shopify-accelerated-checkout-button-border-radius: 14px; --shopify-accelerated-checkout-button-block-size: 54px; }
+  .product__info-container .shopify-payment-button { margin-top: 10px; }
+  .product__info-container .shopify-payment-button__more-options { font-size: 13px; color: #09552B; text-underline-offset: 3px; }
+</style>
