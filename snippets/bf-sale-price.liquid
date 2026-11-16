@@ -1,0 +1,75 @@
+{%- comment -%}
+  Black Friday sale prices: during the sale, every price (product cards, product page, quick add)
+  shows the price after 30% off, the normal price crossed out, and a "30% OFF" tag.
+    - Fri 20 Nov (VIP day): the 30% needs the VIP code, so the tag says "30% OFF WITH VIP CODE".
+    - Sat 21 Nov to midnight Mon 30 Nov: the 30% comes off automatically in the cart.
+  Hooks onto the hidden [data-bf-sale] marker added at the end of snippets/price.liquid.
+  Preview with ?bf_phase=vip (or launch/refund/bf/gift/cyber). Rendered once in layout/theme.liquid.
+  The cart itself shows Shopify's real discount, so nothing here touches cart totals.
+{%- endcomment -%}
+<style>
+  .price.bf-sale-on > .price__container, .price.bf-sale-on > .badge { display: none !important; }
+  .bf-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+  .bf-price__now { font-weight: 800; color: #09552B; }
+  .bf-price__was { font-size: .8em; font-weight: 500; color: #6B7F70; }
+  .bf-price__tag { align-self: center; padding: 3px 9px; border-radius: 999px; background: #0D301F; color: #70C27A; font-size: 11px; font-weight: 800; letter-spacing: .06em; line-height: 1.3; white-space: nowrap; }
+</style>
+<script>
+  (function () {
+    var TZ = {{ settings.bf_gifts_utc_offset | default: '+11:00' | json }};
+    function at(d) { return new Date(d + 'T00:00:00' + TZ).getTime(); }
+    var forced = (location.search.match(/[?&]bf_phase=(\w+)/) || [])[1];
+    var now = Date.now();
+    var mode = null;
+    if (forced) mode = forced === 'vip' ? 'vip' : (forced === 'pre' ? null : 'auto');
+    else if (now >= at('2026-11-20') && now < at('2026-11-21')) mode = 'vip';
+    else if (now >= at('2026-11-21') && now < at('2026-12-01')) mode = 'auto';
+    if (!mode) return;
+    var FORMAT = {{ shop.money_format | json }};
+    {%- if settings.currency_code_enabled %} FORMAT = {{ shop.money_with_currency_format | json }};{% endif %}
+    var PLAIN = {{ shop.money_format | json }};
+    function money(cents, plain) {
+      var n = (cents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return (plain ? PLAIN : FORMAT).replace(/\{\{\s*amount[a-z_]*\s*\}\}/, n);
+    }
+    // same rounding as the cart: 30% of the price, rounded to the cent, taken off
+    function sale(cents) { return cents - Math.round(cents * 3 / 10); }
+    var TAG = mode === 'vip' ? '30% OFF WITH VIP CODE' : '30% OFF';
+    function apply(root) {
+      var marks = (root || document).querySelectorAll('[data-bf-sale]:not([data-bf-done])');
+      for (var i = 0; i < marks.length; i++) {
+        var m = marks[i];
+        m.setAttribute('data-bf-done', '');
+        var price = m.closest('.price');
+        if (!price) continue;
+        var was = parseInt(m.getAttribute('data-bf-sale'), 10);
+        if (!(was > 0)) continue;
+        var cut = sale(was);
+        var from = m.hasAttribute('data-bf-from') ? 'From ' : '';
+        var old = price.querySelector(':scope > .bf-price');
+        if (old) old.remove();
+        var box = document.createElement('div');
+        box.className = 'bf-price';
+        box.innerHTML = '<span class="bf-price__now">' + from + money(cut) + '</span><s class="bf-price__was">' + money(was, true) + '</s><span class="bf-price__tag">' + TAG + '</span>';
+        price.appendChild(box);
+        price.classList.add('bf-sale-on');
+      }
+    }
+    // product page: show the one-time option in the Appstle box at the sale price too
+    function appstle() {
+      if (mode !== 'auto') return;
+      var el = document.querySelector('.product__info-container .appstle_one_time_details_wrapper .appstle_subscription_amount:not([data-bf-done])');
+      if (!el) return;
+      var was = Math.round(parseFloat(el.textContent.replace(/[^0-9.]/g, '')) * 100);
+      if (!(was > 0)) return;
+      el.setAttribute('data-bf-done', '');
+      el.innerHTML = money(sale(was), true) + ' <s style="font-size:.8em;font-weight:500;color:#6B7F70">' + money(was, true) + '</s>';
+    }
+    function start() {
+      apply(); appstle();
+      // product page variant changes, quick add and filtering replace the price HTML
+      new MutationObserver(function () { apply(); appstle(); }).observe(document.body, { childList: true, subtree: true });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+  })();
+</script>

@@ -132,5 +132,6 @@
         {{ 'products.product.sold_out' | t }}
       </span>
     {%- endif -%}
+    {%- if target != null and price > 0 -%}<span data-bf-sale="{{ price }}"{% if target == product and product.price_varies %} data-bf-from{% endif %} hidden></span>{%- endif -%}
   </div>
 {% endunless %}

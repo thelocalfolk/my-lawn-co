@@ -1,0 +1,34 @@
+{%- comment -%}
+  Under Add to cart on product pages: a Christmas delivery cut-off line (shown until the end of
+  Mon 14 Dec, Sydney time) and a small trust row using the same claims as the homepage bar.
+  Rendered from the top of snippets/bf-sale-strip.liquid.
+{%- endcomment -%}
+<div class="bf-trust">
+  <p class="bf-trust__xmas" data-bf-xmas hidden>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8c-2-3-6-3-6 0s4 0 6 0zm0 0c2-3 6-3 6 0s-4 0-6 0z"/></svg>
+    <span>Order by <strong>Monday 14 December</strong> for Christmas delivery</span>
+  </p>
+  <ul class="bf-trust__row">
+    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.6-7 10-7 10z"/></svg>Safe for pets &amp; lawns</li>
+    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-6 8-12a8 8 0 1 0-16 0c0 6 8 12 8 12z"/><circle cx="12" cy="10" r="3"/></svg>100% Australian</li>
+    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21c0-9 6-15 15-16-1 9-7 15-15 16z"/><path d="M5 21l7-7"/></svg>Eco-friendly</li>
+    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Secure checkout</li>
+  </ul>
+</div>
+<style>
+  .bf-trust { margin: 14px 0 0; }
+  .bf-trust__xmas { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; padding: 10px 12px; border-radius: 12px; background: #EEF3F9; color: #0D301F; font-size: 14px; line-height: 1.35; }
+  .bf-trust__xmas[hidden] { display: none; }
+  .bf-trust__xmas svg { flex: none; color: #3E6A99; }
+  .bf-trust__row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .bf-trust__row li { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px 4px; border-radius: 12px; background: #F1F8F2; color: #0D301F; font-size: 12px; font-weight: 700; line-height: 1.25; text-align: center; }
+  .bf-trust__row svg { color: #09552B; }
+  @media (max-width: 400px) { .bf-trust__row { grid-template-columns: repeat(2, 1fr); } }
+</style>
+<script>
+  (function () {
+    var el = document.currentScript.parentNode.querySelector('[data-bf-xmas]') || document.querySelector('[data-bf-xmas]');
+    var TZ = {{ settings.bf_gifts_utc_offset | default: '+11:00' | json }};
+    if (el && Date.now() < new Date('2026-12-15T00:00:00' + TZ).getTime()) el.hidden = false;
+  })();
+</script>

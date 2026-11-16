@@ -39,8 +39,10 @@
       var btn = bar.querySelector('[data-bf-sticky-btn]');
       function visible(e) { return e && e.offsetParent !== null && getComputedStyle(e).visibility !== 'hidden'; }
       function readPrice() {
-        var sub = document.querySelector('.appstle-active-option .appstle_subscription_amount');
+        var sub = document.querySelector('.appstle-active-option.appstle_include_dropdown .appstle_subscription_amount');
         if (visible(sub) && sub.textContent.trim()) return sub.textContent.trim();
+        var bf = document.querySelector('.product__info-container .bf-price__now'); // Black Friday sale price
+        if (bf && bf.textContent.trim()) return bf.textContent.trim();
         var items = document.querySelectorAll('.product__info-container .price .price-item');
         for (var i = 0; i < items.length; i++) {
           if (visible(items[i]) && !items[i].closest('s') && items[i].textContent.trim()) return items[i].textContent.trim();
