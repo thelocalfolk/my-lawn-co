@@ -1,0 +1,20 @@
+{%- comment -%}
+  Sitewide Add to cart buttons (product cards, quick add, featured collections) to match
+  the product page: solid green, white bold text, rounded. Rendered in layout/theme.liquid <head>.
+  The product page's own button is sized in snippets/bf-buybox.liquid.
+{%- endcomment -%}
+<style>
+  .quick-add__submit,
+  .product-form__submit { border-radius: 12px !important; background: #09552B !important; color: #fff !important; font-weight: 700 !important; letter-spacing: .02em !important; box-shadow: none !important; transition: background-color .15s, transform .1s; }
+  .quick-add__submit::before, .quick-add__submit::after,
+  .product-form__submit::before, .product-form__submit::after { box-shadow: none !important; border-radius: 12px !important; }
+  .quick-add__submit { min-height: 46px; font-size: 15px !important; }
+  .quick-add__submit:hover:not([disabled]),
+  .product-form__submit:hover:not([disabled]) { background: #0D301F !important; }
+  .quick-add__submit:active:not([disabled]),
+  .product-form__submit:active:not([disabled]) { transform: translateY(1px); }
+  .quick-add__submit[disabled], .quick-add__submit[aria-disabled="true"],
+  .product-form__submit[disabled] { background: #9CB5A2 !important; opacity: 1 !important; }
+  .quick-add__submit .loading__spinner .path,
+  .product-form__submit .loading__spinner .path { stroke: #fff; }
+</style>
