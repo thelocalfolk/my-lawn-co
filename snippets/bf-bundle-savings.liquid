@@ -1,0 +1,48 @@
+{%- comment -%}
+  Bundle savings line for bundle product pages: "Save $X vs buying separately".
+  Works out the saving live from the current prices of the products inside the bundle,
+  so it stays right if prices change. Products not listed below show nothing.
+  Rendered from a "Custom liquid" block under the price: {% render 'bf-bundle-savings' %}
+  Map: bundle handle = comma-separated handles of the products inside it (one of each).
+{%- endcomment -%}
+{%- liquid
+  assign map = 'grow-rescue-bundle=grow-granular-fertiliser,rescue-dog-wee-repair|grow-thrive-bundle=grow-granular-fertiliser,thrive-liquid-fertiliser|healthy-soil-bundle=grow-granular-fertiliser,enrich,vital-wetting-agent|healthy-leaf-bundle=thrive-liquid-fertiliser,revive-traces,enrich|complete-lawn-health-bundle=grow-granular-fertiliser,vital-wetting-agent,thrive-liquid-fertiliser,revive-traces,enrich' | split: '|'
+  assign parts = ''
+  for row in map
+    assign pair = row | split: '='
+    if pair[0] == product.handle
+      assign parts = pair[1] | split: ','
+    endif
+  endfor
+  assign total = 0
+  assign names = ''
+  assign ok = true
+  if parts != ''
+    for h in parts
+      assign p = all_products[h]
+      if p == blank or p.price == blank
+        assign ok = false
+      else
+        assign total = total | plus: p.price
+        assign short = p.title | split: ' ' | first | split: '-' | first | strip | upcase
+        if names != ''
+          assign names = names | append: ' + '
+        endif
+        assign names = names | append: short
+      endif
+    endfor
+  endif
+  assign bundle_price = product.selected_or_first_available_variant.price
+  assign saving = total | minus: bundle_price
+-%}
+{%- if parts != '' and ok and saving > 0 -%}
+  <div class="bf-bundle-save">
+    <span class="bf-bundle-save__tag">Bundle saving</span>
+    <span>Save <strong>{{ saving | money_without_trailing_zeros }}</strong> vs buying {{ names }} separately ({{ total | money }})</span>
+  </div>
+  <style>
+    .bf-bundle-save { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 2px 0 10px; font-size: 14px; line-height: 1.4; color: #0D301F; }
+    .bf-bundle-save__tag { padding: 3px 9px; border-radius: 999px; background: #70C27A; color: #0D301F; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    .bf-bundle-save strong { font-weight: 800; }
+  </style>
+{%- endif -%}
