@@ -1,10 +1,17 @@
 {%- comment -%}
   Product page breadcrumbs: Home / Collection / Product (+ BreadcrumbList schema).
-  Uses the collection the shopper came from when the URL has one, otherwise the product's first collection.
+  Uses the collection the shopper came from when the URL has one, otherwise "Our full lawn care range" if the product is in it, else its first collection.
   Rendered above the product images and info in sections/main-product.liquid.
 {%- endcomment -%}
 {%- liquid
   assign bc = collection
+  if bc == blank
+    for c in product.collections
+      if c.handle == 'our-full-lawn-care-range'
+        assign bc = c
+      endif
+    endfor
+  endif
   if bc == blank
     for c in product.collections
       unless c.handle == 'all' or c.handle == 'frontpage'
@@ -35,6 +42,8 @@
   }
 </script>
 <style>
+  /* a little wider than the rest of the site so the product page doesn't feel empty at the sides */
+  .page-width:has(> .bf-crumbs) { max-width: 152rem; }
   .bf-crumbs { margin: 0 0 16px; font-size: 13px; line-height: 1.4; }
   .bf-crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 0; padding: 0; list-style: none; }
   .bf-crumbs li { display: inline-flex; align-items: center; gap: 4px; color: #4F6B58; min-width: 0; }
