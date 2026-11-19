@@ -114,6 +114,51 @@
   </style>
 {%- endif -%}
 
+{%- comment -%} Discount code box in the drawer footer (applies through the cart API, so VIP30 can be typed here). {%- endcomment -%}
+{%- if part == 'code' and cart.item_count > 0 -%}
+  {%- liquid
+    assign bf_codes = ''
+    for app in cart.discount_applications
+      if app.type == 'discount_code'
+        unless bf_codes contains app.title
+          assign bf_codes = bf_codes | append: app.title | append: '|'
+        endunless
+      endif
+    endfor
+    assign bf_code_list = bf_codes | split: '|'
+  -%}
+  <div class="bf-code">
+    <form class="bf-code__form" data-bf-code novalidate>
+      <label class="visually-hidden" for="bf-code-input">Discount code</label>
+      <input id="bf-code-input" class="bf-code__input" name="code" type="text" autocomplete="off" autocapitalize="characters" placeholder="Discount code">
+      <button type="submit" class="bf-code__btn">Apply</button>
+    </form>
+    <p class="bf-code__msg" data-bf-code-msg role="status"></p>
+    {%- if bf_code_list.size > 0 -%}
+      <ul class="bf-code__list">
+        {%- for c in bf_code_list -%}
+          <li class="bf-code__chip">{{ c | escape }} <button type="button" data-bf-code-remove="{{ c | escape }}" aria-label="Remove {{ c | escape }}">&times;</button></li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+  <style>
+    .bf-code { margin: 0 0 12px; }
+    .bf-code__form { display: flex; gap: 8px; }
+    .bf-code__input { flex: 1; min-width: 0; height: 46px; padding: 0 14px; border: 1.5px solid #D5E3D8; border-radius: 12px; background: #fff; font: inherit; font-size: 16px; color: #0D301F; text-transform: uppercase; }
+    .bf-code__input::placeholder { text-transform: none; }
+    .bf-code__input:focus { outline: none; border-color: #09552B; }
+    .bf-code__btn { flex: none; height: 46px; padding: 0 18px; border: 0; border-radius: 12px; background: #0D301F; color: #fff; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; }
+    .bf-code__btn[aria-busy="true"] { opacity: .6; cursor: progress; }
+    .bf-code__msg { margin: 6px 0 0; font-size: 13px; color: #B3261E; }
+    .bf-code__msg:empty { display: none; }
+    .bf-code__msg.is-ok { color: #09552B; }
+    .bf-code__list { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 0; padding: 0; list-style: none; }
+    .bf-code__chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 6px 4px 10px; border-radius: 999px; background: #E6F4E8; color: #09552B; font-size: 13px; font-weight: 700; }
+    .bf-code__chip button { width: 22px; height: 22px; border: 0; border-radius: 50%; background: #fff; color: #0D301F; font-size: 15px; line-height: 1; cursor: pointer; }
+  </style>
+{%- endif -%}
+
 {%- comment -%} Click handler for the + Add buttons. Rendered once from layout/theme.liquid, since scripts inside the refreshed drawer HTML don't run. {%- endcomment -%}
 {%- if part == 'script' -%}
   <style>
@@ -157,6 +202,57 @@
               .then(function (sections) { cart.renderContents({ id: Number(btn.getAttribute('data-bf-cup-add')), sections: sections }); });
           })
           .catch(function () { window.location = '/cart'; });
+      });
+    })();
+  </script>
+
+  <script>
+    (function () {
+      if (window.bfCodeBound) return;
+      window.bfCodeBound = true;
+      function apply(code, btn, okText) {
+        var cart = document.querySelector('cart-drawer');
+        var ids = cart && cart.getSectionsToRender ? cart.getSectionsToRender().map(function (s) { return s.id; }) : [];
+        if (btn) btn.setAttribute('aria-busy', 'true');
+        return fetch('/cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ discount: code, sections: ids, sections_url: window.location.pathname })
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (res) {
+            var msg = '', ok = false;
+            if (code) {
+              var want = code.split(',').pop().trim().toUpperCase();
+              var hit = (res.discount_codes || []).filter(function (d) { return String(d.code).toUpperCase() === want; })[0];
+              if (hit && hit.applicable) { ok = true; msg = okText || (want + ' applied'); }
+              else msg = okText ? 'Sorry, ' + want + ' isn’t valid for this cart.' : '';
+            }
+            if (cart && cart.renderContents && res.sections) cart.renderContents({ sections: res.sections });
+            else { window.location.reload(); return; }
+            var m = document.querySelector('cart-drawer [data-bf-code-msg]');
+            if (m && msg) { m.textContent = msg; m.classList.toggle('is-ok', ok); }
+          })
+          .catch(function () { window.location = '/cart'; });
+      }
+      document.addEventListener('submit', function (e) {
+        var form = e.target.closest && e.target.closest('[data-bf-code]');
+        if (!form) return;
+        e.preventDefault();
+        var code = (form.code.value || '').trim();
+        if (!code) return;
+        // keep any codes already on the cart
+        var existing = Array.prototype.map.call(document.querySelectorAll('cart-drawer [data-bf-code-remove]'), function (b) { return b.getAttribute('data-bf-code-remove'); })
+          .filter(function (c) { return c.toUpperCase() !== code.toUpperCase(); });
+        apply(existing.concat(code).join(','), form.querySelector('button'), code.toUpperCase() + ' applied');
+      });
+      document.addEventListener('click', function (e) {
+        var b = e.target.closest && e.target.closest('[data-bf-code-remove]');
+        if (!b) return;
+        e.preventDefault();
+        var keep = Array.prototype.map.call(document.querySelectorAll('cart-drawer [data-bf-code-remove]'), function (x) { return x.getAttribute('data-bf-code-remove'); })
+          .filter(function (c) { return c !== b.getAttribute('data-bf-code-remove'); });
+        apply(keep.join(','), null);
       });
     })();
   </script>

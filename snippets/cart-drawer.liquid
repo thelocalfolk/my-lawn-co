@@ -491,6 +491,7 @@
         <!-- Start blocks -->
         <!-- Subtotals -->
 
+        {%- render 'bf-cart-extras', part: 'code' -%}
         <div class="cart-drawer__footer" {{ block.shopify_attributes }}>
           <div>
             {%- if cart.cart_level_discount_applications.size > 0 -%}
