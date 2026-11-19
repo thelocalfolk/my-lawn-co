@@ -94,6 +94,8 @@
 
       const eligible = new Set(
         config.gifts
+          // safety: only $0 products are ever added as gifts, so nobody is charged for a "free" gift
+          .filter((gift) => !(Number(gift.price) > 0))
           .filter((gift) => hasPaid && eligibleNow(gift, now, codes))
           .map((gift) => Number(gift.variant))
       );

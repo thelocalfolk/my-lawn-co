@@ -16,6 +16,8 @@
         capture bfg_json
           echo '{"variant":'
           echo bfg_product.selected_or_first_available_variant.id
+          echo ',"price":'
+          echo bfg_product.selected_or_first_available_variant.price
           echo ',"title":'
           echo bfg_product.title | json
           echo ',"dates":'
