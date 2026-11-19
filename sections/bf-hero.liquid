@@ -93,9 +93,10 @@
         text: 'Join the VIP list for early access on Friday 20 November, plus $60 in free bonuses: a $20 gift voucher and the Yearly Lawn Program (worth $40).',
         label: 'VIP early access opens in', cta: 'Join the VIP list', url: '/pages/vip-early-access' },
       { id: 'vip', start: at('2026-11-20'), end: at('2026-11-21'),
-        badge: 'VIP early access · Fri 20 Nov only', t1: '30% off sitewide', t2: '+ $60 in free bonuses.',
-        text: 'A free $20 gift voucher and a free Yearly Lawn Program (worth $40), on top of 30% off everything. Opens to everyone tomorrow.',
-        label: 'VIP access ends in', cta: 'Shop VIP deals', url: '/collections/all' },
+        badge: 'VIP list only · Fri 20 Nov', t1: '30% off for VIPs', t2: '+ $60 in free bonuses.',
+        text: 'For our VIP list only: 30% off everything with your VIP code, plus a free $20 gift voucher and a free Yearly Lawn Program (worth $40). Opens to everyone tomorrow.',
+        label: 'VIP access ends in', cta: 'Shop VIP deals', url: '/collections/all',
+        cta2: 'Not a VIP? Join now', url2: '#bf-vip' },
       { id: 'launch', start: at('2026-11-21'), end: END,
         badge: 'Black Friday · 20–30 Nov', t1: '30% off.', t2: 'Everything.',
         text: 'Every lawn fix, every fertiliser, every bundle. Our biggest sale of the year runs until midnight Monday 30 November.',
@@ -136,6 +137,11 @@
         q('[data-bfh-text]').textContent = p.text || '';
         q('[data-bfh-label]').textContent = p.label;
         var a = q('[data-bfh-cta]'); a.textContent = p.cta; a.href = p.url;
+        var b = q('.bfh__btn--ghost');
+        if (b) {
+          if (!b.dataset.bfhLabel) { b.dataset.bfhLabel = b.textContent; b.dataset.bfhUrl = b.getAttribute('href'); }
+          b.textContent = p.cta2 || b.dataset.bfhLabel; b.setAttribute('href', p.url2 || b.dataset.bfhUrl);
+        }
         el.hidden = false;
         var v = el.querySelector('video'); if (v && v.paused) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); }
       }

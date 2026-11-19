@@ -82,7 +82,7 @@
     function get(store, k) { try { return window[store].getItem(k); } catch (e) { return null; } }
     function set(store, k, v) { try { window[store].setItem(k, v); } catch (e) {} }
     var hasCode = /(^|;\s*)discount_code=VIP30/i.test(document.cookie);
-    if (!forced && (get('sessionStorage', 'bf_vip_pop') || get('localStorage', 'bf_vip_joined') || hasCode)) return;
+    var auto = forced || !(get('sessionStorage', 'bf_vip_pop') || get('localStorage', 'bf_vip_joined') || hasCode);
 
     document.body.appendChild(pop);
     var shown = false, lastFocus = null;
@@ -111,8 +111,18 @@
     pop.querySelectorAll('[data-bfpop-close]').forEach(function (b) { b.addEventListener('click', hide); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !pop.hidden) hide(); });
 
-    setTimeout(show, 6000);
-    document.addEventListener('mouseout', function (e) { if (!e.relatedTarget && e.clientY <= 0) show(); });
+    if (auto) {
+      setTimeout(show, 6000);
+      document.addEventListener('mouseout', function (e) { if (!e.relatedTarget && e.clientY <= 0) show(); });
+    }
+    // any link to #bf-vip (e.g. the homepage banner's "Not a VIP? Join now") opens it on demand
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href="#bf-vip"]');
+      if (!a) return;
+      e.preventDefault();
+      if (get('localStorage', 'bf_vip_joined')) { pop.querySelector('[data-bfpop-form]').hidden = true; pop.querySelector('[data-bfpop-done]').hidden = false; }
+      shown = false; show();
+    });
 
     var form = pop.querySelector('[data-bfpop-form]');
     var err = pop.querySelector('[data-bfpop-err]');
