@@ -31,9 +31,17 @@
           var one = money((oneOpt.querySelector('.appstle_subscription_amount') || {}).textContent);
           var sub = money((subOpt.querySelector('.appstle_subscription_amount') || {}).textContent);
           var badge = (subOpt.querySelector('.appstle-save-badge') || {}).textContent || '';
-          var save = one && sub && one > sub ? '$' + (one - sub).toFixed(2) : badge.replace(/save/i, '').trim();
-          btn.querySelector('[data-t]').innerHTML = 'Using it again? <strong>Subscribe and save ' + (save || '10%') + '</strong> on every delivery. Skip or cancel anytime.';
-          // during the Black Friday sale the one-time price can be lower than the subscription, so don't push it then
+          // during the Black Friday sale bf-sale-price rewrites the amounts and keeps the normal ones in data-bf-was
+          var subEl = subOpt.querySelector('.appstle_subscription_amount');
+          var oneEl = oneOpt.querySelector('.appstle_subscription_amount');
+          var subWas = subEl && parseInt(subEl.getAttribute('data-bf-was'), 10) / 100;
+          var oneWas = oneEl && parseInt(oneEl.getAttribute('data-bf-was'), 10) / 100;
+          var saleOn = subWas > 0 && oneWas > 0 && subWas !== sub;
+          var base1 = saleOn ? oneWas : one, base2 = saleOn ? subWas : sub;
+          var save = base1 && base2 && base1 > base2 ? '$' + (base1 - base2).toFixed(2) : badge.replace(/save/i, '').trim();
+          btn.querySelector('[data-t]').innerHTML = saleOn
+            ? 'Using it again? <strong>Subscribe and pay $' + sub.toFixed(2) + ' today</strong>, then save ' + (save || '10%') + ' on every delivery after. Skip or cancel anytime.'
+            : 'Using it again? <strong>Subscribe and save ' + (save || '10%') + '</strong> on every delivery. Skip or cancel anytime.';
           btn.hidden = !oneActive || (one && sub && sub >= one);
         }
         btn.addEventListener('click', function () {

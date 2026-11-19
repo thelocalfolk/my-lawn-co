@@ -55,15 +55,44 @@
         price.classList.add('bf-sale-on');
       }
     }
-    // product page: show the one-time option in the Appstle box at the sale price too
+    // product page Appstle box. From Sat the 30% comes off automatically, on one-time orders and on the
+    // first payment of a subscription (renewals go back to the normal subscription price), so both
+    // options show their sale price. On VIP day the 30% needs the code, so the subscription option just
+    // gets a line saying what the code does. data-bf-was keeps the normal price for the subscribe nudge.
+    var STRIKE = ' <s style="font-size:.8em;font-weight:500;color:#6B7F70">';
+    function cents(t) { var m = String(t).replace(/,/g, '').match(/[0-9]+(\.[0-9]+)?/); return m ? Math.round(parseFloat(m[0]) * 100) : 0; }
+    function rewrite(el, html) {
+      // Appstle rewrites the text when the frequency or variant changes, so redo it whenever it isn't ours
+      if (el.getAttribute('data-bf-out') === el.innerHTML) return false;
+      var was = cents(el.textContent);
+      if (!(was > 0)) return false;
+      el.setAttribute('data-bf-was', was);
+      el.innerHTML = html(was);
+      el.setAttribute('data-bf-out', el.innerHTML);
+      return was;
+    }
     function appstle() {
-      if (mode !== 'auto') return;
-      var el = document.querySelector('.product__info-container .appstle_one_time_details_wrapper .appstle_subscription_amount:not([data-bf-done])');
-      if (!el) return;
-      var was = Math.round(parseFloat(el.textContent.replace(/[^0-9.]/g, '')) * 100);
-      if (!(was > 0)) return;
-      el.setAttribute('data-bf-done', '');
-      el.innerHTML = money(sale(was), true) + ' <s style="font-size:.8em;font-weight:500;color:#6B7F70">' + money(was, true) + '</s>';
+      var box = document.querySelector('.product__info-container .appstle_subscription_wrapper');
+      if (!box) return;
+      var one = box.querySelector('.appstle_one_time_details_wrapper .appstle_subscription_amount');
+      if (one && mode === 'auto') rewrite(one, function (was) { return money(sale(was), true) + STRIKE + money(was, true) + '</s>'; });
+      var sub = box.querySelector('.appstle_include_dropdown .appstle_subscription_amount, .payAsYouGoPlansDropdownWrapper .appstle_subscription_amount');
+      if (!sub) return;
+      if (mode === 'auto') rewrite(sub, function (was) { return money(sale(was), true); });
+      else if (sub.getAttribute('data-bf-out') !== sub.innerHTML) { sub.setAttribute('data-bf-was', cents(sub.textContent)); sub.setAttribute('data-bf-out', sub.innerHTML); }
+      var subWas = parseInt(sub.getAttribute('data-bf-was'), 10);
+      if (!(subWas > 0)) return;
+      var wrap = sub.closest('.appstle_subscription_amount_wrapper') || sub.parentNode;
+      var note = wrap.parentNode.querySelector('.bf-subsale');
+      if (!note) {
+        note = document.createElement('div');
+        note.className = 'bf-subsale';
+        note.style.cssText = 'flex-basis:100%;margin:6px 0 0 30px;font-size:13px;line-height:1.35;color:#09552B;font-weight:600';
+        wrap.insertAdjacentElement('afterend', note);
+      }
+      var text = (mode === 'vip' ? 'With your VIP code: ' + money(sale(subWas), true) + ' first order' : '30% off your first order')
+        + ', then ' + money(subWas, true) + ' per delivery';
+      if (note.textContent !== text) note.textContent = text;
     }
     function start() {
       apply(); appstle();
