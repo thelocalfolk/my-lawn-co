@@ -35,6 +35,30 @@
   </style>
 {%- endif -%}
 
+{%- comment -%} VIP day (Fri 20 Nov) bar: shows whether VIP30 is on the cart, or asks them to join the VIP list (opens the VIP popup). Shown only on VIP day by the script part. {%- endcomment -%}
+{%- if part == 'vip' and cart.item_count > 0 -%}
+  {%- liquid
+    assign bf_vip_on = false
+    for app in cart.discount_applications
+      assign t = app.title | upcase
+      if t == 'VIP30'
+        assign bf_vip_on = true
+      endif
+    endfor
+  -%}
+  {%- if bf_vip_on -%}
+    <div class="bf-vipbar bf-vipbar--on">
+      <span class="bf-vipbar__icon" aria-hidden="true">&#10003;</span>
+      <p><strong>VIP 30% off applied</strong>{%- if cart.total_discount > 0 %}. You’re saving {{ cart.total_discount | money }}{%- endif -%}, and your free VIP gifts are in your cart.</p>
+    </div>
+  {%- else -%}
+    <div class="bf-vipbar bf-vipbar--off">
+      <p><strong>Get 30% off today.</strong> Join our VIP list for your code, plus a free $20 gift voucher.</p>
+      <a class="bf-vipbar__btn" href="#bf-vip">Get my code</a>
+    </div>
+  {%- endif -%}
+{%- endif -%}
+
 {%- if part == 'upsell' and cart.item_count > 0 -%}
   {%- liquid
     assign offer_map = 'rescue-dog-wee-repair=grow-granular-fertiliser,thrive-liquid-fertiliser|grow-granular-fertiliser=thrive-liquid-fertiliser,vital-wetting-agent,enrich|thrive-liquid-fertiliser=grow-granular-fertiliser,revive-traces,enrich|revive-traces=thrive-liquid-fertiliser,enrich,grow-granular-fertiliser|enrich=vital-wetting-agent,grow-granular-fertiliser,thrive-liquid-fertiliser|vital-wetting-agent=grow-granular-fertiliser,enrich,thrive-liquid-fertiliser|grow-rescue-bundle=thrive-liquid-fertiliser,vital-wetting-agent,enrich|grow-thrive-bundle=rescue-dog-wee-repair,vital-wetting-agent,enrich|healthy-soil-bundle=thrive-liquid-fertiliser,rescue-dog-wee-repair,revive-traces|healthy-leaf-bundle=grow-granular-fertiliser,rescue-dog-wee-repair,vital-wetting-agent|complete-lawn-health-bundle=rescue-dog-wee-repair' | split: '|'
@@ -92,6 +116,21 @@
 
 {%- comment -%} Click handler for the + Add buttons. Rendered once from layout/theme.liquid, since scripts inside the refreshed drawer HTML don't run. {%- endcomment -%}
 {%- if part == 'script' -%}
+  <style>
+    .bf-vipbar { display: none; align-items: center; gap: 10px; margin: 0 0 10px; padding: 10px 12px; border-radius: 12px; font-size: 13px; line-height: 1.4; color: #0D301F; }
+    .bf-vipday .bf-vipbar { display: flex; }
+    .bf-vipbar p { margin: 0; flex: 1; }
+    .bf-vipbar--on { background: #E6F4E8; border: 1.5px solid #70C27A; }
+    .bf-vipbar--off { background: #E9F0F8; border: 1.5px solid #7FA3CB; }
+    .bf-vipbar__icon { flex: none; width: 24px; height: 24px; border-radius: 50%; background: #09552B; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; }
+    .bf-vipbar__btn { flex: none; padding: 8px 14px; border-radius: 10px; background: #09552B; color: #fff !important; font-weight: 700; text-decoration: none; white-space: nowrap; }
+  </style>
+  <script>
+    (function () {
+      var TZ = {{ settings.bf_gifts_utc_offset | default: '+11:00' | json }}, now = Date.now();
+      if (/[?&]bf_phase=vip\b/.test(location.search) || (now >= Date.parse('2026-11-20T00:00:00' + TZ) && now < Date.parse('2026-11-21T00:00:00' + TZ))) document.documentElement.classList.add('bf-vipday');
+    })();
+  </script>
   <script>
     (function () {
       if (window.bfCupBound) return;
