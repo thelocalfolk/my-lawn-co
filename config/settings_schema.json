@@ -1508,12 +1508,13 @@
         "id": "bf_gift_1_dates",
         "label": "Active dates",
         "default": "2026-11-20 00:00 to 2026-11-20 23:59",
-        "info": "One date range per line, e.g. 2026-11-20 00:00 to 2026-11-20 23:59 (store time). An end date with no time covers the whole day."
+        "info": "One date range per line, e.g. 2026-11-20 00:00 to 2026-11-20 23:59 (store time). An end date with no time covers the whole day. Add | CODE to a line to limit just those dates to a discount code, e.g. ... 23:59 | VIP30."
       },
       {
         "type": "text",
         "id": "bf_gift_1_code",
         "label": "Only with this discount code (optional)",
+        "default": "VIP30",
         "info": "e.g. VIP30. The code must be on the cart, for example via a /discount/VIP30 link in the email. Leave blank for everyone."
       },
       {
@@ -1530,8 +1531,8 @@
         "type": "textarea",
         "id": "bf_gift_2_dates",
         "label": "Active dates",
-        "default": "2026-11-20 00:00 to 2026-11-20 23:59\n2026-11-28 00:00 to 2026-11-30 23:59",
-        "info": "One date range per line, e.g. 2026-11-20 00:00 to 2026-11-20 23:59 (store time). An end date with no time covers the whole day."
+        "default": "2026-11-20 00:00 to 2026-11-20 23:59 | VIP30\n2026-11-28 00:00 to 2026-11-30 23:59",
+        "info": "One date range per line, e.g. 2026-11-20 00:00 to 2026-11-20 23:59 (store time). An end date with no time covers the whole day. Add | CODE to a line to limit just those dates to a discount code, e.g. ... 23:59 | VIP30."
       },
       {
         "type": "text",

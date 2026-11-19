@@ -5,7 +5,8 @@
     - now is inside one of the gift's date ranges (theme settings, one per line:
       "2026-11-20 00:00 to 2026-11-20 23:59", in the store's UTC offset)
     - the cart has at least one paid item and the paid subtotal >= minSubtotal
-    - if the gift has a required discount code, that code is on the cart
+    - if that date line (after a "|") or the gift has a required discount code,
+      that code is on the cart, e.g. VIP30 on VIP day so only VIPs get the gifts
   Gift products should be priced $0 (compare-at = the value shown struck through).
   Config comes from snippets/bf-free-gifts.liquid (window.bfFreeGifts).
 */
@@ -27,15 +28,22 @@
     return Date.parse(`${m[1]}T${hh}:${mm}:00${config.utcOffset || '+11:00'}`);
   }
 
-  function inWindow(dates, now) {
-    // In the theme editor, show gifts regardless of date so they can be previewed.
-    if (config.preview) return true;
-    return String(dates || '')
+  // A gift is eligible when one of its date lines is open now and that line's code
+  // (written after a "|", e.g. "2026-11-20 00:00 to 2026-11-20 23:59 | VIP30"),
+  // or else the gift's own code setting, is on the cart. No code means everyone.
+  function eligibleNow(gift, now, codes) {
+    const giftCode = String(gift.code || '').trim().toUpperCase();
+    return String(gift.dates || '')
       .split(/\n|;/)
       .map((line) => line.trim())
       .filter(Boolean)
       .some((line) => {
-        const [startText, endText] = line.split(/\s+to\s+/i);
+        const [range, lineCode] = line.split('|').map((part) => part.trim());
+        const code = (lineCode || giftCode).toUpperCase();
+        if (code && !codes.includes(code)) return false;
+        // In the theme editor, show gifts regardless of date so they can be previewed.
+        if (config.preview) return true;
+        const [startText, endText] = range.split(/\s+to\s+/i);
         const start = parseWhen(startText);
         let end = endText ? parseWhen(endText) : NaN;
         if (Number.isNaN(start)) return false;
@@ -86,8 +94,7 @@
 
       const eligible = new Set(
         config.gifts
-          .filter((gift) => hasPaid && inWindow(gift.dates, now))
-          .filter((gift) => !gift.code || codes.includes(String(gift.code).trim().toUpperCase()))
+          .filter((gift) => hasPaid && eligibleNow(gift, now, codes))
           .map((gift) => Number(gift.variant))
       );
 

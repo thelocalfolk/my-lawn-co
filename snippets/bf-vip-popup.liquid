@@ -1,0 +1,152 @@
+{%- comment -%}
+  VIP day popup (Fri 20 Nov 2026 only, store time). Asks shoppers to join the VIP list
+  (Klaviyo list SEKPaT, public key only) and then shows the VIP30 code with a button that
+  applies it to the cart, which also unlocks the VIP free gifts (see assets/bf-free-gifts.js).
+  Shows once per browser session, after a few seconds or when the mouse leaves the page,
+  and never on the cart or VIP page. Waits while a Klaviyo popup is open.
+  Preview any day with ?bf_phase=vip. Rendered once from layout/theme.liquid.
+{%- endcomment -%}
+{%- unless request.design_mode or template.name == 'cart' or request.path contains 'vip-early-access' -%}
+<div class="bfpop" data-bfpop hidden role="dialog" aria-modal="true" aria-labelledby="bfpop-title">
+  <div class="bfpop__overlay" data-bfpop-close></div>
+  <div class="bfpop__card">
+    <button type="button" class="bfpop__x" data-bfpop-close aria-label="Close">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="bfpop__top">
+      <span class="bfpop__badge">VIP day · today only</span>
+      <h2 class="bfpop__title" id="bfpop-title">Receive <span>30% off</span> today</h2>
+      <p class="bfpop__text">Sign up to our VIP list and get 30% off sitewide today, plus a free $20 gift voucher and a free Yearly Lawn Program (worth $40) with your order.</p>
+    </div>
+    <div class="bfpop__body">
+      <form class="bfpop__form" data-bfpop-form novalidate>
+        <label class="bfpop__label" for="bfpop-email">Email</label>
+        <input class="bfpop__input" id="bfpop-email" type="email" name="email" autocomplete="email" placeholder="Your email address" required>
+        <button type="submit" class="bfpop__btn">Join the VIP list</button>
+        <p class="bfpop__err" data-bfpop-err hidden></p>
+        <p class="bfpop__fine">By signing up you agree to get My Lawn Co emails. Unsubscribe anytime.</p>
+        <button type="button" class="bfpop__no" data-bfpop-close>No thanks</button>
+      </form>
+      <div class="bfpop__done" data-bfpop-done hidden>
+        <p class="bfpop__yay">You’re on the VIP list!</p>
+        <p class="bfpop__codeline">Your code for 30% off today:</p>
+        <button type="button" class="bfpop__code" data-bfpop-copy title="Copy code">VIP30 <span data-bfpop-copied>Copy</span></button>
+        <a class="bfpop__btn" data-bfpop-apply href="/discount/VIP30">Apply my code &amp; shop</a>
+        <p class="bfpop__fine">Your free gifts are added to your cart automatically once the code is applied.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .bfpop { position: fixed; inset: 0; z-index: 2147483647; display: flex; align-items: center; justify-content: center; padding: 16px; }
+  .bfpop[hidden] { display: none; }
+  .bfpop__overlay { position: absolute; inset: 0; background: rgba(13, 48, 31, .55); }
+  .bfpop__card { position: relative; width: 100%; max-width: 440px; max-height: calc(100vh - 32px); overflow: auto; border-radius: 20px; background: #FFFEFA; box-shadow: 0 24px 60px rgba(13, 48, 31, .35); animation: bfpop-in .3s ease; font-size: 15px; color: #0D301F; }
+  @keyframes bfpop-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  .bfpop__x { position: absolute; top: 12px; right: 12px; z-index: 1; width: 36px; height: 36px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .85); color: #0D301F; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+  .bfpop__top { padding: 30px 28px 22px; background: #7FA3CB; color: #0D301F; text-align: center; }
+  .bfpop__badge { display: inline-block; padding: 6px 12px; border-radius: 999px; background: #0D301F; color: #fff; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .bfpop__title { margin: 14px 0 8px; font-size: 34px; line-height: 1.05; font-weight: 800; text-transform: uppercase; letter-spacing: .01em; color: #0D301F; text-wrap: balance; }
+  .bfpop__title span { color: #fff; }
+  .bfpop__text { margin: 0; font-size: 15px; line-height: 1.45; text-wrap: pretty; }
+  .bfpop__body { padding: 22px 28px 24px; text-align: center; }
+  .bfpop__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .bfpop__input { display: block; width: 100%; box-sizing: border-box; height: 50px; padding: 0 16px; border: 2px solid #D5E3D8; border-radius: 12px; background: #fff; font: inherit; font-size: 16px; color: #0D301F; }
+  .bfpop__input:focus { outline: none; border-color: #09552B; }
+  .bfpop__btn { display: flex; align-items: center; justify-content: center; width: 100%; box-sizing: border-box; min-height: 52px; margin-top: 10px; border: 0; border-radius: 12px; background: #09552B; color: #fff; font: inherit; font-size: 16px; font-weight: 700; letter-spacing: .02em; text-decoration: none; cursor: pointer; }
+  .bfpop__btn:hover { background: #0D301F; }
+  .bfpop__btn[disabled] { opacity: .7; cursor: wait; }
+  .bfpop__err { margin: 8px 0 0; color: #B3261E; font-size: 13px; }
+  .bfpop__fine { margin: 10px 0 0; font-size: 12px; line-height: 1.4; color: #55605A; }
+  .bfpop__no { margin-top: 6px; padding: 6px; border: 0; background: none; font: inherit; font-size: 13px; color: #55605A; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .bfpop__yay { margin: 0 0 4px; font-size: 20px; font-weight: 800; }
+  .bfpop__codeline { margin: 0 0 10px; color: #55605A; }
+  .bfpop__code { display: inline-flex; align-items: center; gap: 12px; padding: 10px 18px; border: 2px dashed #70C27A; border-radius: 12px; background: #F1F8F2; color: #0D301F; font: inherit; font-size: 24px; font-weight: 800; letter-spacing: .12em; cursor: pointer; }
+  .bfpop__code span { font-size: 12px; font-weight: 700; letter-spacing: .04em; color: #09552B; text-transform: uppercase; }
+  @media (max-width: 480px) {
+    .bfpop__top { padding: 26px 20px 18px; }
+    .bfpop__body { padding: 18px 20px 20px; }
+    .bfpop__title { font-size: 28px; }
+  }
+</style>
+<script>
+  (function () {
+    var pop = document.currentScript.previousElementSibling.previousElementSibling;
+    if (!pop || !pop.hasAttribute('data-bfpop')) return;
+    var TZ = {{ settings.bf_gifts_utc_offset | default: '+11:00' | json }};
+    var COMPANY = 'WDVM9f', LIST = 'SEKPaT', CODE = 'VIP30';
+    var forced = /[?&]bf_phase=vip\b/.test(location.search);
+    var now = Date.now();
+    var live = now >= Date.parse('2026-11-20T00:00:00' + TZ) && now < Date.parse('2026-11-21T00:00:00' + TZ);
+    if (!forced && !live) return;
+    function get(store, k) { try { return window[store].getItem(k); } catch (e) { return null; } }
+    function set(store, k, v) { try { window[store].setItem(k, v); } catch (e) {} }
+    var hasCode = /(^|;\s*)discount_code=VIP30/i.test(document.cookie);
+    if (!forced && (get('sessionStorage', 'bf_vip_pop') || get('localStorage', 'bf_vip_joined') || hasCode)) return;
+
+    document.body.appendChild(pop);
+    var shown = false, lastFocus = null;
+    var apply = pop.querySelector('[data-bfpop-apply]');
+    apply.href = '/discount/' + CODE + '?redirect=' + encodeURIComponent(location.pathname + location.search.replace(/[?&]bf_phase=vip/, ''));
+
+    function klaviyoOpen() {
+      var m = document.querySelector('[data-kl-scroll-locking-modal], .klaviyo-form [role=dialog]');
+      return m && m.offsetParent !== null;
+    }
+    function show() {
+      if (shown) return;
+      if (klaviyoOpen()) { setTimeout(show, 1500); return; }
+      shown = true;
+      set('sessionStorage', 'bf_vip_pop', '1');
+      lastFocus = document.activeElement;
+      pop.hidden = false;
+      document.documentElement.style.overflow = 'hidden';
+      setTimeout(function () { var i = pop.querySelector('input'); if (i && window.matchMedia('(min-width: 750px)').matches) i.focus(); }, 50);
+    }
+    function hide() {
+      pop.hidden = true;
+      document.documentElement.style.overflow = '';
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+    pop.querySelectorAll('[data-bfpop-close]').forEach(function (b) { b.addEventListener('click', hide); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !pop.hidden) hide(); });
+
+    setTimeout(show, 6000);
+    document.addEventListener('mouseout', function (e) { if (!e.relatedTarget && e.clientY <= 0) show(); });
+
+    var form = pop.querySelector('[data-bfpop-form]');
+    var err = pop.querySelector('[data-bfpop-err]');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = form.email.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = 'Please enter a valid email address.'; err.hidden = false; return; }
+      err.hidden = true;
+      var btn = form.querySelector('[type=submit]');
+      btn.disabled = true; btn.textContent = 'Joining…';
+      fetch('https://a.klaviyo.com/client/subscriptions/?company_id=' + COMPANY, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/vnd.api+json', revision: '2025-10-15' },
+        body: JSON.stringify({ data: { type: 'subscription', attributes: {
+          custom_source: 'BFCM 2026 VIP day popup',
+          profile: { data: { type: 'profile', attributes: { email: email, properties: { bfcm_2026_vip: true }, subscriptions: { email: { marketing: { consent: 'SUBSCRIBED' } } } } } }
+        }, relationships: { list: { data: { type: 'list', id: LIST } } } } })
+      }).then(function (r) {
+        if (!r.ok && r.status !== 202) throw new Error('status ' + r.status);
+        set('localStorage', 'bf_vip_joined', '1');
+        form.hidden = true;
+        pop.querySelector('[data-bfpop-done]').hidden = false;
+        // apply the code in the background too, so it is on the cart even if they just close this
+        fetch('/discount/' + CODE, { credentials: 'same-origin' }).catch(function () {});
+      }).catch(function () {
+        btn.disabled = false; btn.textContent = 'Join the VIP list';
+        err.textContent = 'Sorry, something went wrong. Please try again.'; err.hidden = false;
+      });
+    });
+    var copy = pop.querySelector('[data-bfpop-copy]');
+    copy.addEventListener('click', function () {
+      var label = copy.querySelector('[data-bfpop-copied]');
+      (navigator.clipboard ? navigator.clipboard.writeText(CODE) : Promise.reject()).then(function () { label.textContent = 'Copied'; }, function () { label.textContent = CODE; });
+    });
+  })();
+</script>
+{%- endunless -%}

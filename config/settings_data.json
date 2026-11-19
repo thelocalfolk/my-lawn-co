@@ -130,7 +130,7 @@
     "cart_drawer_collection": "",
     "cart_color_scheme": "scheme-1",
     "bf_gift_1_product": "20-gift-voucher",
-    "bf_gift_2_product": "yearly-lawn-care-program",
+    "bf_gift_2_product": "yearly-lawn-care-program","bf_gift_1_code":"VIP30","bf_gift_2_dates":"2026-11-20 00:00 to 2026-11-20 23:59 | VIP30\n2026-11-28 00:00 to 2026-11-30 23:59",
     "sections": {
       "main-password-header": {
         "type": "main-password-header",
