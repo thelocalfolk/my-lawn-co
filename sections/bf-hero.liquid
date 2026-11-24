@@ -41,6 +41,7 @@
     </div>
   </div>
 </section>
+{%- render 'bf-rescue3', part: 'band' -%}
 
 <style>
   #bfh-{{ section.id }} { position: relative; overflow: hidden; color: #FFFEFA; background: #0D301F; font-family: Inter, var(--font-body-family), sans-serif; }
@@ -100,19 +101,23 @@
       { id: 'launch', start: at('2026-11-21'), end: END,
         badge: 'Black Friday · 20–30 Nov', t1: '30% off.', t2: 'Everything.',
         text: 'Every lawn fix, every fertiliser, every bundle. Our biggest sale of the year runs until midnight Monday 30\u00a0November.',
-        label: 'Sale ends in', cta: 'Shop 30% off', url: '/collections/all' },
+        label: 'Sale ends in', cta: 'Shop 30% off', url: '/collections/all',
+        cta2: 'RESCUE: 3 for $98.91', url2: '/products/rescue-dog-wee-repair' },
       { id: 'refund', start: at('2026-11-22'), end: at('2026-11-23'),
         badge: 'Refund giveaway · Sun 22 Nov only', t1: 'Order today.', t2: 'It could be free.',
         text: 'We’re refunding 5 lucky customers who order today, on top of 30% off sitewide.',
-        label: 'Giveaway ends tonight in', cta: 'Shop 30% off', url: '/collections/all' },
+        label: 'Giveaway ends tonight in', cta: 'Shop 30% off', url: '/collections/all',
+        cta2: 'RESCUE: 3 for $98.91', url2: '/products/rescue-dog-wee-repair' },
       { id: 'gift', start: at('2026-11-28'), end: END,
         badge: 'Free gift weekend · 28–30 Nov', t1: '30% off', t2: '+ a free Yearly Lawn Program.',
         text: 'Dave’s year-round plan, worth $40, free with every eligible order. Only until midnight Monday.',
-        label: 'Sale ends in', cta: 'Shop and claim it', url: '/collections/all' },
+        label: 'Sale ends in', cta: 'Shop and claim it', url: '/collections/all',
+        cta2: 'RESCUE: 3 for $98.91', url2: '/products/rescue-dog-wee-repair' },
       { id: 'cyber', start: at('2026-11-30'), end: END,
         badge: 'Cyber Monday · Final day', t1: 'Last chance.', t2: 'Everything ends at midnight.',
         text: '30% off sitewide, plus the free Yearly Lawn Program (worth $40) with every eligible order. After tonight, it’s gone.',
-        label: 'Everything ends in', cta: 'Shop 30% off', url: '/collections/all' }
+        label: 'Everything ends in', cta: 'Shop 30% off', url: '/collections/all',
+        cta2: 'RESCUE: 3 for $98.91', url2: '/products/rescue-dog-wee-repair' }
     ];
     var forced = (location.search.match(/[?&]bf_phase=(\w+)/) || [])[1];
     function current(now) {

@@ -191,7 +191,7 @@
         fetch((window.routes && window.routes.cart_add_url) || '/cart/add', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({ items: [{ id: Number(btn.getAttribute('data-bf-cup-add')), quantity: 1 }], sections: ids, sections_url: window.location.pathname })
+          body: JSON.stringify({ items: [{ id: Number(btn.getAttribute('data-bf-cup-add')), quantity: Number(btn.getAttribute('data-bf-qty') || 1) }], sections: ids, sections_url: window.location.pathname })
         })
           .then(function (r) { return r.json(); })
           .then(function (res) {

@@ -1,0 +1,114 @@
+{%- comment -%}
+  RESCUE 3-pack deal (Black Friday 2026): buy 3 RESCUE, 40% off automatically in the cart. 3 for $98.91.
+  Parts:
+    'band'   homepage strip, rendered at the end of sections/bf-hero.liquid
+    'pdp'    box on the RESCUE product page, rendered from snippets/bf-pairs.liquid
+    'script' date gate (shows until midnight Mon 30 Nov AEDT, ?bf_phase=pre hides it) and removes the
+             "BUY 3 RESCUE" announcement slide after the deal ends. Rendered once from layout/theme.liquid.
+  "Add 3 to cart" buttons use the delegated handler in snippets/bf-cart-extras.liquid (data-bf-qty).
+{%- endcomment -%}
+{%- assign r3_product = all_products['rescue-dog-wee-repair'] -%}
+{%- assign r3_variant = r3_product.selected_or_first_available_variant -%}
+
+{%- if part == 'band' and r3_variant and r3_variant.available -%}
+  <section class="r3b" data-r3>
+    <div class="r3b__in page-width">
+      <a class="r3b__img" href="{{ r3_product.url }}">{%- if r3_product.featured_image -%}<img src="{{ r3_product.featured_image | image_url: width: 300 }}" alt="{{ r3_product.title | escape }}" width="110" height="110" loading="lazy">{%- endif -%}</a>
+      <div class="r3b__copy">
+        <span class="r3b__tag"><span class="r3b__long">Black Friday bonus · </span>Ends midnight Mon 30&nbsp;Nov</span>
+        <h2 class="r3b__t">Buy 3 RESCUE, <span>save&nbsp;40%</span></h2>
+        <p class="r3b__p"><strong>3 for $98.91</strong> <s>$164.85</s> · That’s $32.97 a bag. No code needed, the 40% comes off in your&nbsp;cart.</p>
+      </div>
+      <button type="button" class="r3b__btn" data-bf-cup-add="{{ r3_variant.id }}" data-bf-qty="3">Add 3 to cart</button>
+    </div>
+  </section>
+  <style>
+    .r3b { background: #0D301F; color: #fff; }
+    .r3b[hidden] { display: none; }
+    .r3b__in { display: flex; align-items: center; gap: 28px; padding-top: 22px; padding-bottom: 22px; }
+    .r3b__img { flex: none; display: block; width: 110px; height: 110px; border-radius: 14px; overflow: hidden; background: #E6F4E8; }
+    .r3b__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .r3b__copy { flex: 1; min-width: 0; }
+    .r3b__tag { display: inline-block; padding: 5px 11px; border-radius: 999px; background: #7FA3CB; color: #0D301F; font-size: 12px; font-weight: 800; letter-spacing: .08em; line-height: 1.2; text-transform: uppercase; white-space: nowrap; }
+    .r3b__t { margin: 8px 0 4px; font-size: 34px; line-height: 1.05; font-weight: 800; text-transform: uppercase; color: #fff; letter-spacing: 0; }
+    .r3b__t span { color: #70C27A; }
+    .r3b__p { margin: 0; font-size: 16px; line-height: 1.45; color: #E6F4E8; }
+    .r3b__p strong { color: #70C27A; font-size: 19px; }
+    .r3b__p s { color: #9CB5A2; }
+    .r3b__btn { flex: none; padding: 16px 28px; border: 0; border-radius: 12px; background: #70C27A; color: #0D301F; font: inherit; font-weight: 800; font-size: 16px; cursor: pointer; }
+    .r3b__btn:hover { background: #8FD497; }
+    .r3b__btn[aria-busy="true"] { opacity: .6; cursor: progress; }
+    @media (max-width: 749px) {
+      .r3b__in { display: grid; grid-template-columns: 84px 1fr; gap: 12px 14px; align-items: center; }
+      .r3b__img { width: 84px; height: 84px; }
+      .r3b__long { display: none; }
+      .r3b__tag { font-size: 11px; justify-self: start; }
+      .r3b__t { font-size: 26px; margin-top: 6px; }
+      .r3b__p { grid-column: 1 / -1; }
+      .r3b__btn { grid-column: 1 / -1; width: 100%; }
+    }
+  </style>
+{%- endif -%}
+
+{%- if part == 'pdp' and product.handle == 'rescue-dog-wee-repair' and r3_variant and r3_variant.available -%}
+  <div class="r3p" data-r3>
+    <div class="r3p__top">
+      <span class="r3p__badge">40%<br>OFF</span>
+      <div>
+        <p class="r3p__t">Buy 3, save 40%</p>
+        <p class="r3p__s"><strong>3 for $98.91</strong> <s>$164.85</s> · $32.97&nbsp;a&nbsp;bag</p>
+      </div>
+    </div>
+    <button type="button" class="r3p__btn" data-bf-cup-add="{{ r3_variant.id }}" data-bf-qty="3">Add 3 to cart · $98.91</button>
+    <p class="r3p__f">No code needed. Ends midnight Mon 30 Nov.</p>
+  </div>
+  <style>
+    .r3p { margin: 14px 0 4px; padding: 14px; border: 2px solid #70C27A; border-radius: 14px; background: #F1F8F2; color: #0D301F; }
+    .r3p[hidden] { display: none; }
+    .r3p__top { display: flex; align-items: center; gap: 12px; }
+    .r3p__badge { flex: none; width: 58px; height: 58px; border-radius: 50%; background: #70C27A; color: #0D301F; font-weight: 900; font-size: 14px; line-height: 1.05; display: flex; align-items: center; justify-content: center; text-align: center; }
+    .r3p__t { margin: 0; font-size: 19px; font-weight: 800; text-transform: uppercase; line-height: 1.2; }
+    .r3p__s { margin: 2px 0 0; font-size: 15px; line-height: 1.4; }
+    .r3p__s strong { color: #09552B; }
+    .r3p__s s { color: #6B7F70; }
+    .r3p__btn { width: 100%; margin-top: 12px; min-height: 50px; border: 0; border-radius: 12px; background: #09552B; color: #fff; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer; }
+    .r3p__btn:hover { background: #0D301F; }
+    .r3p__btn[aria-busy="true"] { opacity: .6; cursor: progress; }
+    .r3p__f { margin: 8px 0 0; font-size: 12.5px; color: #4F6B58; text-align: center; }
+  </style>
+  <script>
+    (function () {
+      // sit above the purchase options (Appstle builds its box after load), else above the product form
+      var box = document.currentScript.previousElementSibling.previousElementSibling;
+      if (!box || !box.classList.contains('r3p')) return;
+      var tries = 0;
+      (function place() {
+        var w = document.querySelector('.product__info-container .appstle_subscription_wrapper');
+        var anchor = w ? (w.closest('.appstle_sub_widget, .appstle_subscription_wrapper_main, [class*="appstle_widget"]') || w) : null;
+        if (!anchor && ++tries < 30) { setTimeout(place, 250); return; }
+        if (!anchor) anchor = document.querySelector('.product__info-container product-form, .product__info-container .product-form');
+        if (anchor) anchor.parentNode.insertBefore(box, anchor);
+      })();
+    })();
+  </script>
+{%- endif -%}
+
+{%- if part == 'script' -%}
+  <script>
+    (function () {
+      var TZ = {{ settings.bf_gifts_utc_offset | default: '+11:00' | json }};
+      var forced = (location.search.match(/[?&]bf_phase=(\w+)/) || [])[1];
+      var live = forced ? forced !== 'pre' : Date.now() < Date.parse('2026-12-01T00:00:00' + TZ);
+      if (live) return;
+      function off() {
+        document.querySelectorAll('[data-r3]').forEach(function (e) { e.hidden = true; });
+        document.querySelectorAll('.announcement-bar__message, .announcement-bar').forEach(function (e) {
+          if (/BUY 3 RESCUE/i.test(e.textContent)) { var s = e.closest('.slideshow__slide, li') || e; s.remove(); }
+        });
+      }
+      document.documentElement.classList.add('r3-off');
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', off); else off();
+    })();
+  </script>
+  <style>.r3-off [data-r3] { display: none !important; }</style>
+{%- endif -%}
