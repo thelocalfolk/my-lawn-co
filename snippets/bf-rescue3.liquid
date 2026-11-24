@@ -102,8 +102,8 @@
       if (live) return;
       function off() {
         document.querySelectorAll('[data-r3]').forEach(function (e) { e.hidden = true; });
-        document.querySelectorAll('.announcement-bar__message, .announcement-bar').forEach(function (e) {
-          if (/BUY 3 RESCUE/i.test(e.textContent)) { var s = e.closest('.slideshow__slide, li') || e; s.remove(); }
+        document.querySelectorAll('.announcement-bar__message').forEach(function (e) {
+          if (/BUY 3 RESCUE/i.test(e.textContent)) { var s = e.closest('.slideshow__slide') || e.closest('.announcement-bar') || e; s.remove(); }
         });
       }
       document.documentElement.classList.add('r3-off');
